@@ -1,0 +1,12 @@
+>>> payoff = qp.AsianOption(
+...     sampler = qp.BrownianMotion(qp.Sobol(52), drift=1),
+...     start_price=100, strike_price=200)
+>>> qmc_stopper = qp.CubQMCSobolG(payoff, abs_tol=0.001)
+>>> price,data_drift = qmc_stopper.integrate()
+>>> print("Option price = $%.4f using %.3f seconds, n = %.2e"
+...     %(price, data_drift.time_integrate, data_drift.n_total))
+Option price = $0.1754 using 0.085 seconds, n = 1.64e+04
+>>> print("Using drift required %.0f%% the time, %.0f%% the n"
+...     %(100*data_drift.time_integrate / data.time_integrate,
+...       100*data_drift.n_total / data.n_total))
+Using drift required 15% the time, 12% the n

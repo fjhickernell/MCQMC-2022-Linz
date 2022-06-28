@@ -1,0 +1,13 @@
+>>> payoff = qp.AsianOption(
+...     qp.Sobol(52), # weekly monitoring
+...     start_price = 100,
+...     strike_price = 120,
+...     volatility = 0.5,
+...     interest_rate = 0,
+...     t_final = 1,
+...     call_put = "call")
+>>> qmc_stop_crit = qp.CubQMCSobolG(payoff, abs_tol=0.001)
+>>> price,data = qmc_stop_crit.integrate()
+>>> print("Option price = $%.3f using %.3f seconds, %.2e samples"
+...     %(price, data.time_integrate, data.n_total))
+Option price = $5.194 using 0.587 seconds, 1.31e+05 samples

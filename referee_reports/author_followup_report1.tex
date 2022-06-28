@@ -1,0 +1,54 @@
+\documentclass{amsart}
+\usepackage{mathtools,upref,siunitx,upquote,fancyvrb,color}
+\usepackage[hyphens]{url}
+\usepackage[utf8]{inputenc}
+
+
+\textwidth 6.5in
+\hoffset -0.7in
+\allowdisplaybreaks %allow equations to span multiple pages
+
+\input{../FJHDef}
+
+\newcommand{\scnote}[1]{ {\textcolor{blue}  {\mbox{\bf Response:} #1}}}
+
+\begin{document}
+\title{QMCPy Authors' Feedback for Referee Report 1}
+%\author{}
+
+
+\maketitle
+
+Report on the paper "Quasi-Monte Carlo Software", by Sou-Cheng T. Choi, Fred J. Hickernell, R. Jagadeeswaran, Michael J. McCourt, Aleksei G. Sorokin
+
+
+This work is devoted to discuss quasi-MonteCarlo (QMC) software available for practitioners and researchers. The main focus is the QMCPy Python project, developed by the authors of the paper.
+
+The introduction of the paper discusses the general framework of QMC methods, their main properties, and notation. Section 2 lists a number of QMC software available (in some cases in commercial packages), with a very short reference to their contents. Section 3 conceptualizes four main components of QMC software: discrete distribution; true measure; integrand; stopping criterion. The following sections (4 thru 7) discuss in more detail how these components are included/represented/used in the QMCPy library. Section 8 go into further depth for some additional features of the library. Section 9 presents conclusions and future work.
+
+The paper seems devoid of obvious mistakes or errors. The  availability of QMC libraries is important for more widespread use of the existing methods, as well as for trying out new ideas.
+
+Nevertheless, I feel that Section 2 of the paper is very short and gives almost no information on the existing software, the strengths and weaknesses, etc.  Also, while conceptualizing the main four components of a QMC library can be useful, the authors do not map these components for existing software, except their own QMCPy library. They state that ``The sections that follow describe QMCPy [3], which is our attempt to combine some of the best of the above software under a common user interface written in Python 3.''; but they do not explain which are the features of ``the best of the above software'' that they have included in their library.
+
+In this sense, the paper is very focused on this particularly library, and the title, and the abstract do not quite represent the actual contents. 
+
+My recommendation is a minor revision, so that the authors can expand Section 2, or let more clear that the paper will be focused specifically on their library.
+
+%\bibliographystyle{amsplain}
+%\bibliography{FJH23,FJHown23}
+
+\vspace{10ex}
+
+\scnote{ 
+We thank the reviewer for the valid and helpful feedback especially for Section 2 of the manuscript. We have expanded the section from half a page to almost two pages with the following changes: 
+\begin{enumerate}
+ \item added a few packages (SciPy, TF Quant Finance, and MultilevelEstimators.jl) that have come to our attention recently; 
+ \item for each software, 
+    \begin{enumerate}
+        \item described in more detail some of its best features;
+        \item specified if some or all of the best features are accessible and, if applicable, enhanced through QMCPy by various mechanisms (e.g., direct calls, wrapper functions, code compilation, or direct translation).
+    \end{enumerate}
+\end{enumerate}
+}
+
+\end{document}

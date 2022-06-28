@@ -1,0 +1,22 @@
+General ~ Sou-Cheng and Fred
+- Expand section 2 and talk more about how QMCPy combines the best of available QMC softwares
+- Fix LatNet Builder reference
+
+Discrete Distribution ~ Fred
+- Discuss difference between stratification and RQMC
+- Comment on the name DiscreteDistribution, the referee and Dirk Nuyens found this confusing  Fred Done
+- List criterion used to construct - Lattice sequences
+- Clarify that the better uniformity is for embedded Lattices and is not true in general  Fred Done
+
+Code / Choice of Parameters ~ Aleksei
+- Show how the user can customize Sobol' and Lattice generative vectors
+- Make parameters more explicit e.g. Sobol(2) --> Sobol(dimension=2), and explain more about what the code does for non-python / QMCPy users
+
+Integrand / Stopping Criterion ~ Jags
+- Explain why we use the trapezoidal rule for AsianOption and how we chose the drift for the importance sampling example? 
+- Better explanation of CubQMCSobolG algorithm
+
+Importance Sampling ~ Aleksei
+- Provide better discussion of importance sampling and justification for the example
+- Motivation for successive change of variables
+- Explain the Kumaraswamy distribution

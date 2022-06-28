@@ -1,0 +1,175 @@
+\documentclass{amsart}
+\usepackage{mathtools,upref,siunitx,upquote,fancyvrb,color}
+\usepackage[hyphens]{url}
+\usepackage[utf8]{inputenc}
+
+
+\textwidth 6.5in
+\hoffset -0.7in
+\allowdisplaybreaks %allow equations to span multiple pages
+
+\input{FJHDef}
+
+\begin{document}
+\title{QMCPy Authors' Feedback for Referee Report 2}
+%\author{}
+
+\newcommand{\AGSComment}[1]{{\color{blue} #1}}
+\newcommand{\FJHComment}[1]{{\color{blue} #1}}
+
+\maketitle
+
+
+\section{Overall Evaluation}
+
+This paper proposes and discusses a software tool named QMCPy, in the form of a Python library, for estimating integrals via quasi-Monte Carlo (QMC). The library offers different types of QMC point sets and randomizations. The point sets are extensible in the number of points, using successive powers of 2. The main function takes an extensible point set, an integrand, and a target maximal error (or variance), and computes an RQMC estimator by doubling the number of points successively until the error bound is below the target. Several examples are given, some with a change of measure and/or a change of variables, and the corresponding Python code.
+
+This is certainly a very useful tool, designed by knowledgeable people, which is likely to grow and spread. The paper is reasonably well written and should have its place in the MCQMC 2020 book. However, there are several pieces that would need clarification, as well as some additional explanations to make the paper more self-contained. I understand that one can also study the tutorial and the Colab notebooks to understand how things work, but it would be good if the paper can also be understood easily just by itself.
+
+\bigskip
+
+\FJHComment{We thank the referee for his or her careful reading of our manuscript and many helpful comments, including pointers to some of the literature that we were unfamiliar with.  We have tried to address them all.}
+
+\section{Details}
+
+Page 3: ``The measure of the difference...'' should be ``A measure of the difference...'' (not
+unique).
+
+\AGSComment{Fixed.}
+\vspace{1cm}
+
+Page 4, Eq.(5): Replace the comma by a period.
+
+\AGSComment{Fixed.}
+\vspace{1cm}
+
+Page 4, ``highly stratified sampling'': A key difference between RQMC and stratification is that in the latter, once the partition is defined, the positions of the points in the different pieces are conditionally independent. Because of that, the variance can never increase compared with Monte Carlo, which is not true for RQMC. See Section 2 of [2], for example. This independence property can make it easier to prove convergence rates for the variance; see
+[3], Proposition 6, for an example of this. 
+
+\FJHComment{Thanks to the referee for pointing this out.  We have modified the wording to say that LD sampling is similar to stratified sampling without going into the details.}
+
+\vspace{1cm}
+
+Page 5, SSJ: You may add “in the hups package”.
+
+\AGSComment{Added.}
+\vspace{1cm}
+
+The authors call an RQMC point set a discrete distribution, which I find a bit confusing. The
+RQMC points do not really follow a discrete distribution and there is no sampling from a discrete distribution. After they are randomized, conditional on their values, the n points form a deterministic set and one can think of a discrete uniform distribution over these n points, but one never generate points from this discrete distribution. A DiscreteDistribution object has a gen samples method that returns all the n points of the RQMC point set in a
+large two-dimensional array. It is probably too late to change the name, but a comment on this could be added.
+
+\FJHComment{The intention in the name is that the finite points have an empirical distribution that has discrete support.  We might in the future add the possibility of unequal weights although we have not done so yet.  A comment added in the first paragraph of Section 4.}
+
+\vspace{1cm}
+
+Page 6: The $\oplus$ sign is commonly used to denote the exclusive-or operation, so its use for
+something more general is a bit confusing.
+
+\FJHComment{An explanation has been added in the footnote.}
+
+\vspace{1cm}
+
+``lattices and digital sequences prefer $n$ to be a power of 2'' should be better qualified. This is true for digital nets in base 2. For digital nets in prime base $b > 2$, we would prefer a power of $b$. For lattice rules, a prime $n$ is sometimes better than a power of 2; see Figure 6 of [4], for example. I think the real reason for using a power of 2 for lattices in this paper is to have a sequence of embedded lattices. This should be clarified.
+
+\FJHComment{Explanation and clarification added early in Section 4.  You are correct that we want embedded lattices or nets.}
+
+\vspace{1cm}
+
+Bottom of table 1: the 	$\ominus$ operator is not defined. What is it?
+
+\FJHComment{The definition is given in the text where we discuss Table 1.}
+
+\vspace{1cm}
+
+From what we see in Section 4, it seems that the user cannot select the point sets (direction numbers, generating matrices, generating vectors for the lattices). A comment on this would be good. 
+
+\AGSComment{We have added a discussion in Section 8, ``Under the Hood'',  regarding QMCPy's support for custom generating vectors for Lattice sequences and custom generating matrices for digital nets in base 2.}
+\vspace{1cm}
+
+In several places, a reader who is not already familiar with both Python and QMCPy (like me) may struggle to understand what goes on when reading the Python code. For example, on page 8, it would be good to recall quickly in the text what the parameters mean in \texttt{IIDStdUniform(2)}, \texttt{gen\_samples(1)}, and \texttt{gen\_samples(n min=1,n max=2)}.
+
+\AGSComment{We have added some discussion/keywords to try and make input parameters more transparent.}
+\vspace{1cm}
+
+On page 12, it would also be good to explain the code a bit. What is \texttt{CustomFun} doing? What are \texttt{Halton(2)} and \texttt{Gaussian} doing? Do we have \texttt{d = 2} in this case?
+
+\AGSComment{We have added some discussion/keywords to try and make input parameters more transparent.}
+\vspace{1cm}
+
+The different ways of rewriting the integral shown on pages 12 and 13 are only remotely connected to the software itself. I suppose the software can take any reformulation as an integral over the unit hypercube. Of course, the MC and RQMC variances will depend on the reformulation. We also miss some insight about the specific choices of reformulations given here. For example, the optimal change of measure for the importance sampling is the one that makes the integrand completely flat and gives a variance of zero [1]. This zero variance IS can often be well approximated [6]. Basically, we want $\lambda_\text{IS}$ to be approximately proportional to $g \cdot \lambda$. But the choice made in the paper seems arbitrary and is not really justified.
+
+\FJHComment{You are correct that importance sampling can be difficult to do well.  It is an art.  QMCPy is not yet developed enough to do sophisticated importance sampling.  This is future work.}
+
+\vspace{1cm}
+
+The code on page 14: Say what \texttt{CubQMCSobolG} is doing exactly. How is the error or variance estimated? What randomization is used for the Sobol points?
+
+\FJHComment{\texttt{CubQMCSobolG} implements the stopping criterion of Hickernell and Jim\'enez Rugama in reference [18] as now explained in the text.  A more detailed description of the stopping criterion would be too long.  The randomization is linear matrix scrambling, but it is immaterial.  We are not using replications.}
+
+\vspace{1cm}
+
+Page 16: Why use a trapezoidal rule? I think Asian option payoffs in practice are already defined by a finite arithmetic average, no?
+
+\FJHComment{The continuous time Asian option is defined as an integral.  The trapezoidal rule gives a better approximation to the integral.}
+
+\vspace{1cm}
+
+``Integrand object to approximate the Asian call option''? You mean to ``approximate the value of ... ''?
+
+\AGSComment{Yes. This has been reworded.}
+\vspace{1cm}
+
+Bottom of page 16: How did you select the upward drift? An optimal choice that would provide zero variance would have to be dynamic, as explained in [6] for the Markov chain
+setting.
+
+\FJHComment{Again, dynamic choice is beyond the scope of what we can do.}
+
+\vspace{1cm}
+
+Section 8.1: What criteria were used to construct these lattice sequences?
+
+\AGSComment{We added a bit of discussion on how the default lattice generating vector was found and where it was sourced from.}
+\vspace{1cm}
+
+Section 8.2: “better evenness for ... powers of 2” is because of the specific construction of embedded lattices. It is not always true in general. Maybe this should be clarified.
+
+\AGSComment{We added a bit of discussion throughout that tries to clarify and reinforce this.}
+\vspace{1cm}
+
+Section 8.3, first paragraph: How are the IID Gaussian points obtained if it is not by inversion?
+
+\AGSComment{Good point, we are still using inversion for IID Standard Gaussian, so this does not avoid the computational overhead of the inverse normal.}
+\vspace{1cm}
+
+Second paragraph: Here you consider successive changes of measures and/or successive changes of variables. It is not clear why one would want to do that. In the end, the combined changes of variables corresponds to a single change of variable, no? We miss a motivation for this.
+
+\AGSComment{We have built-in support for successive changes of variables to help users easily construct complex variable transformations without having to work out the math. This discussion has been added to the paper.}
+\vspace{1cm}
+
+What is the Kumaraswamy distribution?
+
+\AGSComment{It is similar to the Beta distribution, but with closed-form CDF and quantile functions. We have added a reference for this.}
+\vspace{1cm}
+
+Page 20: ``Successful importance sampling places more points where the original integrand $g$ varies more'' is not quite correct. Again, see [1] and [6] for the optimal choice.
+
+\AGSComment{We have replaced this sentence with ``Successful importance sampling makes the transformed integrand, $f$, more flat.''}
+\vspace{1cm}
+
+Page 22: Automatic adaptive choice of IS: How?
+
+\AGSComment{Not quite sure yet. Perhaps we can do some distribution-hyperparameter optimization? We need to think through this more, but initial computer experiments have shown some promise.}
+
+\vspace{1cm}
+
+Reference 27 is not correct. There is the journal paper [5] on Lattice Builder. Then there is the LatNet Builder software at https://github.com/umontreal-simul/latnetbuilder, which has more contributors: L’Ecuyer, Munger, Marion, Godin, Puchhammer.
+
+\FJHComment{The references to Lattice Builder and LatNet Builder have been updated.}
+
+\vspace{1cm}
+
+%\bibliographystyle{amsplain}
+%\bibliography{FJH23,FJHown23}
+
+\end{document}

@@ -17,7 +17,7 @@
 	siunitx,
  	graphicx}
 \usepackage[usenames]{xcolor}
-\usepackage[giveninits=false,backend=biber,style=nature, maxcitenames =10, mincitenames=9]{biblatex}
+\usepackage[giveninits=false,backend=biber,style=nature,style=authoryear,maxcitenames =10, mincitenames=9]{biblatex}
 \addbibresource{FJHown23.bib}
 \addbibresource{FJH23.bib}
 \usepackage{newpxtext}
@@ -130,6 +130,49 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 
 \section{Background}
+
+\begin{frame}{My Definition of Great MCQMC Software}
+	
+	\vspace{-5ex}
+	\begin{itemize}
+		\item \alert{Correct}, e.g., not omit the zeroth point in a low discrepancy sequence \parencite{Owe22a, scipySobol2020a}
+	
+		\item 
+		
+		\item 
+
+		\item 
+
+		\item 
+
+		
+	\end{itemize}
+\end{frame}
+
+\printbibliography
+\end{document}
+
+\begin{frame}{Quasi-Monte Carlo (QMC) uses low discrepancy (LD) sequences}
+	\vspace{-3ex}
+	\begin{tabular}{>{\centering}p{0.47\textwidth}@{\quad}>{\centering}p{0.47\textwidth}}
+		%Independent \& Identically Distributed (IID) &
+		%Low Discrepancy (LD) \tabularnewline
+		\includegraphics[height=5cm]{ProgramsImages/IIDPoints.eps} &
+		\includegraphics[height=5cm]{ProgramsImages/SSobolPoints.eps}
+		\tabularnewline
+		$\vT_i$ are random &
+		$\vX_i$ may be deterministic \alert{or} random 
+		\tabularnewline
+		$\vT_1, \vT_2 \cdots \alert{\IIDsim} F$ &
+		$\vX_1, \vX_2 \cdots \alert{\LDsim} F$ 
+		\tabularnewline
+		$\vT_i$ do not know about one another &
+		$\{\vX_i\}_{i=1}^n$ represent $F$ well
+		\tabularnewline
+		$F_{n}(\vt_1, \ldots, \vt_n) = F(\vt_1) \cdots F(\vt_n)$ &
+		$F_{\{\vX_i\}_{i=1}^n}(\vx) \approx F(\vx)$
+	\end{tabular}
+\end{frame}
 
 \begin{frame}{You have heard about QMC.  How do you try it?}
 	

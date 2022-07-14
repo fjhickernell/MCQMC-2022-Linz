@@ -22,7 +22,7 @@
     giveninits=true,
     style=nature,
     style=authoryear,
-    maxcitenames =2,
+    maxcitenames=2,
     mincitenames=1]{biblatex}
 \AtBeginBibliography{\small}
 \addbibresource{FJHown23.bib}
@@ -173,7 +173,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
 		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
 		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022} by Alex Keller and collaborators
-		\item L'Ecuyer
+		\item \alert{RNGStreams} \parencite{LEcEtal02a},  L'Ecuyer
 		\item Nuyens
 		\item Giles
 		\item Hickernell
@@ -208,6 +208,28 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 \begin{frame}{Connecting Demos}
 	content...
+\end{frame}
+
+\begin{frame}{Connecting QMCPy with FEniCS/Dolphin}
+	\begin{itemize}
+		\item Want to demonstrate how our QMC software could work with a popular DE solver to solve DEs with random coefficients
+		\item Partial success
+	\end{itemize}
+\begin{columns}
+ \begin{column}{0.5\textwidth}
+ 	\begin{gather*}
+ 		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 2x - 1 \\
+ 		 0 \leq x \leq 1, \qquad
+ 		u(0) = u(1) = 0 \\
+ 		a(x,\vW) = 1 + \beta \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
+ 		 \vW \sim \cu[-1,1]^d \\
+ 	\end{gather*}
+ \end{column}
+ \begin{column}{0.5\textwidth}
+ 	\centering
+ 	\includegraphics[width=\textwidth]{ProgramsImages/timing-2.eps}
+\end{column}
+\end{columns}
 \end{frame}
 
 

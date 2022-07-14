@@ -17,7 +17,13 @@
 	siunitx,
  	graphicx}
 \usepackage[usenames]{xcolor}
-\usepackage[giveninits=false,backend=biber,style=nature,style=authoryear,maxcitenames =10, mincitenames=9]{biblatex}
+\usepackage[giveninits=false,
+    backend=biber,
+    giveninits=true,
+    style=nature,
+    style=authoryear,
+    maxcitenames =2,
+    mincitenames=1]{biblatex}
 \AtBeginBibliography{\small}
 \addbibresource{FJHown23.bib}
 \addbibresource{FJH23.bib}
@@ -156,6 +162,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 
 \begin{frame}[allowframebreaks]{Selective History of MC\textbf{QMC} Software}
+\vspace{-2ex}
 	\begin{itemize}
 		\item \textcite{LEc2017a} provides a history of \alert{random number generation}
 		\item Notorious \alert{randu} from the 1960s \parencite{RANDU}, which fails the spectral test
@@ -165,13 +172,13 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item Korobov cubature and scrambled Sobol' generators in \alert{NAG} \parencite{NAG27} for decades		
 		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
 		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
-		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{Gru},  and \alert{MatBuilder} \parencite{paulin2022} by Alex Keller and collaborators
+		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022} by Alex Keller and collaborators
 		\item L'Ecuyer
 		\item Nuyens
 		\item Giles
 		\item Hickernell
-		\item TensorFlow
-		\item Scrambled Sobol' in SciPy \parencite{virtanen2020scipy} and PyTorch \parencite{paszke2019pytorch}
+		\item \alert{TensorFlow}
+		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
 		
 		
 	\end{itemize}

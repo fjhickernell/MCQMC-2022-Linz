@@ -155,8 +155,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 \end{frame}
 
 
-\begin{frame}{Selective History of MC\textbf{QMC} Software}
-	\vspace{-4ex}
+\begin{frame}[allowframebreaks]{Selective History of MC\textbf{QMC} Software}
 	\begin{itemize}
 		\item \textcite{LEc2017a} provides a history of \alert{random number generation}
 		\item Notorious \alert{randu} from the 1960s \parencite{RANDU}, which fails the spectral test
@@ -164,17 +163,12 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item \alert{ACM} low discrepancy point generators \parencite{BraFox88,BraFoxNie92,HonHic00a}
 		\item \alert{FinDer} \parencite{PasTra95,FinDer} and \alert{BRODA} \parencite{BRODA20a} targeting quantitative finance
 		\item Korobov cubature and scrambled Sobol' generators in \alert{NAG} \parencite{NAG27} for decades		
-		\item Scrambled Sobol' and Halton generators in MATLAB \parencite{MAT9.13} since 2008, and fixed a few years later
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Selective History of MC\textbf{QMC} Software}
-	\vspace{-6ex}
-	\begin{itemize}
-		\item \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
-		\item Keller
+		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
+		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
+		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{Gru},  and \alert{MatBuilder} \parencite{paulin2022} by Alex Keller and collaborators
 		\item L'Ecuyer
 		\item Nuyens
+		\item Giles
 		\item Hickernell
 		\item TensorFlow
 		\item Scrambled Sobol' in SciPy \parencite{virtanen2020scipy} and PyTorch \parencite{paszke2019pytorch}

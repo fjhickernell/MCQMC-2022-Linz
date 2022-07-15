@@ -177,7 +177,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb}
 		\item Multi-level software \parencite{GilesSoft,GilesQSoft} 
 		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a} 
-		\item Uncertainty quantification packages \alert{Dakota} \parencite{Dakota}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy
+		\item Uncertainty quantification packages \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy sampling
 	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others
 		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
 		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
@@ -197,6 +197,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\begin{itemize}
 			\item Makes \alert{algorithms} practical
 			\item Solves (new) \alert{applications}
+			\item Eliminates do-it-yourself
 		\end{itemize}
 		\item New \alert{applications} inspire new \alert{theory}
 	\end{itemize}
@@ -205,10 +206,32 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 \section{Structure}
 
 \begin{frame}{Software Library Architecture}
-	content...
+	\vspace{-7ex}
+
+\[
+\mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots = 	
+\underbrace{\Ex[f(\vX)]}_{\text{expectation}} = \underbrace{\int_{[0,1]^d}  f(\vx) \, \dif \vx}_{\text{integration}} \approx  \frac 1{n} \sum_{i=1}^{n} f(\vX_i) =: \hmu_{n}
+\]
+
+\vspace{-3ex}
+
+\begin{description}
+	%\setlength{\itemsep}{0.2cm}
+	
+	\item[LD Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the distribution with PDF $\varrho$, e.g., uniform
+	
+	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \Psi(\vx)$
+	
+	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator 
+	
+	\item[Stopping Criterion] based on a data-driven error bound, whic determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
+\end{description}
+
+\vspace{-1ex}
+\uncover<2->{May we agree on a \alert{common definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
 \end{frame}
 
-\begin{frame}{Choice of Language}
+\begin{frame}{Choice of Language or Package}
 	content...
 \end{frame}
 

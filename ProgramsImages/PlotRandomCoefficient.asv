@@ -1,0 +1,11 @@
+%% Plot of our random coefficient
+
+n = 128;
+d = 6;
+beta = 0.8;
+
+p = scramble(sobolset(d),"MatousekAffineOwen");
+wpts = net(p,n);
+xpts = 0:0.002:1;
+chebpoly = cos(acos(2*xpts-1).*(1:d)');
+amat = chebpoly*wpts';

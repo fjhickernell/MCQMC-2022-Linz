@@ -177,13 +177,13 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb}
 		\item Multi-level software \parencite{GilesSoft,GilesQSoft} 
 		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a} 
-		\item Uncertainty quantification packages \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy sampling
+		\item Uncertainty quantification libraries \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy sampling
 	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others
 		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
 		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
-		
-		
 	\end{itemize}
+
+In summary, we have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 \begin{frame}{Why Do We Need Software?}
@@ -197,9 +197,14 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\begin{itemize}
 			\item Makes \alert{algorithms} practical
 			\item Solves (new) \alert{applications}
-			\item Eliminates do-it-yourself
+			\item Eliminates \alert{do-it-yourself}
 		\end{itemize}
-		\item New \alert{applications} inspire new \alert{theory}
+		\item \alert{Applications} 
+  		\begin{itemize}
+			\item Make \alert{societal} impact
+			\item Inspire new \alert{theory}
+		\end{itemize}
+
 	\end{itemize}
 \end{frame}
 
@@ -231,16 +236,73 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 \uncover<2->{May we agree on a \alert{common definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
 \end{frame}
 
-\begin{frame}{Choice of Language or Package}
-	content...
+\begin{frame}{Choice of Language, Library, or Environment}
+	\begin{itemize}
+    \item Language/library choices of the users are driven by familiarity and speed
+
+    \item Several favorites aligned with various communities, but no one dominates all
+
+    \item Diversity of multi-processor environments complicates software development; where does parallelism really help?
+
+    \item<2-> Recommendations
+    \begin{itemize}
+    \item Contribute your new idea as a demo in your favorite library
+    \item If your contribution is substantial, add as a feature to other libraries
+    \item Move basic features of your library to larger library
+    \item Write wrappers or demos to connect other libraries to your library
+    
+    \end{itemize}
+ \end{itemize}
 \end{frame}
 
-\begin{frame}{Advanced Architectures}
-	content...
+\begin{frame}{Ex.\ Connecting QMCPy with FEniCS/Dolfin}
+\vspace{-4ex}
+	\begin{itemize}
+		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
+		\item Partial success \only<3->{\alert{Why?}}
+	\end{itemize}
+ 	\vspace{-2ex}
+ \begin{minipage}{0.48\textwidth}
+ 	\only<1-2>{\begin{gather*}
+ 		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 200( 2x - 1)\\
+ 		 0 \leq x \leq 1, \qquad
+ 		u(0) = u(1) = 0 \\
+ 		a(x,\vW) = 1 + 0.6 \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
+ 		 \vW \sim \cu[-1,1]^d \\
+ 		 \Ex[u(0.25,\vW)] = \only<1>{\, ?}\only<2>{ -1.7462}
+ 	\end{gather*}}
+  \only<3->{
+\begin{itemize}
+\item Even with FEniCS/Dolfin's extensive documentation we had \alert{difficulties}
+\begin{itemize}
+    \item Learning how to solve a simple ODE, so reverted to an older version
+    \item Learning how to change the random instance of coefficient without tiggering the JIT compile
+    \item Do not yet know how to express the random coefficient in terms of the covariance kernel
+\end{itemize}
+\end{itemize}
+  }
+ \end{minipage}%
+\hfill
+ \begin{minipage}{0.48\textwidth}
+ 	\only<1-2>{\centering
+ 	\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
+ 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-4.eps}}%
+  \only<3->{
+\begin{itemize}
+\item But
+\begin{itemize}
+    \item It does work
+    \item If we can overcome the challenges, will post a blog and demo at \textcite{QMCBlog}
+\end{itemize}
+\end{itemize}
+
+  }
+\end{minipage}
+
 \end{frame}
 
-\section{Supporting Documentation}
-\begin{frame}{Introductory Demos}
+\section{Support}
+\begin{frame}{Encouraging Users Requires}
 	content...
 \end{frame}
 
@@ -248,33 +310,6 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 	content...
 \end{frame}
 
-\begin{frame}{Connecting QMCPy with FEniCS/Dolfin}
-	\begin{itemize}
-		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
-		\item Partial success
-	\end{itemize}
- 	\vspace{-3ex}
- \begin{minipage}{0.48\textwidth}
- 	\begin{gather*}
- 		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 200( 2x - 1)\\
- 		 0 \leq x \leq 1, \qquad
- 		u(0) = u(1) = 0 \\
- 		a(x,\vW) = 1 + 0.6 \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
- 		 \vW \sim \cu[-1,1]^d \\
- 		 \Ex[u(0.25,\vW)] = \, ?
- 	\end{gather*}
- \end{minipage}%
-\hfill
- \begin{minipage}{0.48\textwidth}
- 	\centering
- 	\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
- 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-4.eps}
-\end{minipage}
-
-\end{frame}
-
-
-\section{People}
 \begin{frame}{Building User \& Developer Ownership}
  Research Software Engineers International 	\url{https://researchsoftware.org}, ``Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.''
   \url{https://us-rse.org}

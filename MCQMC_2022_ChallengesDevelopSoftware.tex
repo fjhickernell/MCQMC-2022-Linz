@@ -230,33 +230,9 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
  \begin{minipage}{0.48\textwidth}
  	\centering
  	\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
- 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-2.eps}
+ 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-4.eps}
 \end{minipage}
 
-\end{frame}
-
-\begin{frame}{Connecting QMCPy with FEniCS/Dolphin}
-	\begin{itemize}
-		\item Want to demonstrate how our QMC software could work with a popular DE solver to solve DEs with random coefficients
-		\item Partial success
-	\end{itemize}
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\begin{gather*}
-				-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 100( 2x - 1)\\
-				0 \leq x \leq 1, \qquad
-				u(0) = u(1) = 0 \\
-				a(x,\vW) = 1 + 0.6 \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
-				\vW \sim \cu[-1,1]^d \\
-				\Ex[u(0.25,\vW) = ?]
-			\end{gather*}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\centering
-			\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
-			\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-2.eps}
-		\end{column}
-	\end{columns}
 \end{frame}
 
 

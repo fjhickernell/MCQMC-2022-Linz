@@ -161,31 +161,45 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 \end{frame}
 
 
-\begin{frame}[allowframebreaks]{Selective History of MC\textbf{QMC} Software}
+\begin{frame}[allowframebreaks]{Selective History of Publicly Available MC\textbf{QMC} Software}
 \vspace{-2ex}
 	\begin{itemize}
 		\item \textcite{LEc2017a} provides a history of \alert{random number generation}
-		\item Notorious \alert{randu} from the 1960s \parencite{RANDU}, which fails the spectral test
+		\item Notorious \alert{RANDU} from the 1960s \parencite{RANDU}, which fails the spectral test
 		\item \alert{VEGAS} \parencite{Lep78a, Lep21a} importance sampling Monte Carlo algorithm favored by physicists
 		\item \alert{ACM} low discrepancy point generators \parencite{BraFox88,BraFoxNie92,HonHic00a}
 		\item \alert{FinDer} \parencite{PasTra95,FinDer} and \alert{BRODA} \parencite{BRODA20a} targeting quantitative finance
 		\item Korobov cubature and scrambled Sobol' generators in \alert{NAG} \parencite{NAG27} for decades		
 		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
 		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
-		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02a},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet}
+		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet}
 		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022}
 		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb}
 		\item Multi-level software \parencite{GilesSoft,GilesQSoft} 
 		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a} 
-		\framebreak
-		\item \alert{TensorFlow}
+		\item Uncertainty quantification packages \alert{Dakota} \parencite{Dakota}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy
+	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others
 		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
+		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
 		
 		
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Why Do We Need Software?}
+	\begin{itemize}
+		\item \alert{Theory} 
+		\begin{itemize}
+			\item Explains and justifies \alert{algorithms}
+			\item Assumptions$\implies$success should be viewed as failure$\implies$why
+		\end{itemize}
+		\item \alert{Software} 
+		\begin{itemize}
+			\item Makes \alert{algorithms} practical
+			\item Solves (new) \alert{applications}
+		\end{itemize}
+		\item New \alert{applications} inspire new \alert{theory}
+	\end{itemize}
 \end{frame}
 
 \section{Structure}
@@ -239,7 +253,8 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 \section{People}
 \begin{frame}{Building User \& Developer Ownership}
-	content...
+ Research Software Engineers International 	\url{https://researchsoftware.org}, ``Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.''
+  \url{https://us-rse.org}
 \end{frame}
 
 \begin{frame}{From Private to Public}

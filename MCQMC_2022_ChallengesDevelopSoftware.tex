@@ -270,12 +270,12 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 \begin{frame}{Ex.\ QMCPy $+$ FEniCS/Dolfin \parencite{LoggEtal_10_2012}}
-\vspace{-4ex}
+\vspace{-3ex}
 	\begin{itemize}
 		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
 		\item Partial success \only<3->{\alert{Why?}}
 	\end{itemize}
- 	\vspace{-2ex}
+ 	\only<1>{\vspace{-3ex}}\only<2>{\vspace{-2ex}}\only<3>{\vspace{0ex}}
  \begin{minipage}{0.48\textwidth}
  	\only<1-2>{\begin{gather*}
  		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 200( 2x - 1)\\
@@ -289,8 +289,8 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \begin{itemize}
 \item Even with FEniCS/Dolfin's extensive documentation we had \alert{difficulties}
 \begin{itemize}
-    \item Learning how to solve a simple ODE, so reverted to an older version
-    \item Learning how to change the random instance of coefficient without tiggering the JIT compile
+    \item Did not understand the latest version, so reverted to an older version
+    \item Had to learn how to change the random instance of coefficient without tiggering the JIT compile
     \item Do not yet know how to express the random coefficient in terms of the covariance kernel
 \end{itemize}
 \end{itemize}
@@ -305,7 +305,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \begin{itemize}
 \item But
 \begin{itemize}
-    \item It does work
+    \item It  works
     \item If we can overcome the challenges, will post a blog and demo at \textcite{QMCBlog}
 \end{itemize}
 \end{itemize}
@@ -340,7 +340,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \item Many senior researchers \alert{don't code}, and rely on transient team members (students, postdocs)
 \begin{itemize}
 	\item Encourage a sense of ownership that lasts beyond the time your team members are part of your lab
-	\item Encourage 
+	\item Encourage those outside your own group to contribute
 \end{itemize}
 
 \item Recognize good software as \alert{valuable} scholarly output
@@ -352,7 +352,17 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \section{Conclusion}
 
 \begin{frame}{Next Steps}
-	\includegraphics[width=0.5\textwidth]{ProgramsImages/PizeriaBellaCasa.png}
+	\begin{minipage}{0.48\textwidth}
+		content...
+	\end{minipage}
+	\begin{minipage}{0.48\textwidth}
+		Join us for a lunch discussion at Bella Casa tomorrow, July 19, at 12:45 PM 
+		
+		\vspace{2ex}
+		
+		\includegraphics[width=\textwidth]{ProgramsImages/PizeriaBellaCasa.png}
+\end{minipage}
+
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}

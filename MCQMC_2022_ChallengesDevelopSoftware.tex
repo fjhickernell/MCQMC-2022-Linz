@@ -42,6 +42,7 @@
 \usetheme{FJHSlimNoFoot169}
 \setlength{\parskip}{2ex}
 \setlength{\arraycolsep}{0.5ex}
+\setbeamersize{text margin top=10mm}
 
 \DeclareMathOperator{\sol}{SOL}
 \DeclareMathOperator{\app}{APP}
@@ -141,7 +142,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 \begin{frame}{My Definition of Great MCQMC Software}
 	
-	\vspace{-5ex}
+	%\vspace{-5ex}
 	\begin{itemize}
 		\item \alert{Correct}, e.g., not omit the zeroth point in a low discrepancy sequence \parencite{Owe22a, scipySobol2020a}
 	
@@ -187,6 +188,7 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 \end{frame}
 
 \begin{frame}{Why Do We Need Software?}
+	\vspace{-5ex}
 	\begin{itemize}
 		\item \alert{Theory} 
 		\begin{itemize}
@@ -206,6 +208,8 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 		\end{itemize}
 
 	\end{itemize}
+
+\uncover<2->{The United States Department of Energy is investing in studying how to develop great scientific software \parencite{Her19a,ASCR-SSSDU}}
 \end{frame}
 
 \section{Structure}
@@ -229,7 +233,7 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 	
 	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator 
 	
-	\item[Stopping Criterion] based on a data-driven error bound, whic determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
+	\item[Stopping Criterion] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
 \end{description}
 
 \vspace{-1ex}
@@ -242,7 +246,11 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 
     \item Several favorites aligned with various communities, but no one dominates all
 
-    \item Diversity of multi-processor environments complicates software development; where does parallelism really help?
+    \item Growth of multi-processor environments 
+    \begin{itemize}
+    	\item Provides opportunity
+    	\item Complicates software development; where does parallelism really help?
+    \end{itemize}
 
     \item<2-> Recommendations
     \begin{itemize}
@@ -255,7 +263,7 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
  \end{itemize}
 \end{frame}
 
-\begin{frame}{Ex.\ Connecting QMCPy with FEniCS/Dolfin}
+\begin{frame}{Ex.\ Connecting QMCPy with FEniCS/Dolfin \parencite{}}
 \vspace{-4ex}
 	\begin{itemize}
 		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
@@ -302,24 +310,37 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 \end{frame}
 
 \section{Support}
-\begin{frame}{Encouraging Users Requires \ldots}
+\begin{frame}{Encouraging Users Requires}
 	\begin{itemize}
-		\item (Elementary) \alert{demos} that show how to use the software and its advantages over other approaches
-		\item Demos showing  how the software \alert{connects} with other
+		\item A repository where
+		\begin{itemize}
+		\item  Your library can be easily downloaded
+		\item Issues or queries can be posted
+		\item There are updates
+		\end{itemize}
+		\item (Elementary) \alert{demos} on how to use the software and highlighting  its advantages
+		\item Demos \alert{connecting}  your library with others
+		\item Recommending your students and postdocs to \alert{use} your library
+		\item \alert{Welcoming} instructions on how to contribute an algorithm or a demo
 	\end{itemize}
+		
 \end{frame}
 
-\begin{frame}{Connecting Demos}
-	content...
-\end{frame}
 
-\begin{frame}{Building User \& Developer Ownership}
- Research Software Engineers International 	\url{https://researchsoftware.org}, ``Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.''
-  \url{https://us-rse.org}
-\end{frame}
+\begin{frame}{Building Developer Team}
+	
+\begin{itemize}
+	
+\item Many senior researchers \alert{don't code}, and rely on transient team members (students, postdocs)
+\begin{itemize}
+	\item Encourage a sense of ownership that lasts beyond the time your team members are part of your lab
+	\item Encourage 
+\end{itemize}
 
-\begin{frame}{From Private to Public}
-	content...
+\item Recognize good software as \alert{valuable} scholarly output
+	
+\item Recognize \alert{research software engineer} as a valued vocation; look at \alert{Research Software Engineers International} 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
+  \end{itemize}
 \end{frame}
 
 \section{Conclusion}

@@ -42,7 +42,7 @@
 \usetheme{FJHSlimNoFoot169}
 \setlength{\parskip}{2ex}
 \setlength{\arraycolsep}{0.5ex}
-\setbeamersize{text margin top=10mm}
+%\setbeamersize{text margin top=10mm}
 
 \DeclareMathOperator{\sol}{SOL}
 \DeclareMathOperator{\app}{APP}
@@ -140,7 +140,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 \section{Introduction}
 
-\begin{frame}{My Definition of Great MCQMC Software}
+\begin{frame}{My Definition of a Great MCQMC Software Ecosystem}
 	
 	%\vspace{-5ex}
 	\begin{itemize}
@@ -175,8 +175,9 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
 		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet}
 		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022}
+		\item Sobol' \alert{direction numbers} \parencite{JoeKuo03,JoeKuo08,SobolDirection}
 		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb}
-		\item Multi-level software \parencite{GilesSoft,GilesQSoft} 
+		\item \alert{Multi-level} software \parencite{GilesSoft,GilesQSoft} 
 		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a} 
 		\item Uncertainty quantification libraries \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy sampling
 	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others
@@ -184,7 +185,7 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
 	\end{itemize}
 
-In summary, we have stand-alone algorithms, small libraries, and pieces of larger libraries
+We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 \begin{frame}{Why Do We Need Software?}
@@ -209,12 +210,12 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 
 	\end{itemize}
 
-\uncover<2->{The United States Department of Energy is investing in studying how to develop great scientific software \parencite{Her19a,ASCR-SSSDU}}
+\uncover<2->{The US Department of Energy is investing in studying how to develop great scientific software \parencite{Her19a,ASCR-SSSDU}}
 \end{frame}
 
 \section{Structure}
 
-\begin{frame}{Software Library Architecture}
+\begin{frame}{Software Architecture}
 	\vspace{-7ex}
 
 \[
@@ -237,20 +238,25 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
 \end{description}
 
 \vspace{-1ex}
-\uncover<2->{May we agree on a \alert{common definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
+\uncover<2->{May we agree on a \alert{common software definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
 \end{frame}
 
 \begin{frame}{Choice of Language, Library, or Environment}
+	\vspace{-5ex}
 	\begin{itemize}
-    \item Language/library choices of the users are driven by familiarity and speed
+    \item Language/library choices of the users are driven by \alert{familiarity} and \alert{speed}
 
-    \item Several favorites aligned with various communities, but no one dominates all
+  	\item  Favorites aligned with various \alert{communities}, but no one dominates all
 
+	\item Difference between \alert{prototyping} environments and ninja written \alert{production} code 
+
+  
     \item Growth of multi-processor environments 
     \begin{itemize}
     	\item Provides opportunity
     	\item Complicates software development; where does parallelism really help?
     \end{itemize}
+
 
     \item<2-> Recommendations
     \begin{itemize}
@@ -263,7 +269,7 @@ In summary, we have stand-alone algorithms, small libraries, and pieces of large
  \end{itemize}
 \end{frame}
 
-\begin{frame}{Ex.\ Connecting QMCPy with FEniCS/Dolfin \parencite{}}
+\begin{frame}{Ex.\ QMCPy $+$ FEniCS/Dolfin \parencite{LoggEtal_10_2012}}
 \vspace{-4ex}
 	\begin{itemize}
 		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients

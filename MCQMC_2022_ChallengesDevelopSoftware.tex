@@ -42,7 +42,6 @@
 \usetheme{FJHSlimNoFoot169}
 \setlength{\parskip}{2ex}
 \setlength{\arraycolsep}{0.5ex}
-%\setbeamersize{text margin top=10mm}
 
 \DeclareMathOperator{\sol}{SOL}
 \DeclareMathOperator{\app}{APP}
@@ -96,7 +95,8 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 	partially supported by SigOpt, an Intel company \\[2ex]
 	Please join us Tuesday, July 19, at 12:45 PM for lunch at Bella Casa \\ to discuss the future of MCQMC software \\[2ex]
 	Thanks to the organizers as we meet again in person\\
-	Slides at  \href{??}{\nolinkurl{speakerdeck.com/fjhickernell/quasi-monte-carlo-software}}
+	Slides at  \href{https://speakerdeck.com/fjhickernell/challenges-of-developing-mcqmc-software}%
+	{\nolinkurl{speakerdeck.com/fjhickernell/challenges-of-developing-mcqmc-software}}
 }
 \event{MCQMC 2022, Linz}
 \date[]{July 18, 2022}
@@ -122,6 +122,8 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 	\newcommand{\largercone}{\parbox{2.2cm}{\vspace*{-0.2cm}\includegraphics[width=1cm,angle=270]{MediumWaffleCone.eps}}\xspace}
 	\newcommand{\largecone}{\ICcone{1.8cm}}
 	\newcommand{\smallcone}{\parbox{1.1cm}{\includegraphics[width=0.5cm,angle=270]{MediumWaffleCone.eps}}\xspace}
+	
+	\newcommand{\talktime}[1]{{\color{Purple} \textbf{Talk #1}}}
 
 	
 
@@ -140,15 +142,15 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 
 \section{Introduction}
 
-\begin{frame}{My Definition of a Great MCQMC Software Ecosystem}
+\begin{frame}{A Great MCQMC Software Ecosystem Should Be}
 	
-	%\vspace{-5ex}
+	\vspace{-3ex}
 	\begin{itemize}
 		\item \alert{Correct}, e.g., not omit the zeroth point in a low discrepancy sequence \parencite{Owe22a, scipySobol2020a}
 	
 		\item  \alert{Complete}---contain the components or  easily access components in other libraries to solve real, complex problems
 		
-		\item  \alert{Accessible}---tutorials, demos, discussion forums, etc.\ for (new) users; written in a language that potential users speak; provide a consistent user interface
+		\item  \alert{Accessible}---downloadable; tutorials, demos, discussion forums, etc.\ for (new) users; written in a language that potential users speak; provide a consistent user interface
 		
 		\item \alert{Efficient}---in terms of compute time and memory
 				
@@ -173,14 +175,14 @@ The process of translating new Monte Carlo and Quasi-Monte Carlo (MCQMC) algorit
 		\item Korobov cubature and scrambled Sobol' generators in \alert{NAG} \parencite{NAG27} for decades		
 		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
 		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
-		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet}
-		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022}
+		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet} \talktime{M 11}
+		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022} \talktime{M 12, Tu 12}
 		\item Sobol' \alert{direction numbers} \parencite{JoeKuo03,JoeKuo08,SobolDirection}
-		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb}
-		\item \alert{Multi-level} software \parencite{GilesSoft,GilesQSoft} 
-		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a} 
-		\item Uncertainty quantification libraries \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} have some basic level low discrepancy sampling
-	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others
+		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb} \talktime{Tu 10:30}
+		\item \alert{Multi-level} software \parencite{GilesSoft,GilesQSoft} \talktime{M 10:30}
+		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a}  \talktime{Tu 11}
+		\item Uncertainty quantification libraries \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} \talktime{Tu 11:30} have some basic level low discrepancy sampling
+	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others \talktime{M 17}
 		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
 		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
 	\end{itemize}
@@ -189,12 +191,12 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 \begin{frame}{Why Do We Need Software?}
-	\vspace{-5ex}
+	\vspace{-4ex}
 	\begin{itemize}
 		\item \alert{Theory} 
 		\begin{itemize}
-			\item Explains and justifies \alert{algorithms}
-			\item Assumptions$\implies$success should be viewed as failure$\implies$why
+			\item Explains, justifies, and leads to \alert{algorithms}
+			\item Assumptions$\implies$success can be viewed as failure$\implies$what went wrong
 		\end{itemize}
 		\item \alert{Software} 
 		\begin{itemize}
@@ -210,13 +212,13 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 
 	\end{itemize}
 
-\uncover<2->{The US Department of Energy is investing in studying how to develop great scientific software \parencite{Her19a,ASCR-SSSDU}}
+\uncover<2->{The US Department of Energy is investing in studying how to develop great scientific software, including a recent \emph{Workshop on the Science of Scientific-Software Development and Use} \parencite{Her19a,ASCR-SSSDU}}
 \end{frame}
 
 \section{Structure}
 
 \begin{frame}{Software Architecture}
-	\vspace{-7ex}
+	\vspace{-6ex}
 
 \[
 \mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots = 	
@@ -225,12 +227,12 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 
 \vspace{-3ex}
 
-\begin{description}
-	%\setlength{\itemsep}{0.2cm}
+\begin{description}[\labelwidth=5ex,\leftmargin=10ex]
+	%\setlength{\labelwidth}{5ex}
 	
-	\item[LD Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the distribution with PDF $\varrho$, e.g., uniform
+	\item[Low Discrepancy Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the uniform distribution
 	
-	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \Psi(\vx)$
+	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \vPsi(\vx)$
 	
 	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator 
 	
@@ -241,7 +243,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \uncover<2->{May we agree on a \alert{common software definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
 \end{frame}
 
-\begin{frame}{Choice of Language, Library, or Environment}
+\begin{frame}{Choosing a Language, Library, or Environment}
 	\vspace{-5ex}
 	\begin{itemize}
     \item Language/library choices of the users are driven by \alert{familiarity} and \alert{speed}
@@ -251,7 +253,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 	\item Difference between \alert{prototyping} environments and ninja written \alert{production} code 
 
   
-    \item Growth of multi-processor environments 
+    \item Growth of \alert{multi-processor} environments 
     \begin{itemize}
     	\item Provides opportunity
     	\item Complicates software development; where does parallelism really help?
@@ -260,10 +262,10 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 
     \item<2-> Recommendations
     \begin{itemize}
-    \item Contribute your new idea as a demo in your favorite library
-    \item If your contribution is substantial, add as a feature to other libraries
-    \item Move basic features of your library to larger library
-    \item Write wrappers or demos to connect other libraries to your library
+    \item Contribute your new idea as a \alert{demo} in your favorite library
+    \item If your contribution is substantial, add as a \alert{feature} to other libraries
+    \item Move basic features of your library to \alert{larger} library
+    \item Write wrappers or demos to \alert{connect} other libraries to your library
     
     \end{itemize}
  \end{itemize}
@@ -290,7 +292,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \item Even with FEniCS/Dolfin's extensive documentation we had \alert{difficulties}
 \begin{itemize}
     \item Did not understand the latest version, so reverted to an older version
-    \item Had to learn how to change the random instance of coefficient without tiggering the JIT compile
+    \item Had to learn how to change the random instance of the coefficient without tiggering the JIT compiler
     \item Do not yet know how to express the random coefficient in terms of the covariance kernel
 \end{itemize}
 \end{itemize}
@@ -316,13 +318,17 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 \section{Support}
-\begin{frame}{Encouraging Users Requires}
+\begin{frame}{Encouraging Users of Your Library Requires}
+	
+	\vspace{-4ex}
 	\begin{itemize}
 		\item A repository where
 		\begin{itemize}
 		\item  Your library can be easily downloaded
+		\item There is documentation
 		\item Issues or queries can be posted
 		\item There are updates
+		\item Tests are run regularly to mitigate against bugs
 		\end{itemize}
 		\item (Elementary) \alert{demos} on how to use the software and highlighting  its advantages
 		\item Demos \alert{connecting}  your library with others
@@ -333,30 +339,39 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 \end{frame}
 
 
-\begin{frame}{Building Developer Team}
-	
+\begin{frame}{Building a Developer Team for Your Library}
+		
+	\vspace{-4ex}
 \begin{itemize}
 	
 \item Many senior researchers \alert{don't code}, and rely on transient team members (students, postdocs)
 \begin{itemize}
-	\item Encourage a sense of ownership that lasts beyond the time your team members are part of your lab
-	\item Encourage those outside your own group to contribute
+	\item Encourage a sense of \alert{ownership} that lasts beyond the time your team members are part of your lab
+	\item Encourage those \alert{outside} your own group to contribute
 \end{itemize}
+
+\item Those of us who understand theory and appreciate software need to encourage and steer popular software to ensure that it is implemented well.
 
 \item Recognize good software as \alert{valuable} scholarly output
 	
-\item Recognize \alert{research software engineer} as a valued vocation; look at \alert{Research Software Engineers International} 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
+\item Recognize \alert{research software engineer} as a valued vocation; see \alert{Research Software Engineers International} 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
   \end{itemize}
 \end{frame}
 
-\section{Conclusion}
+\section{Next Steps}
 
 \begin{frame}{Next Steps}
+	
+	\vspace{-2ex}
 	\begin{minipage}{0.48\textwidth}
-		content...
+		\begin{itemize}
+			\item Which exemplary \alert{theoretical developments} are not yet implemented in readily available software?
+			\item What potential MCQMC user communities are \alert{ill-served} by existing  software libraries?
+			\item Should those of us interested in software gather regularly for \alert{show-and-tell} to foster more collaboration?
+		\end{itemize}
 	\end{minipage}
 	\begin{minipage}{0.48\textwidth}
-		Join us for a lunch discussion at Bella Casa tomorrow, July 19, at 12:45 PM 
+		Join us for a \alert{lunch} discussion at Bella Casa tomorrow, July 19, at 12:45 PM 
 		
 		\vspace{2ex}
 		

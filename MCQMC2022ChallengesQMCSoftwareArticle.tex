@@ -128,9 +128,9 @@
 
 \begin{document}
 
-\title*{Quasi-Monte Carlo Software}
+\title*{Challenges in Developing Great MCQMC Software}
 \authorrunning{S.-C.\ T.\ Choi et al}
-\author{Sou-Cheng Terrya Choi \and Fred J. Hickernell \and R. Jagadeeswaran \and Michael J. McCourt \and Aleksei G. Sorokin}
+\author{Sou-Cheng Terrya Choi \and Fred J. Hickernell \and Aleksei G. Sorokin}
 \institute{Sou-Cheng Terrya Choi \at Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@hawk.iit.edu}
 \and
 Fred J. Hickernell \at Center for Interdisciplinary Scientific Computation and \\
@@ -145,9 +145,259 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 
 \maketitle
 
-\abstract{This is the article based on my MCQMC 2020 Tutorial. \AGSComment{Latest code demo at: \href{https://colab.research.google.com/drive/1wijwt0ugsJ9chUHtzSb3lQpc3-N8mCDs?usp=sharing}{https://colab.research.google.com/drive/1wijwt0ugsJ9chUHtzSb3lQpc3-N8mCDs?usp=sharing}}.}
+\abstract{}
 
 \end{document}
+\section{Introduction}
+
+\begin{frame}{A Great MCQMC Software Ecosystem Should Be}
+	
+	\vspace{-3ex}
+	\begin{itemize}
+		\item \alert{Correct}, e.g., not omit the zeroth point in a low discrepancy sequence \parencite{Owe22a, scipySobol2020a}
+	
+		\item  \alert{Complete}---contain the components or  easily access components in other libraries to solve real, complex problems
+		
+		\item  \alert{Accessible}---downloadable; tutorials, demos, discussion forums, etc.\ for (new) users; written in a language that potential users speak; provide a consistent user interface
+		
+		\item \alert{Efficient}---in terms of compute time and memory
+				
+		\item \alert{Current}---include the latest and best algorithms
+
+		\item  \alert{Sustainable}---have a sufficient user base and developer community for updates and maintenance
+		
+		\item \alert{Scalable}---take advantage of advanced computer architectures for speed and to solve large problems
+		
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Selective History of Publicly Available MC\textbf{QMC} Software}
+\vspace{-2ex}
+	\begin{itemize}
+		\item \textcite{LEc2017a} provides a history of \alert{random number generation}
+		\item Notorious \alert{RANDU} from the 1960s \parencite{RANDU}, which fails the spectral test
+		\item \alert{VEGAS} \parencite{Lep78a, Lep21a} importance sampling Monte Carlo algorithm favored by physicists
+		\item \alert{ACM} low discrepancy point generators \parencite{BraFox88,BraFoxNie92,HonHic00a}
+		\item \alert{FinDer} \parencite{PasTra95,FinDer} and \alert{BRODA} \parencite{BRODA20a} targeting quantitative finance
+		\item Korobov cubature and scrambled Sobol' generators in \alert{NAG} \parencite{NAG27} for decades		
+		\item Scrambled Sobol' and Halton generators in \alert{MATLAB} \parencite{MAT9.13} since 2008, and fixed a few years later
+		\item \alert{BUGS} \parencite{BUGSBook, BUGSweb} and \alert{Stan} \parencite{STAN} for Markov Chain Monte Carlo (MCMC)
+		\item \alert{LatMRG} \parencite{LEcCou97}, \alert{RNGStreams} \parencite{LEcEtal02},  \alert{SSJ} \parencite{LEc2002a,SSJ}, and \alert{LatNetBuilder} \parencite{LatNet} \talktime{M 11}
+		\item Low discrepancy generators \parencite{FriKel02,FriKelweb}, \alert{SamplePack} \parencite{SamplePack}, \textcite{GruWeb},  and \alert{MatBuilder} \parencite{paulin2022} \talktime{M 12, Tu 12}
+		\item Sobol' \alert{direction numbers} \parencite{JoeKuo03,JoeKuo08,SobolDirection}
+		\item \alert{Fast CBC}, \alert{Magic Point Shop}, \alert{QMC4PDE} and other code since 2004  at \textcite{NuyWeb} \talktime{Tu 10:30}
+		\item \alert{Multi-level} software \parencite{GilesSoft,GilesQSoft} \talktime{M 10:30}
+		\item Data-driven error bounds and stopping criteria in \alert{GAIL} \parencite{ChoEtal21a} and \alert{QMCPy} \parencite{QMCPy2020a, ChoEtal22a}  \talktime{Tu 11}
+		\item Uncertainty quantification libraries \alert{Dakota} \parencite{DakotaUsersManual}, \alert{UQTk} \parencite{DebEtal04,UQTk}, and \alert{MUQ} \parencite{MUQ} \talktime{Tu 11:30} have some basic level low discrepancy sampling
+	    \item QMC framework in Julia since 2019 \parencite{QMCJulia} by Robbe and others \talktime{M 17}
+		\item Scrambled Sobol' in \alert{SciPy} \parencite{virtanen2020scipy} and \alert{PyTorch} \parencite{paszke2019pytorch} since several years ago
+		\item \alert{TensorFlow} QMC framework \parencite{tfqfQMC2021a} since a year or so ago
+	\end{itemize}
+
+We have stand-alone algorithms, small libraries, and pieces of larger libraries
+\end{frame}
+
+\begin{frame}{Why Do We Need Software?}
+	\vspace{-4ex}
+	\begin{itemize}
+		\item \alert{Theory} 
+		\begin{itemize}
+			\item Explains, justifies, and leads to \alert{algorithms}
+			\item Assumptions$\implies$success can be viewed as failure$\implies$what went wrong
+		\end{itemize}
+		\item \alert{Software} 
+		\begin{itemize}
+			\item Makes \alert{algorithms} practical
+			\item Solves (new) \alert{applications}
+			\item Eliminates \alert{do-it-yourself}
+		\end{itemize}
+		\item \alert{Applications} 
+  		\begin{itemize}
+			\item Make \alert{societal} impact
+			\item Inspire new \alert{theory}
+		\end{itemize}
+
+	\end{itemize}
+
+\uncover<2->{The US Department of Energy is investing in studying how to develop great scientific software, including a recent \emph{Workshop on the Science of Scientific-Software Development and Use} \parencite{Her19a,ASCR-SSSDU}}
+\end{frame}
+
+\section{Structure}
+
+\begin{frame}{Software Architecture}
+	\vspace{-6ex}
+
+\[
+\mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots = 	
+\underbrace{\Ex[f(\vX)]}_{\text{expectation}} = \underbrace{\int_{[0,1]^d}  f(\vx) \, \dif \vx}_{\text{integration}} \approx  \frac 1{n} \sum_{i=1}^{n} f(\vX_i) =: \hmu_{n}
+\]
+
+\vspace{-3ex}
+
+\begin{description}[alabel]
+	%\setlength{\labelwidth}{5ex}
+	
+	\item[Low Discrepancy Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the uniform distribution
+	
+	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \vPsi(\vx)$
+	
+	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator 
+	
+	\item[Stopping Criterion] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
+\end{description}
+
+\vspace{-1ex}
+\uncover<2->{May we agree on a \alert{common software definition} for these these objects like we have for floating point numbers or basic mathematical functions?}
+\end{frame}
+
+\begin{frame}{Choosing a Language, Library, or Environment}
+	\vspace{-5ex}
+	\begin{itemize}
+    \item Language/library choices of the users are driven by \alert{familiarity} and \alert{speed}
+
+  	\item  Favorites aligned with various \alert{communities}, but no one dominates all
+
+	\item Difference between \alert{prototyping} environments and ninja written \alert{production} code 
+
+  
+    \item Growth of \alert{multi-processor} environments 
+    \begin{itemize}
+    	\item Provides opportunity
+    	\item Complicates software development; where does parallelism really help?
+    \end{itemize}
+
+
+    \item<2-> Recommendations if you want to contribute software
+    \begin{itemize}
+    \item Realize your new idea as a \alert{demo} in your favorite library
+    \item Add a significant idea as a \alert{feature} to other libraries
+    \item Move basic features of your library to \alert{larger} library
+    \item Write wrappers or demos to \alert{connect} other libraries to your library
+    
+    \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Ex.\ QMCPy $+$ FEniCS/Dolfin \parencite{LoggEtal_10_2012}}
+\vspace{-3ex}
+	\begin{itemize}
+		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
+		\item Partial success \only<3->{\alert{Why?}}
+	\end{itemize}
+ 	\only<1>{\vspace{-3ex}}\only<2>{\vspace{-2ex}}\only<3>{\vspace{0ex}}
+ \begin{minipage}{0.48\textwidth}
+ 	\only<1-2>{\begin{gather*}
+ 		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 200( 2x - 1)\\
+ 		 0 \leq x \leq 1, \qquad
+ 		u(0) = u(1) = 0 \\
+ 		a(x,\vW) = 1 + 0.6 \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
+ 		 \vW \sim \cu[-1,1]^d \\
+ 		 \Ex[u(0.25,\vW)] = \only<1>{\, ?}\only<2>{ -1.7462}
+ 	\end{gather*}}
+  \only<3->{
+\begin{itemize}
+\item Even with FEniCS/Dolfin's extensive documentation we had \alert{difficulties}
+\begin{itemize}
+    \item Did not understand the latest version, so reverted to an older version
+    \item Had to learn how to change the random instance of the coefficient without tiggering the JIT compiler
+    \item Do not yet know how to express the random coefficient in terms of the covariance kernel
+\end{itemize}
+\end{itemize}
+  }
+ \end{minipage}%
+\hfill
+ \begin{minipage}{0.48\textwidth}
+ 	\only<1-2>{\centering
+ 	\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
+ 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-4.eps}}%
+  \only<3->{
+\begin{itemize}
+\item But
+\begin{itemize}
+    \item It  works
+    \item If we can overcome the challenges, will post a blog and demo at \textcite{QMCBlog}
+\end{itemize}
+\end{itemize}
+
+  }
+\end{minipage}
+
+\end{frame}
+
+\section{Support}
+\begin{frame}{Encouraging Users of Your Library Requires}
+	
+	\vspace{-4ex}
+	\begin{itemize}
+		\item A repository where
+		\begin{itemize}
+		\item  Your library can be easily downloaded
+		\item There is documentation
+		\item Issues or queries can be posted
+		\item There are updates
+		\item Tests are run regularly to mitigate against bugs
+		\end{itemize}
+		\item (Elementary) \alert{demos} on how to use the software and highlighting  its advantages
+		\item Demos \alert{connecting}  your library with others
+		\item Recommending your students and postdocs to \alert{use} your library
+		\item \alert{Welcoming} instructions on how to contribute an algorithm or a demo
+	\end{itemize}
+		
+\end{frame}
+
+
+\begin{frame}{Building a Developer Team for Your Library}
+		
+	\vspace{-4ex}
+\begin{itemize}
+	
+\item Many senior researchers \alert{don't code}, and rely on transient team members (students, postdocs)
+\begin{itemize}
+	\item Encourage a sense of \alert{ownership} that lasts beyond the time your team members are part of your lab
+	\item Encourage those \alert{outside} your own group to contribute
+\end{itemize}
+
+\item Those of us who understand theory and appreciate software need to encourage and steer popular software to ensure that it is implemented well.
+
+\item Recognize good software as \alert{valuable} scholarly output
+	
+\item Recognize \alert{research software engineer} as a valued vocation; see \alert{Research Software Engineers International} 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
+  \end{itemize}
+\end{frame}
+
+\section{Next Steps}
+
+\begin{frame}{Next Steps}
+	
+	\vspace{-2ex}
+	\begin{minipage}{0.48\textwidth}
+		\begin{itemize}
+			\item Which exemplary \alert{theoretical developments} are not yet implemented in readily available software?
+			\item What potential MCQMC user communities are \alert{ill-served} by existing  software libraries?
+			\item Should those of us interested in software gather regularly for \alert{show-and-tell} to foster more collaboration?
+		\end{itemize}
+	\end{minipage}
+	\begin{minipage}{0.48\textwidth}
+		Join us for a \alert{lunch} discussion at Bella Casa tomorrow, July 19, at 12:45 PM 
+		
+		\vspace{2ex}
+		
+		\includegraphics[width=\textwidth]{ProgramsImages/PizeriaBellaCasa.png}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+	\printbibliography
+\end{frame}
+
+
+
+
+
+
+
 \section{Introduction} \label{sec:intro}
 Quasi-Monte Carlo (QMC) methods promise great efficiency gains over independent and identically distributed (IID) Monte Carlo (MC) methods.  In some cases QMC  achieves one hundredth of the error of IID MC in the same amount of time. Often, these efficiency gains are obtained simply by  replacing IID sampling by low discrepancy (LD) sampling, which is the heart of QMC. 
 

@@ -69,6 +69,8 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 
 \section{Introduction}
 
+Monte Carlo and their often more efficient variant, quasi-Monte Carlo (QMC) methods, have developed since the middle of the last century.  With the explosion in computational science, there is a need for great Monte Carlo and Quasi-Monte Carlo (MCQMC) software to realize the value in MCQMC methods. Based on our observations of what software has been developed to date, and what potential is not yet realized, we propose some criteria for developing great MCQMC software and some practical steps forward.  Our focus is primarily on QMC software.
+
 	\begin{itemize}
 	\item Correct, e.g., not omit the zeroth point in a low discrepancy sequence \cite{Owe22a, scipySobol2020a}
 	
@@ -117,31 +119,7 @@ We have stand-alone algorithms, small libraries, and pieces of larger libraries
 
 
 
-\begin{frame}[allowframebreaks]{Selective History of Publicly Available MC\textbf{QMC} Software}
-\vspace{-2ex}
-	\begin{itemize}
-		\item \cite{LEc2017a} provides a history of random number generation
-		\item Notorious RANDU from the 1960s \cite{RANDU}, which fails the spectral test
-		\item VEGAS \cite{Lep78a, Lep21a} importance sampling Monte Carlo algorithm favored by physicists
-		\item ACM low discrepancy point generators \cite{BraFox88,BraFoxNie92,HonHic00a}
-		\item FinDer \cite{PasTra95,FinDer} and BRODA \cite{BRODA20a} targeting quantitative finance
-		\item Korobov cubature and scrambled Sobol' generators in NAG \cite{NAG27} for decades		
-		\item Scrambled Sobol' and Halton generators in MATLAB \cite{MAT9.13} since 2008, and fixed a few years later
-		\item BUGS \cite{BUGSBook, BUGSweb} and Stan \cite{STAN} for Markov Chain Monte Carlo (MCMC)
-		\item LatMRG \cite{LEcCou97}, RNGStreams \cite{LEcEtal02},  SSJ \cite{LEc2002a,SSJ}, and LatNetBuilder \cite{LatNet} 
-		\item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022} 
-		\item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
-		\item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb} 
-		\item Multi-level software \cite{GilesSoft,GilesQSoft} 
-		\item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}  
-		\item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
-	    \item QMC framework in Julia since 2019 \cite{QMCJulia} by Robbe and others 
-		\item Scrambled Sobol' in SciPy \cite{virtanen2020scipy} and PyTorch \cite{paszke2019pytorch} since several years ago
-		\item TensorFlow QMC framework \cite{tfqfQMC2021a} since a year or so ago
-	\end{itemize}
 
-We have stand-alone algorithms, small libraries, and pieces of larger libraries
-\end{frame}
 
 \begin{frame}{Why Do We Need Software?}
 	\vspace{-4ex}

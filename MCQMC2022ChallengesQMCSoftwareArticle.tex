@@ -180,6 +180,21 @@ Accessibility is key to community engagment. It is paramount that your package b
 
 It is also important for a development team to make a clear path for collaborators to contributors to the software. Templates for issues and pull requests are a good place to start. Contributors should also be encouraged to write robust tests for their updates and highlight their new features in a demo for greater accessibility. 
 
+\section{Example Collaboration with UMBridge and QMCPy} \label{sec:example_collaboration_umbridge}
+
+This section discusses a collaboration between the UM-Bridge (the UQ and Model Bridge) \AGSComment{CITE} and QMCPy (the Quasi-Monte Carlo Python library) \cite{QMCPy2020a} softwares. The UM-Bridge documentation describes its' mission is to, ``provide a unified interface for numerical models that is accessible from virtually any programming language or framework. It is primarily intended for coupling advanced models (e.g. simulations of complex physical processes) to advanced statistics or optimization methods.'' QMCPy is a high level framework for combining QMC components in a compatible and consistent manner. The collaboration between these two packages focused on making the UQ methods of QMCPy compatible with the abstract model representations from UM-Bridge. Specifically, UM-Bridge models are made compatible with the QMCPy framework through an integrand wrapper for seamless compatibility with a variety of existing point generators, transformations, and stopping criterion already available in QMCPy. 
+
+To exemplify the integration, we focus on quantifying uncertainty propagation of material properties of a cantilevered beam. It is assumed the beam is split into $3$ regions of random stiffness dependent on uncertain material properties. Given a sample of $3$ stiffness values, the UM-Bridge model provides the displacement at $31$ equidistant nodes along the beam. Our task is to quantify the uncertainty in displacement at each of these $31$ locations along the beam. 
+
+A fully coded example of this problem is available at \url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/umbridge.ipynb}. At a high level, one begins by running the UM-Bridge model in a Docker container. A model is then initialized in the UM-Bridge Python client which is then provided to QMCPy alongside a low discrepancy point generator and distribution governing the $3$ beam stiffness values. QMCPy then performs adaptive QMC cubature to simultaneously approximate the expected displacement at the $31$ locations of interest. When the cubature method queries the model, the QMCPy wrapper around UM-Bridge model sends requests to the Docker UM-Bridge model in parallel. The load balancing provided by UM-Bridge may be utilized to evaluate the model in parallel, a potentially advantageous feature for models which are costly to evaluate. Figure \ref{fig:umbridge_muq} depicts the $31$ approximate expected displacement values subject to uniform stiffness. 
+
+\begin{figure}
+    \centering
+    \includegraphics[height=4cm]{umbridge_muq.png}
+    \caption{QMCPy approximate expected displacement at $31$ locations subject to random uniform stiffness. }
+    \label{fig:umbridge_muq}
+\end{figure}
+
 \bibliographystyle{spmpsci}
 \bibliography{FJH23,FJHown23}
 

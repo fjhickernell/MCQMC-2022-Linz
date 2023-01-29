@@ -43,6 +43,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%Fred start
+\usepackage{cite}
 \usepackage{xspace}
 \usepackage[hyphens]{url}
 \providecommand{\HickernellFJ}{Hickernell\xspace}
@@ -54,7 +55,7 @@
 
 \begin{document}
 
-\title*{Challenges in Developing Great QMC Software}
+\title*{Challenges in Developing Great Quasi-Monte Carlo Software}
 \authorrunning{S.-C.\ T.\ Choi et al}
 \author{Sou-Cheng Terrya Choi \and Yuhan Ding \and Fred J. Hickernell \and Aleksei G. Sorokin}
 \institute{Sou-Cheng Terrya Choi \at Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@hawk.iit.edu}
@@ -69,31 +70,50 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 \maketitle
 
 \abstract{
-Monte Carlo and their often more efficient variant, quasi-Monte Carlo (QMC) methods, have developed since the middle of the last century.  With the explosion in computational science, there is a need for great Monte Carlo and Quasi-Monte Carlo (MCQMC) software to realize the value in MCQMC methods. Based on our observations of what software has been developed to date, and what potential is not yet realized, we propose some criteria for developing great MCQMC software and some practical steps forward.  Our focus is primarily on QMC software.
+Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software to realize that implements QMC algorithms. We review what QMC software has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
 }
 
 \newpage
 
 \section{Introduction}
 
-Modern programming languages enable a simple Monte Carlo method approximating $\mu := \mathbb{E}[f(\boldsymbol{X})]$, $\boldsymbol{X} \sim \mathcal{U}[0,1]^d$ to be implemented in three lines of code:
+A QMC approximation of $\mu := \mathbb{E}[f(\boldsymbol{X})]$, $\boldsymbol{X} \sim \mathcal{U}[0,1]^d$ can be implemented in a few steps:
 \begin{enumerate}
-    \item draw $n$ independent identically distributed (IID) standard uniform nodes 
-    $$\boldsymbol{x}_1,\dots,\boldsymbol{x}_n \sim \mathcal{U}[0,1]^d,$$
-    \item evaluate the integrand $f$ at these nodes to obtain $$y_i := f(\boldsymbol{x}_i), \qquad i=1,\dots,n$$
-    \item estimate the true mean $\mu$ by the sample mean
+    \item Draw a sequence of $n$ a low discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
+    $\boldsymbol{x}_1,\dots,\boldsymbol{x}_n$ that mimic $\mathcal{U}[0,1]^d$.
+    \item Evaluate the integrand $f$ at these nodes to obtain $f(\boldsymbol{x}_i)$, $i=1,\dots,n$.
+    \item Estimate the true mean, $\mu$, by the sample mean
     \begin{equation}
-        \hat{\mu} := \frac{1}{n} \sum_{i=1}^n y_i.
+        \hat{\mu} := \frac{1}{n} \sum_{i=1}^n f(\boldsymbol{x}_i).
         \label{eq:mc_average}
     \end{equation}  
 \end{enumerate}
-However, practitioners may want to utilize advanced sampling methods such as antithetic sampling, importance sampling, or low discrepancy sampling in the case of Quasi-Monte Carlo (QMC) methods. Users may also wish to modify the integrand to accommodate taking the expectation with respect to a non-standard-uniform random variable or to utilize control variates. The above enhancements may require taking the weighted average in place of \eqref{eq:mc_average} to maintain an unbiased estimate. Practitioners may also be interested in determining $n$ adaptively so the approximation is within some error threshold from the true mean $\mu$.
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a desired error tolerance. 
+
+In the next section we describe why QMC software is important.  We then discuss characteristics of great QMC software:
+
+\begin{itemize}
+\item Correct,
+
+\item Efficient in computational time and memory,
+
+\item Accessible to practitioners and theorists alike,
+
+\item Sustainable by a community that owns it,
+
+\item Integrated with related libraries, and
+
+\item Scalable to advanced hardware architectures.
+
+\end{itemize}
+
+
 
 Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Section \ref{sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Section \ref{sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Section \ref{sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Section \ref{sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Section \ref{sec:encouraging_collaborative_developement}. 
 
 \section{Why Develop Software} \label{sec:why_we_need_software}
 
-In 2021, the US Department of Energy held a ``Workshop on the Science of Scientific-Software Development and Use'' \cite{Her19a,ASCR-SSSDU}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. This section describes both the practical and theoretical importance of developing scientific software.
+Recent interest in quality scientific software is typified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{Her19a,ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. This section describes both the practical and theoretical importance of developing scientific software.
 
 \subsection{Theory to Software}
 

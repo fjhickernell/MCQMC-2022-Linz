@@ -111,22 +111,25 @@ In the next section we describe why QMC software is important.  We then discuss 
 
 Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Section \ref{sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Section \ref{sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Section \ref{sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Section \ref{sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Section \ref{sec:encouraging_collaborative_developement}. 
 
-\section{Why Develop Software} \label{sec:why_we_need_software}
+\section{Why Develop QMC Software} \label{sec:why_we_need_software}
 
-Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{Her19a,ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. This section describes both the practical and theoretical importance of developing scientific software.
-
-\subsection{Theory to Software}
-
-The chief purpose of most scientific software developments is to make theoretical advancements available to practitioners. Developing theory into practical software leads to algorithms which often require additional considerations. For instance, the numerical stability of a method only becomes relevant when considering how to implement a method onto a finite precision computer. Taking the time to consider such implications and determine relevant algorithm parameters alleviates these burdens form the user. Moreover, the availability of such algorithms enables practitioners with a variety of applications to quickly solve problems. 
-
-\subsection{Software to Theory}
-
-An often overlooked benefit of scientific software  is the feedback garnered for future theoretical development. A few motivating examples are
+Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. Three cross-cutting themes that arose in this workshop were
 \begin{itemize}
-    \item the early application of QMC to high dimensional option pricing and 
-    \item the early application of neural networks to problems in computer vision.
+    \item  We need to consider both human and technical elements to better understand how to improve the development and use of scientific software.
+
+    \item We need to address urgent challenges in workforce recruitment and retention in the computing sciences with growth through expanded diversity, stable career paths, and the creation of a community and culture that attract and retain new generations of scientists.
+
+    \item Scientific software has become essential to all areas of science and technology, creating opportunities for expanded partnerships, collaboration, and impact.
 \end{itemize}
-The unexpected performance in these examples motivated theoretical developments to justify their success. Moreover, the availability of high quality software will often attract practitioners to a certain methodology over competitors, and in turn may inspire further theoretical development.
+These themes apply to QMC software in particular, as well as scientific software in general.
+
+\subsection{QMC Theory to Software}
+
+QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerical stable, and provides reasonable default choices of tuning parameters. Good QMC software relieves users of these concerns.
+
+\subsection{QMC Software to Theory}
+
+Good QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results leads to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
 \section{Tenets of Great Software} \label{sec:tenets_of_great_software}
 

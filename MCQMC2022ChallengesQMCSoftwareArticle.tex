@@ -108,8 +108,6 @@ In the next section we describe why QMC software is important.  We then discuss 
 
 \end{itemize}
 
-
-
 Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Section \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Section \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Section \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Section \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Section \ref{CDHS_sec:encouraging_collaborative_developement}. 
 
 \section{Why Develop QMC Software} \label{CDHS_sec:why_we_need_software}
@@ -152,13 +150,21 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 \end{equation*}
 Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.
 
-An \emph{LD generator}, such as a lattice, digital net, or Halton point generator supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
+An \emph{LD generator}, such as a lattice, digital net, or Halton point generator supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, and MATLAB \cite{MAT9.13}.
+
+
 
 Finally, a \emph{stopping criterion} is determines the sample size, $n$, required to satisfy the error criterion \eqref{CDHS_eq:error_tol} given in terms of the absolute error tolerance, $\varepsilon$.  One can also imagine error criteria involving a relative error tolerance or a combination of absolute and relative error tolerances.
 
 No one software library contains all of these features, which is why great QMC software must be well integrated into other software libraries.  This may mean large libraries including QMC routines and/or building connections between QMC libraries and other libraries.
 
-The most prevalent generally available QMC software are LD generators. They appear in ACM publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, and MATLAB \cite{MAT9.13}.
+
+
+
+
+
+
+
 
 
 LatNetBuilder \cite{LatNet} 

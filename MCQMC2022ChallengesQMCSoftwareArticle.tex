@@ -96,19 +96,19 @@ In the next section we describe why QMC software is important.  We then discuss 
 \begin{itemize}
 \item Integrated with related libraries (Sect.\ \ref{CDHS_sec:integrated}),
 
-\item Correct,
+\item Correct (Sect.\ \ref{CDHS_sec:correct}),
 
-\item Efficient in computational time and memory,
+\item Efficient in computational time and memory (Sect.\ \ref{CDHS_sec:efficient}),
 
-\item Accessible to practitioners and theorists alike,
+\item Accessible to practitioners and theorists alike (Sect.\ \ref{CDHS_sec:accessible}),
 
-\item Sustainable by a community that owns it, and
+\item Sustainable by a community that owns it (Sect.\ \ref{CDHS_sec:sustainable}), and
 
-\item Scalable to advanced hardware architectures.
+\item Scalable to advanced hardware architectures (Sect.\  \ref{CDHS_sec:scalable}).
 
 \end{itemize}
 
-Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Section \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Section \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Section \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Section \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Section \ref{CDHS_sec:encouraging_collaborative_developement}. 
+Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}. 
 
 \section{Why Develop QMC Software} \label{CDHS_sec:why_we_need_software}
 
@@ -130,17 +130,25 @@ QMC software makes theoretical advances in QMC available to practitioners. Howev
 
 Good QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results leads to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
-\section{Integrated} \label{CDHS_sec:integrated}
-We now discuss characteristics of great QMC software outlined in the introduction.
+We next discuss characteristics of great QMC software outlined in the introduction.  For each characteristic we identify what is lacking and what might be done to remedy the lack.
 
-Expanding on the problem formulation in the introduction, we want to approximate the integral or expectation, $\mu$, well by the sample mean, $\hat{\mu}$:
+\section{Integrated} \label{CDHS_sec:integrated}
+
+Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}$:
 \begin{gather} 
 \label{eq:cubSummary}
 	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=0}^{n-1} f(\bsx_i) =: \hat{\mu}_n, \\
  \label{CDHS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
-Progressing from the left side of this equation to the right requires several steps.
+Progressing from the original problem to a satisfactory solution requires several software components.  Great QMC software environment allows different implementations of these components to be interchanged.
+
+\subsection{LD Generators} A lattice, digital net, or Halton point generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  
+
+LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"nschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, Julia \cite{QMCJulia}, SciPy \cite{virtanen2020scipy}, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tfqfQMC2021a}, and MatBuilder \cite{paulin2022}.  Joe and Kuo
+
+
+
 
 The \emph{integrand}, $g$, and the non-negative weight, $\lambda$, define the original integral arising from an application.  The function $g$ may represent the discounted payoff of a financial derivative, or the velocity of flow at a point in rock with stochastic porosity.  If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  
 
@@ -150,7 +158,7 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 \end{equation*}
 Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.
 
-An \emph{LD generator}, such as a lattice, digital net, or Halton point generator supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, and MATLAB \cite{MAT9.13}.
+ Joe and Kuo
 
 
 
@@ -166,17 +174,16 @@ No one software library contains all of these features, which is why great QMC s
 
 
 
+R by Lemieux
 
 LatNetBuilder \cite{LatNet} 
-    \item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022} 
+   and MatBuilder \cite{paulin2022} 
     \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
     \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb} 
     \item Multi-level software \cite{GilesSoft,GilesQSoft} 
     \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}  
     \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
-    \item QMC framework in Julia since 2019 \cite{QMCJulia} by Robbe and others 
-    \item Scrambled Sobol' in SciPy \cite{virtanen2020scipy} and PyTorch \cite{paszke2019pytorch} since several years ago
-    \item TensorFlow QMC framework \cite{tfqfQMC2021a} since a year or so ago
+ago
     \item CUBA \cite{CUBA}
 
 
@@ -193,6 +200,42 @@ Software should be \emph{integrated} into the environment's scientific software 
 
 
 
+* Standard definitions, e.g., for LD generator
+* UM-Bridge, Dolfin
+* Move to other libraries
+* Demos, bridges
+
+
+
+\section{Correct} \label{CDHS_sec:correct}
+* Matlab randomization
+* Don't omit first point
+* 
+
+
+\section{Efficient} \label{CDHS_sec:efficient}
+* New architectures
+* Memory and FLOPS
+
+\section{Accessible} \label{CDHS_sec:accessible}
+* Documentation
+* Demos
+* Tutorials
+* Blogs
+* Supported, issues, features
+* Up to date
+* 
+
+\section{Sustainable} \label{CDHS_sec:sustainable} Community Owned
+* Developers, contributors
+* Use to illustrate research code
+* Use cases, new applications
+* Referenced
+* Build STEM pipeline
+
+\section{Scalable} \label{CDHS_sec:scalable} 
+
+
 
 \section{Tenets of Great Software} \label{CDHS_sec:tenets_of_great_software}
 
@@ -202,9 +245,9 @@ Software is expected to be \emph{correct}. A practitioner generating a digital s
 
 Algorithms should be implemented in an \emph{efficient} manner. Both the compute time and memory requirements should match theoretical developments which in turn should be as close to the state of the art as possible. As a classical example, it is expected that an implementation of the discrete Fourier transform for $n$ points has complexity $\mathcal{O}(n\log n)$. 
 
-Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Section \ref{CDHS_sec:language_library_environment}.
+Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Sect.\ \ref{CDHS_sec:language_library_environment}.
 
-Libraries should be \emph{sustainable} for future development. The goal should be to have a sufficient user base and developer community for updates and maintenance. Similar to accessibility, sustainability is often overlooked for aspirations discussed later in this section. However, we contend that a sub-optimal but user-friendly library with community engagement may be more impactful than an optimal library which lacks support. We promote collaborative, community driven development further in Section \ref{CDHS_sec:encouraging_collaborative_developement}.
+Libraries should be \emph{sustainable} for future development. The goal should be to have a sufficient user base and developer community for updates and maintenance. Similar to accessibility, sustainability is often overlooked for aspirations discussed later in this section. However, we contend that a sub-optimal but user-friendly library with community engagement may be more impactful than an optimal library which lacks support. We promote collaborative, community driven development further in Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}.
 
 Software should be \emph{integrated} into the environment's scientific software ecosystem. More simply, libraries should play nicely together and utilize the mature developments of other teams. A simple example in \AGSComment{CITE} shows a straightforward integration between the QMC package QMCPy \cite{QMCPy2020a} and the PDE package FEniCS/Dolfin \cite{LoggEtal_10_2012}, both in Python.
 

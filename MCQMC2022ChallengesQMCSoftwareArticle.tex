@@ -30,7 +30,7 @@
 \usepackage[bottom]{footmisc}% places footnotes at page bottom
 
 
-\usepackage{newtxtext}       % 
+\usepackage{newtxtext}       %
 \usepackage[varvw]{newtxmath}       % selects Times Roman as basic font
 
 % see the list of further useful packages
@@ -43,7 +43,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%Fred start
-\include{common-macros.tex}
+\input{common-macros.tex}
 \usepackage{cite}
 \usepackage{xspace}
 \usepackage[hyphens]{url}
@@ -64,7 +64,7 @@
 Fred J. Hickernell \at Center for Interdisciplinary Scientific Computation and \\
 Department of Applied Mathematics, Illinois Institute of Technology \\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{hickernell@iit.edu}
 \and Yuhan Ding \at
-\and 
+\and
 Aleksei G. Sorokin \at
 Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{asorokin@hawk.iit.edu}}
 
@@ -87,9 +87,9 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
     \begin{equation}
         \hat{\mu} := \frac{1}{n} \sum_{i=1}^n f(\bsx_i).
         \label{eq:mc_average}
-    \end{equation}  
+    \end{equation}
 \end{enumerate}
-However, the practice of QMC is often more complicated.  The original problem may need to be rewritten fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a desired error tolerance. 
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a desired error tolerance.
 
 In the next section we describe why QMC software is important.  We then discuss characteristics of great QMC software:
 
@@ -108,7 +108,7 @@ In the next section we describe why QMC software is important.  We then discuss 
 
 \end{itemize}
 
-Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}. 
+Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}.
 
 \section{Why Develop QMC Software} \label{CDHS_sec:why_we_need_software}
 
@@ -135,7 +135,7 @@ We next discuss characteristics of great QMC software outlined in the introducti
 \section{Integrated} \label{CDHS_sec:integrated}
 
 Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}$:
-\begin{gather} 
+\begin{gather}
 \label{eq:cubSummary}
 	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=0}^{n-1} f(\bsx_i) =: \hat{\mu}_n, \\
  \label{CDHS_eq:error_tol}
@@ -143,16 +143,16 @@ Expanding on the problem formulation in the introduction, we want to approximate
 \end{gather}
 Progressing from the original problem to a satisfactory solution requires several software components.  Great QMC software environment allows different implementations of these components to be interchanged.
 
-\subsection{LD Generators} A lattice, digital net, or Halton point generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  
+\subsection{LD Generators} A lattice, digital net, or Halton point generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
 LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"nschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, Julia \cite{QMCJulia}, SciPy \cite{virtanen2020scipy}, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tfqfQMC2021a}, and MatBuilder \cite{paulin2022}.  Joe and Kuo
 
 
 
 
-The \emph{integrand}, $g$, and the non-negative weight, $\lambda$, define the original integral arising from an application.  The function $g$ may represent the discounted payoff of a financial derivative, or the velocity of flow at a point in rock with stochastic porosity.  If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  
+The \emph{integrand}, $g$, and the non-negative weight, $\lambda$, define the original integral arising from an application.  The function $g$ may represent the discounted payoff of a financial derivative, or the velocity of flow at a point in rock with stochastic porosity.  If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.
 
-To put $\mu$ into the form that is directly accessible to QMC methods requires a \emph{variable transformation}, $\bsPsi$, such that 
+To put $\mu$ into the form that is directly accessible to QMC methods requires a \emph{variable transformation}, $\bsPsi$, such that
 \begin{equation*}
     \Psi((0,1)^d) = \calT, \qquad f(x) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial{\bsx}}}.
 \end{equation*}
@@ -176,12 +176,12 @@ No one software library contains all of these features, which is why great QMC s
 
 R by Lemieux
 
-LatNetBuilder \cite{LatNet} 
-   and MatBuilder \cite{paulin2022} 
+LatNetBuilder \cite{LatNet}
+   and MatBuilder \cite{paulin2022}
     \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
-    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb} 
-    \item Multi-level software \cite{GilesSoft,GilesQSoft} 
-    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}  
+    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb}
+    \item Multi-level software \cite{GilesSoft,GilesQSoft}
+    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}
     \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
 ago
     \item CUBA \cite{CUBA}
@@ -210,7 +210,7 @@ Software should be \emph{integrated} into the environment's scientific software 
 \section{Correct} \label{CDHS_sec:correct}
 * Matlab randomization
 * Don't omit first point
-* 
+*
 
 
 \section{Efficient} \label{CDHS_sec:efficient}
@@ -224,7 +224,7 @@ Software should be \emph{integrated} into the environment's scientific software 
 * Blogs
 * Supported, issues, features
 * Up to date
-* 
+*
 
 \section{Sustainable} \label{CDHS_sec:sustainable} Community Owned
 * Developers, contributors
@@ -233,17 +233,16 @@ Software should be \emph{integrated} into the environment's scientific software 
 * Referenced
 * Build STEM pipeline
 
-\section{Scalable} \label{CDHS_sec:scalable} 
-
+\section{Scalable} \label{CDHS_sec:scalable}
 
 
 \section{Tenets of Great Software} \label{CDHS_sec:tenets_of_great_software}
 
-In this section we lay out common aspirations of scientific software. While some objectives are expected by practitioners, e.g. correctly written software, others may better be characterized as features that are pursued as a project matures, e.g. supporting scalable computation. The following paragraphs highlight aspirations with more important, expected behaviours coming earlier in the discussion. 
+In this section we lay out common aspirations of scientific software. While some objectives are expected by practitioners, e.g. correctly written software, others may better be characterized as features that are pursued as a project matures, e.g. supporting scalable computation. The following paragraphs highlight aspirations with more important, expected behaviours coming earlier in the discussion.
 
 Software is expected to be \emph{correct}. A practitioner generating a digital sequence expects the routine to produce theoretically accurate points. For example, the QMC community has helped developers ensure implementations of low discrepancy sequence generators include the zeroth point \cite{Owe22a, scipySobol2020a} and  have correct randomization routines. %, and disallow thinning / leaping: taking every $k^\text{th}$ value in the sequence.
 
-Algorithms should be implemented in an \emph{efficient} manner. Both the compute time and memory requirements should match theoretical developments which in turn should be as close to the state of the art as possible. As a classical example, it is expected that an implementation of the discrete Fourier transform for $n$ points has complexity $\mathcal{O}(n\log n)$. 
+Algorithms should be implemented in an \emph{efficient} manner. Both the compute time and memory requirements should match theoretical developments which in turn should be as close to the state of the art as possible. As a classical example, it is expected that an implementation of the discrete Fourier transform for $n$ points has complexity $\mathcal{O}(n\log n)$.
 
 Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Sect.\ \ref{CDHS_sec:language_library_environment}.
 
@@ -251,21 +250,21 @@ Libraries should be \emph{sustainable} for future development. The goal should b
 
 Software should be \emph{integrated} into the environment's scientific software ecosystem. More simply, libraries should play nicely together and utilize the mature developments of other teams. A simple example in \AGSComment{CITE} shows a straightforward integration between the QMC package QMCPy \cite{QMCPy2020a} and the PDE package FEniCS/Dolfin \cite{LoggEtal_10_2012}, both in Python.
 
-Routines should be \emph{scalable} to advanced computer architectures. The widespread availability of on demand computing with multi-core and multi-GPU machines encourages software that can take advantage of parallel computation. Scalable algorithms lend themselves to a larger class or problems and provide practitioners the opportunity to more quickly test ideas. 
+Routines should be \emph{scalable} to advanced computer architectures. The widespread availability of on demand computing with multi-core and multi-GPU machines encourages software that can take advantage of parallel computation. Scalable algorithms lend themselves to a larger class or problems and provide practitioners the opportunity to more quickly test ideas.
 
 \section{(Quasi-)Monte Carlo Software Architecture} \label{CDHS_sec:qmc_software_architecture}
 
-An important step in the development of any software is to determine its' architecture. How should components interact with each other? Which aspects should be modular? Object oriented? Procedural? Answers to these questions form the blueprint of software design and guide implementation. 
+An important step in the development of any software is to determine its' architecture. How should components interact with each other? Which aspects should be modular? Object oriented? Procedural? Answers to these questions form the blueprint of software design and guide implementation.
 
-This section proposes an object oriented design for (Q)MC software. The authors have implemented this architecture into the QMCPy \cite{QMCPy2020a} Python package which is further detailed in the MCQMC 2020 proceedings article \AGSComment{CITE}. While this is not the only possible architecture for (Q)MC problems, we hope the high level object definitions facilitate easy collaboration and integration for research across the (Q)MC community. 
+This section proposes an object oriented design for (Q)MC software. The authors have implemented this architecture into the QMCPy \cite{QMCPy2020a} Python package which is further detailed in the MCQMC 2020 proceedings article \AGSComment{CITE}. While this is not the only possible architecture for (Q)MC problems, we hope the high level object definitions facilitate easy collaboration and integration for research across the (Q)MC community.
 
 The standard (Q)MC problem is to approximate the true mean $\mu := \mathbb{E}[g(\boldsymbol{T})]$ where $\boldsymbol{T}$ is some $d$ dimensional random variable. For nice $\boldsymbol{T}$, one may perform a change of variables to write $\mu = \mathbb{E}[f(\boldsymbol{X})]$ where $\boldsymbol{X} \sim \mathcal{U}[0,1]^d$. For example, if $\boldsymbol{T} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{I})$, then one may set $f(\boldsymbol{x}) := g(\boldsymbol{\Phi}^{-1}(\boldsymbol{x}))$ for $\boldsymbol{x} \in [0,1]^d$ where $\boldsymbol{\Phi}^{-1}$ is the inverse CDF of a standard normal distribution taken element wise. One may then approximate $\mu$ by the $n$ sample average $\hat{\mu} = 1/n \sum_{i=1}^n f(\boldsymbol{x}_i)$ where $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen so their empirical distribution is ``close'' to the uniform distribution. The approximation error $\varepsilon = \lvert \mu - \hat{\mu} \rvert$ is $\mathcal{O}(n^{-1/2})$ when $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen to be IID standard uniform as in the case of simple Monte Carlo (MC) and almost $\mathcal{O}(n^{-1})$ when $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen from a low discrepancy sequence as done for Quasi-Monte Carlo (QMC). Instead of selecting the number of samples $n$ and then determining the error $\varepsilon$, it is often desirable to select $\varepsilon$ and then adaptively determine $n$. From this view, $n$ is $\mathcal{O}(\varepsilon^{-2})$ for MC and almost $\mathcal{O}(\varepsilon^{-1})$ for QMC. A more detailed account of MC and QMC can be found in \AGSComment{CITE}.
 
-The (Q)MC pipeline above can be decomposed into $4$ main components:  
+The (Q)MC pipeline above can be decomposed into $4$ main components:
 \begin{description}
-    \item[\textbf{Generator:}] producing $\{\boldsymbol{x}_i\}_{i=1}^n$ whose empirical distribution is ``close'' to the standard uniform distribution in $d$ dimensions for any $n \geq 1$.  May produce IID or low discrepancy sequences depending on the problem. 
-    \item[\textbf{Measure:}] that defines the distribution of $\boldsymbol{T}$ e.g., uniform, Gaussian, Lebesgue. This definition facilitates choosing a change of variables to determine $f$. 
-    \item[\textbf{Integrand:}] $g$, which defines the original integral. When provided knowledge of the true measure, the integrand can also evaluate $f$ via the change of variables.  
+    \item[\textbf{Generator:}] producing $\{\boldsymbol{x}_i\}_{i=1}^n$ whose empirical distribution is ``close'' to the standard uniform distribution in $d$ dimensions for any $n \geq 1$.  May produce IID or low discrepancy sequences depending on the problem.
+    \item[\textbf{Measure:}] that defines the distribution of $\boldsymbol{T}$ e.g., uniform, Gaussian, Lebesgue. This definition facilitates choosing a change of variables to determine $f$.
+    \item[\textbf{Integrand:}] $g$, which defines the original integral. When provided knowledge of the true measure, the integrand can also evaluate $f$ via the change of variables.
     \item[\textbf{Stopping Criterion:}] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\varepsilon$ is less than some user-provided error threshold.
 \end{description}
 A variety of QMC materials and the their categorizations into the above framework are described in the following list.
@@ -275,17 +274,17 @@ A variety of QMC materials and the their categorizations into the above framewor
     %\item VEGAS \cite{Lep78a, Lep21a} importance sampling Monte Carlo algorithm favored by physicists
     \item ACM low discrepancy point generators \cite{BraFox88,BraFoxNie92,HonHic00a}
     \item FinDer \cite{PasTra95,FinDer} and BRODA \cite{BRODA20a} targeting quantitative finance
-    \item Korobov cubature and scrambled Sobol' generators in NAG \cite{NAG27} for decades	
+    \item Korobov cubature and scrambled Sobol' generators in NAG \cite{NAG27} for decades
     \item Scrambled Sobol' and Halton generators in MATLAB \cite{MAT9.13} since 2008, and fixed a few years later
     %\item BUGS \cite{BUGSBook, BUGSweb} and Stan \cite{STAN} for Markov Chain Monte Carlo (MCMC)
-    \item LatMRG \cite{LEcCou97}, RNGStreams \cite{LEcEtal02},  SSJ \cite{LEc2002a,SSJ}, and LatNetBuilder \cite{LatNet} 
-    \item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022} 
+    \item LatMRG \cite{LEcCou97}, RNGStreams \cite{LEcEtal02},  SSJ \cite{LEc2002a,SSJ}, and LatNetBuilder \cite{LatNet}
+    \item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022}
     \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
-    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb} 
-    \item Multi-level software \cite{GilesSoft,GilesQSoft} 
-    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}  
+    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb}
+    \item Multi-level software \cite{GilesSoft,GilesQSoft}
+    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}
     \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
-    \item QMC framework in Julia since 2019 \cite{QMCJulia} by Robbe and others 
+    \item QMC framework in Julia since 2019 \cite{QMCJulia} by Robbe and others
     \item Scrambled Sobol' in SciPy \cite{virtanen2020scipy} and PyTorch \cite{paszke2019pytorch} since several years ago
     \item TensorFlow QMC framework \cite{tfqfQMC2021a} since a year or so ago
     \item CUBA \cite{CUBA}
@@ -293,29 +292,29 @@ A variety of QMC materials and the their categorizations into the above framewor
 
 \section{Choosing a Environment} \label{CDHS_sec:language_library_environment}
 
-This section discusses the challenges in choosing environments for development and distribution. The development environment includes the choice of which languages, architectures, testing methods, and documentation methods to support. The deployment environment will often be influenced by the choice of programming languages.  
+This section discusses the challenges in choosing environments for development and distribution. The development environment includes the choice of which languages, architectures, testing methods, and documentation methods to support. The deployment environment will often be influenced by the choice of programming languages.
 
-The choice of programming language should be aligned with the communities the team wishes to reach with their software. The choice should also account for developer familiarity and ability to quickly prototype ideas. A team should align their choice of language to balance the desire to have user-friendly prototyping code versus the desire to have high performance computing (HPC) ``ninja'' code written for production setting. To the second point, it is also important to consider which language will best facilitate the parallel and GPU computations the team wishes to support. 
+The choice of programming language should be aligned with the communities the team wishes to reach with their software. The choice should also account for developer familiarity and ability to quickly prototype ideas. A team should align their choice of language to balance the desire to have user-friendly prototyping code versus the desire to have high performance computing (HPC) ``ninja'' code written for production setting. To the second point, it is also important to consider which language will best facilitate the parallel and GPU computations the team wishes to support.
 
-Many programming languages come bundled with their own preferred distribution systems. Python has PyPI, R has CRAN, Julia has Pkg. However, many projects support multiple languages and have complex dependency requirements. In such cases, it can be helpful to containerize your application using a service like Docker. 
+Many programming languages come bundled with their own preferred distribution systems. Python has PyPI, R has CRAN, Julia has Pkg. However, many projects support multiple languages and have complex dependency requirements. In such cases, it can be helpful to containerize your application using a service like Docker.
 
 \section{Encouraging Collaborative Development} \label{CDHS_sec:encouraging_collaborative_developement}
 
-We now discuss ways a team may encourage collaborative development while touching on a few best practices. As discussed earlier, collaborative development promotes greater community engagement, ecosystem integration, and software longevity. 
+We now discuss ways a team may encourage collaborative development while touching on a few best practices. As discussed earlier, collaborative development promotes greater community engagement, ecosystem integration, and software longevity.
 
-The authors have found the Git version control system to be an invaluable for software development. Git hosts such as GitHub or Bitbucket may offer teams additional features such as tracking issues, managing discussion threads, and setting up automated workflows for jobs such as testing and documentation compilation. 
+The authors have found the Git version control system to be an invaluable for software development. Git hosts such as GitHub or Bitbucket may offer teams additional features such as tracking issues, managing discussion threads, and setting up automated workflows for jobs such as testing and documentation compilation.
 
-Accessibility is key to community engagment. It is paramount that your package be easy to install, well documented, and tested regularly. Aside from static communications, a team should also be engaged in addressing users bugs and be attentive to collaborating with proposed code changes. 
+Accessibility is key to community engagment. It is paramount that your package be easy to install, well documented, and tested regularly. Aside from static communications, a team should also be engaged in addressing users bugs and be attentive to collaborating with proposed code changes.
 
-It is also important for a development team to make a clear path for collaborators to contributors to the software. Templates for issues and pull requests are a good place to start. Contributors should also be encouraged to write robust tests for their updates and highlight their new features in a demo for greater accessibility. 
+It is also important for a development team to make a clear path for collaborators to contributors to the software. Templates for issues and pull requests are a good place to start. Contributors should also be encouraged to write robust tests for their updates and highlight their new features in a demo for greater accessibility.
 
 \section{Example Collaboration with UMBridge and QMCPy} \label{CDHS_sec:example_collaboration_umbridge}
 
-This section discusses a collaboration between the UM-Bridge (the UQ and Model Bridge) \AGSComment{CITE} and QMCPy (the Quasi-Monte Carlo Python library) \cite{QMCPy2020a} softwares. The UM-Bridge documentation describes its' mission is to, ``provide a unified interface for numerical models that is accessible from virtually any programming language or framework. It is primarily intended for coupling advanced models (e.g. simulations of complex physical processes) to advanced statistics or optimization methods.'' QMCPy is a high level framework for combining QMC components in a compatible and consistent manner. The collaboration between these two packages focused on making the UQ methods of QMCPy compatible with the abstract model representations from UM-Bridge. Specifically, UM-Bridge models are made compatible with the QMCPy framework through an integrand wrapper for seamless compatibility with a variety of existing point generators, transformations, and stopping criterion already available in QMCPy. 
+This section discusses a collaboration between the UM-Bridge (the UQ and Model Bridge) \AGSComment{CITE} and QMCPy (the Quasi-Monte Carlo Python library) \cite{QMCPy2020a} softwares. The UM-Bridge documentation describes its' mission is to, ``provide a unified interface for numerical models that is accessible from virtually any programming language or framework. It is primarily intended for coupling advanced models (e.g. simulations of complex physical processes) to advanced statistics or optimization methods.'' QMCPy is a high level framework for combining QMC components in a compatible and consistent manner. The collaboration between these two packages focused on making the UQ methods of QMCPy compatible with the abstract model representations from UM-Bridge. Specifically, UM-Bridge models are made compatible with the QMCPy framework through an integrand wrapper for seamless compatibility with a variety of existing point generators, transformations, and stopping criterion already available in QMCPy.
 
-To exemplify the integration, we focus on quantifying uncertainty propagation of material properties of a cantilevered beam. It is assumed the beam is split into $3$ regions of random stiffness dependent on uncertain material properties. Given a sample of $3$ stiffness values, the UM-Bridge model provides the displacement at $31$ equidistant nodes along the beam. Our task is to quantify the uncertainty in displacement at each of these $31$ locations along the beam. 
+To exemplify the integration, we focus on quantifying uncertainty propagation of material properties of a cantilevered beam. It is assumed the beam is split into $3$ regions of random stiffness dependent on uncertain material properties. Given a sample of $3$ stiffness values, the UM-Bridge model provides the displacement at $31$ equidistant nodes along the beam. Our task is to quantify the uncertainty in displacement at each of these $31$ locations along the beam.
 
-A fully coded example of this problem is available at \url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/umbridge.ipynb}. At a high level, one begins by running the UM-Bridge model in a Docker container. A model is then initialized in the UM-Bridge Python client which is then provided to QMCPy alongside a low discrepancy point generator and distribution governing the $3$ beam stiffness values. QMCPy then performs adaptive QMC cubature to simultaneously approximate the expected displacement at the $31$ locations of interest. When the cubature method queries the model, the QMCPy wrapper around UM-Bridge model sends requests to the Docker UM-Bridge model in parallel. The load balancing provided by UM-Bridge may be utilized to evaluate the model in parallel, a potentially advantageous feature for models which are costly to evaluate. Figure \ref{fig:umbridge_muq} depicts the $31$ approximate expected displacement values subject to uniform stiffness. 
+A fully coded example of this problem is available at \url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/umbridge.ipynb}. At a high level, one begins by running the UM-Bridge model in a Docker container. A model is then initialized in the UM-Bridge Python client which is then provided to QMCPy alongside a low discrepancy point generator and distribution governing the $3$ beam stiffness values. QMCPy then performs adaptive QMC cubature to simultaneously approximate the expected displacement at the $31$ locations of interest. When the cubature method queries the model, the QMCPy wrapper around UM-Bridge model sends requests to the Docker UM-Bridge model in parallel. The load balancing provided by UM-Bridge may be utilized to evaluate the model in parallel, a potentially advantageous feature for models which are costly to evaluate. Figure \ref{fig:umbridge_muq} depicts the $31$ approximate expected displacement values subject to uniform stiffness.
 
 \begin{figure}
     \centering
@@ -332,8 +331,8 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 \section*{TODO}
 \begin{itemize}
     \item Flesh out Section \ref{CDHS_sec:encouraging_collaborative_developement}
-    \item QMC Software Architecture section: better way then description of components and list of softwares? 
-    \item For Section \ref{CDHS_sec:tenets_of_great_software}, the slides also include 
+    \item QMC Software Architecture section: better way then description of components and list of softwares?
+    \item For Section \ref{CDHS_sec:tenets_of_great_software}, the slides also include
     \begin{itemize}
         \item  Complete---contain the components or  easily access components in other libraries to solve real, complex problems
         \item Current---include the latest and best algorithms
@@ -354,18 +353,18 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 \begin{frame}{Why Do We Need Software?}
 	\vspace{-4ex}
 	\begin{itemize}
-		\item Theory 
+		\item Theory
 		\begin{itemize}
 			\item Explains, justifies, and leads to algorithms
 			\item Assumptions$\implies$success can be viewed as failure$\implies$what went wrong
 		\end{itemize}
-		\item Software 
+		\item Software
 		\begin{itemize}
 			\item Makes algorithms practical
 			\item Solves (new) applications
 			\item Eliminates do-it-yourself
 		\end{itemize}
-		\item Applications 
+		\item Applications
   		\begin{itemize}
 			\item Make societal impact
 			\item Inspire new theory
@@ -382,7 +381,7 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 	\vspace{-6ex}
 
 \[
-\mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots = 	
+\mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots =
 \underbrace{\Ex[f(\vX)]}_{\text{expectation}} = \underbrace{\int_{[0,1]^d}  f(\vx) \, \dif \vx}_{\text{integration}} \approx  \frac 1{n} \sum_{i=1}^{n} f(\vX_i) =: \hmu_{n}
 \]
 
@@ -390,13 +389,13 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 
 \begin{description}[alabel]
 	%\setlength{\labelwidth}{5ex}
-	
+
 	\item[Low Discrepancy Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the uniform distribution
-	
+
 	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \vPsi(\vx)$
-	
-	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator 
-	
+
+	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator
+
 	\item[Stopping Criterion] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
 \end{description}
 
@@ -411,10 +410,10 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 
   	\item  Favorites aligned with various communities, but no one dominates all
 
-	\item Difference between prototyping environments and ninja written production code 
+	\item Difference between prototyping environments and ninja written production code
 
-  
-    \item Growth of multi-processor environments 
+
+    \item Growth of multi-processor environments
     \begin{itemize}
     	\item Provides opportunity
     	\item Complicates software development; where does parallelism really help?
@@ -427,7 +426,7 @@ A fully coded example of this problem is available at \url{https://github.com/QM
     \item Add a significant idea as a feature to other libraries
     \item Move basic features of your library to larger library
     \item Write wrappers or demos to connect other libraries to your library
-    
+
     \end{itemize}
  \end{itemize}
 \end{frame}
@@ -480,7 +479,7 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 
 \section{Support}
 \begin{frame}{Encouraging Users of Your Library Requires}
-	
+
 	\vspace{-4ex}
 	\begin{itemize}
 		\item A repository where
@@ -496,15 +495,15 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 		\item Recommending your students and postdocs to use your library
 		\item Welcoming instructions on how to contribute an algorithm or a demo
 	\end{itemize}
-		
+
 \end{frame}
 
 
 \begin{frame}{Building a Developer Team for Your Library}
-		
+
 	\vspace{-4ex}
 \begin{itemize}
-	
+
 \item Many senior researchers don't code, and rely on transient team members (students, postdocs)
 \begin{itemize}
 	\item Encourage a sense of ownership that lasts beyond the time your team members are part of your lab
@@ -514,7 +513,7 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 \item Those of us who understand theory and appreciate software need to encourage and steer popular software to ensure that it is implemented well.
 
 \item Recognize good software as valuable scholarly output
-	
+
 \item Recognize research software engineer as a valued vocation; see Research Software Engineers International 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
   \end{itemize}
 \end{frame}
@@ -522,7 +521,7 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 \section{Next Steps}
 
 \begin{frame}{Next Steps}
-	
+
 	\vspace{-2ex}
 	\begin{minipage}{0.48\textwidth}
 		\begin{itemize}
@@ -532,10 +531,10 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 		\end{itemize}
 	\end{minipage}
 	\begin{minipage}{0.48\textwidth}
-		Join us for a lunch discussion at Bella Casa tomorrow, July 19, at 12:45 PM 
-		
+		Join us for a lunch discussion at Bella Casa tomorrow, July 19, at 12:45 PM
+
 		\vspace{2ex}
-		
+
 		\includegraphics[width=\textwidth]{ProgramsImages/PizeriaBellaCasa.png}
 \end{minipage}
 
@@ -552,9 +551,9 @@ A fully coded example of this problem is available at \url{https://github.com/QM
 
 
 \section{Introduction} \label{CDHS_sec:intro}
-Quasi-Monte Carlo (QMC) methods promise great efficiency gains over independent and identically distributed (IID) Monte Carlo (MC) methods.  In some cases QMC  achieves one hundredth of the error of IID MC in the same amount of time. Often, these efficiency gains are obtained simply by  replacing IID sampling by low discrepancy (LD) sampling, which is the heart of QMC. 
+Quasi-Monte Carlo (QMC) methods promise great efficiency gains over independent and identically distributed (IID) Monte Carlo (MC) methods.  In some cases QMC  achieves one hundredth of the error of IID MC in the same amount of time. Often, these efficiency gains are obtained simply by  replacing IID sampling by low discrepancy (LD) sampling, which is the heart of QMC.
 
-As a practitioner, you might wish to test whether QMC would speed your computation.  You would like easy access to the best QMC algorithms available.  As a theoretician or an algorithm developer, you would want to demonstrate your best ideas on  various  use cases to show their practical value.  
+As a practitioner, you might wish to test whether QMC would speed your computation.  You would like easy access to the best QMC algorithms available.  As a theoretician or an algorithm developer, you would want to demonstrate your best ideas on  various  use cases to show their practical value.
 
 This tutorial points to some of the best QMC software available.  Moreover, we describe QMCPy \cite{QMCPy2020a}, which is designed to be a community owned Python library that combines the best QMC algorithms from various authors under a common user interface.
 
@@ -566,7 +565,7 @@ where $g$ is the integrand, and $\lambda$ is a non-negative weight.  We use $\mu
 \begin{equation} \label{eq:fintegral}
 	\mu = \bbE[f(\bsX)] = \int_\calX f(\bsx) \, \varrho(\bsx) \, \D \bsx =  \int_\calX f(\bsx) \,  \D F(\bsx) ,
 \end{equation}
-where $\varrho$ is a probability density with corresponding probability distribution $F$.  In practice, $\calX$ often corresponds to the unit cube, $[0,1]^d$, and $F$ corresponds to the uniform distribution.  
+where $\varrho$ is a probability density with corresponding probability distribution $F$.  In practice, $\calX$ often corresponds to the unit cube, $[0,1]^d$, and $F$ corresponds to the uniform distribution.
 
 QMC approximates this population mean by a sample mean,
 \begin{equation} \label{eq:samplemean}
@@ -596,12 +595,12 @@ LD sequences may be deterministic or random, but each point is carefully coordin
 The error in using the sample mean to approximate the integral can be bounded according to the Koksma-Hlawka inequality and its extensions as the product of the discrepancy of the sampling sequence and the variation of the integrand, denoted $V(\cdot)$:
 \begin{equation}
 	\QMCPYabs{\mu - \hmu} = \QMCPYabs{\int_{\calX} f(\bsx) \, \D (F - F_{\{\bsX_i\}_{i=0}^{n-1}}) (\bsx)} \le D(\{\bsX_i\}_{i=0}^{n-1}, F) V(f),
-\end{equation} 
+\end{equation}
 The variation is a (semi-) norm of the integrand in a suitable Banach space.  The discrepancy corresponds to the norm of the error functional for that Banach space.  For typical Banach spaces, the discrepancy of LD points is $\calO(n^{-1+\epsilon})$, which is a higher convergence order than for IID points.  For details, the reader is referred to the references.  For our purposes, we expect the reader to see in Figure \ref{fig:comparePts} that the LD points cover the integration domain more evenly than IID points.  In the examples below the reader will see the demonstrably smaller cubature errors arising from using LD points.
 
 In the sections that follow we first overview available QMC software.  We next describe an architecture for good QMC software, i.e., what are the key components and how should they interact.  We then describe how we have implemented this architecture in QMCPy.  Finally, we summarize further directions that we hope QMCPy and related software projects will take.  Those interested in following the development of QMCPy or even contributing to that development are urged to visit the GitHub repository at \href{https://qmcsoftware.github.io/QMCSoftware/}{\nolinkurl{https://qmcsoftware.github.io/QMCSoftware/}}.
 
-\section{Available Software for QMC} \label{CDHS_sec:available} 
+\section{Available Software for QMC} \label{CDHS_sec:available}
 QMC software spans  LD sequence generators, algorithms, and applications.  We review the better known software collections, recognizing that some software overlaps multiple categories.
 Software focusing on generating high quality LD sequences  or their generators includes
 \begin{description}[format=\textup,format=\textbf]
@@ -637,26 +636,26 @@ QMC cubature can be summarized as follows.  We want to approximate the integral 
 This requires four components, which we implement as QMCPy classes.
 
 \begin{description}[format=\textup,format=\textbf]
-	
+
 	\item[Discrete Distribution] that produces $\bsX_0, \bsX_1, \dots$ mimicking the distribution $F$, which typically is $\calU[0,1]^d$;
-	
+
 	\item[True Measure] $\bst \mapsto \lambda (\bst) \D \bst$ that defines the original integral, e.g., Gaussian or Lebesgue;
-	
+
 	\item[Integrand] $g$ that  defines the original integral, plus the transformed version, $f$, to fit the discrete distribution; and
-	
+
 	\item[Stopping Criterion] that determines how large $n$ should be to ensure that $\QMCPYabs{\mu - \hmu_n} \le \varepsilon$.
 \end{description}
 
-The software libraries referenced in Section \ref{CDHS_sec:available} provide one or more of these components. QMCPy combines multiple examples of them all under and object oriented framework. Each example is implemented as a concrete class that realizes the properties and methods required by the abstract class for that component. The following sections detail descriptions and use cases for each component and select implementations. 
+The software libraries referenced in Section \ref{CDHS_sec:available} provide one or more of these components. QMCPy combines multiple examples of them all under and object oriented framework. Each example is implemented as a concrete class that realizes the properties and methods required by the abstract class for that component. The following sections detail descriptions and use cases for each component and select implementations.
 
-Thorough documentation of all QMCPy classes can be found in \cite{QMCPyDocs}. Demonstrations of how QMCPy work are given in Google Colab notebooks \cite{QMCPyTutColab2020,QMCPyTutColab2020_paper} \AGSComment{Update \cite{QMCPyTutColab2020_paper}'s link}. The project may be installed from PyPI into your Python 3 environment via the command \texttt{pip install qmcpy}. In the codes that follows, we assume QMCPy has been imported alongside Numpy \cite{numpy} 
-%and Scipy \cite{scipy} 
+Thorough documentation of all QMCPy classes can be found in \cite{QMCPyDocs}. Demonstrations of how QMCPy work are given in Google Colab notebooks \cite{QMCPyTutColab2020,QMCPyTutColab2020_paper} \AGSComment{Update \cite{QMCPyTutColab2020_paper}'s link}. The project may be installed from PyPI into your Python 3 environment via the command \texttt{pip install qmcpy}. In the codes that follows, we assume QMCPy has been imported alongside Numpy \cite{numpy}
+%and Scipy \cite{scipy}
 via
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/import.txt}
 
 \section{Discrete Distributions}
 
-LD sequences typically mimic $\calU[0,1]^d$, which we assume here.  Good sequences for other distributions are obtained by transformations in the next section.  
+LD sequences typically mimic $\calU[0,1]^d$, which we assume here.  Good sequences for other distributions are obtained by transformations in the next section.
 
 QMCPy implements \emph{extensible} LD sequences, i.e., those that allow practitioners to obtain and use $\bsX_n, \bsX_{n+1}, \ldots $ without discarding the existing $\bsX_0, \ldots, \bsX_{n-1}$.  Halton sequences do not have preferred sample sizes $n$, but integration lattices and digital sequences do.  These latter two also have an elegant group structure, which we summarize in Table \ref{tab:GroupProp}.  For simplicity we restrict ourselves to the case where the first $n = 2^m$ points of these LD sequences form a group under the addition operator $\oplus$.
 
@@ -670,12 +669,12 @@ QMCPy implements \emph{extensible} LD sequences, i.e., those that allow practiti
 	\multicolumn{2}{c}{\text{Define \ldots}} \\
 	\multicolumn{2}{c}{\bsZ_1, \bsZ_2, \bsZ_4, \ldots \in [0,1)^d \text{ chosen well} } \\
 	\multicolumn{2}{c}{
-	\bsZ_{i} := i_0  \bsZ_1 \oplus i_1 \bsZ_{2} \oplus + i_2  \bsZ_{4} \oplus  i_3  \bsZ_{8} + \cdots 
+	\bsZ_{i} := i_0  \bsZ_1 \oplus i_1 \bsZ_{2} \oplus + i_2  \bsZ_{4} \oplus  i_3  \bsZ_{8} + \cdots
 	\quad
 	\text{for }i = i_0 +i_1 2 + i_2 4 + i_3 8 + \cdots, \; i_\ell \in \{0,1\}} \\
     \multicolumn{2}{c}{\bsX_i := \bsZ_i \oplus \bsDelta, \qquad \text{where }\bsDelta \IIDsim [0,1)^d} \\  \hline
 	\text{Rank-1 Integration Lattices} & \text{Digital Nets} \\
-		\bst \oplus \bsx : = (\bst + \bsx) \bmod \bsone & \bst \oplus \bsx := \text{binary digitwise addition} \\ 
+		\bst \oplus \bsx : = (\bst + \bsx) \bmod \bsone & \bst \oplus \bsx := \text{binary digitwise addition} \\
 		 \text{require } \begin{array}{l} \bsZ_1 = (1/2, \ldots, 1/2) \\
 		 	\bsZ_{2^{m}} \oplus \bsZ_{2^{m}} = \bsZ_{2^{m-1}} \quad \forall m \in \bbN \end{array}
 		\\
@@ -692,7 +691,7 @@ QMCPy implements \emph{extensible} LD sequences, i.e., those that allow practiti
 \]
 \end{table}
 
-We illustrate lattice and Sobol' sequences using QMCPy. First, we create an instance of a $d=2$ dimensional \texttt{Lattice} object of the  \texttt{DiscreteDistribution} abstract class. Then we generate the first eight (non-randomized) points in this lattice. 
+We illustrate lattice and Sobol' sequences using QMCPy. First, we create an instance of a $d=2$ dimensional \texttt{Lattice} object of the  \texttt{DiscreteDistribution} abstract class. Then we generate the first eight (non-randomized) points in this lattice.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/dd_lattice.txt}
 The first three generators for this lattice are $\bsZ_1 = (0.5, 0.5)$, $\bsZ_2 = (0.25, 0.75)$, and $\bsZ_4 = (0.125, 0.375)$.  One can check that $(\bsZ_2 + \bsZ_4) \bmod \bsone = (0.375, 0.125) = \bsZ_6$, as Table \ref{tab:GroupProp} specifies.
 
@@ -720,7 +719,7 @@ A crucial difference between IID generators and LD generators is reflected in th
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/dd_iidone.txt}
 Your output may look different depending on the seed used to generate these random numbers.
 
-On the other hand for an LD generator, asking for $n$ points repeatedly gives you \emph{the same} points each time because they are meant to be the first $n$ points of a given LD sequence.  
+On the other hand for an LD generator, asking for $n$ points repeatedly gives you \emph{the same} points each time because they are meant to be the first $n$ points of a given LD sequence.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/dd_latticeone.txt}
 Here we allow the randomization so that the first point in the sequence is not the origin.  To obtain the \emph{next} $n$ points one may specify the start and ending indices of the sequence.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/dd_latticenextone.txt}
@@ -748,21 +747,21 @@ The LD sequences implemented as \text{DiscreteDistribution} objects typically mi
 \end{subequations}
 and $\odot$ denotes term-by-term (Hadamard) multiplication.  Here, $\bsa$ and $\bsb$ are assumed to be finite, and $\Phi$ is the standard Gaussian distribution function.  Again we use ``$\sim$'' to denote mimicry, not necessarily in a probabilistic sense.
 
-Figure \ref{fig:tm_ug} displays LD sequences transformed as described above to mimic a uniform and a Gaussian distribution.  The code to generate these points takes the following form of 
+Figure \ref{fig:tm_ug} displays LD sequences transformed as described above to mimic a uniform and a Gaussian distribution.  The code to generate these points takes the following form of
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/tm_uniform.txt}
-for uniform points based on a Halton sequence, and 
+for uniform points based on a Halton sequence, and
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/tm_gaussian.txt}
 for Gaussian points based on a lattice sequence.
 
 \begin{figure}
-	\includegraphics[width=.45\textwidth]{QMCSoftwareArticle/figs/tm_uniform.png} 
+	\includegraphics[width=.45\textwidth]{QMCSoftwareArticle/figs/tm_uniform.png}
 	%	\quad
 	\includegraphics[width=.45\textwidth]{QMCSoftwareArticle/figs/tm_gaussian.png}
 	\caption{Sobol' samples transformed to mimic a uniform $\calU\left(\begin{bmatrix} -2 \\ 0 \end{bmatrix}, \begin{bmatrix} 2 \\ 4 \end{bmatrix} \right)$ (left) and  Gaussian $\calN\left(\begin{bmatrix} 3 \\ 2 \end{bmatrix}, \begin{bmatrix} 9 & 5 \\ 5 & 4 \end{bmatrix} \right)$ (right).}
 	\label{fig:tm_ug}
 \end{figure}
 
-The Brownian motion distribution arises often in financial risk applications.  Here the $d$ components of the variable $\bsT$ correspond to the Brownian motion at times $\tau/d, 2\tau/d, \ldots, \tau$, where $\tau$ is the time horizon.  The distribution is a special case of the Gaussian with covariance 
+The Brownian motion distribution arises often in financial risk applications.  Here the $d$ components of the variable $\bsT$ correspond to the Brownian motion at times $\tau/d, 2\tau/d, \ldots, \tau$, where $\tau$ is the time horizon.  The distribution is a special case of the Gaussian with covariance
 \begin{equation} \label{eq:BMcov}
 	\mSigma = (\tau/d) \bigl (\min(j,k) \bigr)_{j,k=1}^d
 \end{equation}
@@ -771,16 +770,16 @@ and mean $\bsa$, which  correspond to a drift coefficient times $(\tau/d)(1, 2, 
 Figure \ref{fig:tm_bm} displays a Brownian motion based on Sobol' sequence with and without a drift.
 
 \begin{figure}
-	\includegraphics[width=1\textwidth]{QMCSoftwareArticle/figs/tm_bm.png} 
+	\includegraphics[width=1\textwidth]{QMCSoftwareArticle/figs/tm_bm.png}
 	\caption{Sobol' samples transformed to mimic a 32-dimensional Brownian Motion without drift (left) and with drift coefficient 2 (right).}
 	\label{fig:tm_bm}
 \end{figure}
 
 \section{Integrands}
 
-Let's return now to the integration problem in \eqref{eq:integral}, which we must rewrite as \eqref{eq:fintegral}.  We choose a transformation of variables defined as $\bst = \bsPsi(\bsx)$ where $\bsPsi:\calX \to \calT$.  This leads to 
+Let's return now to the integration problem in \eqref{eq:integral}, which we must rewrite as \eqref{eq:fintegral}.  We choose a transformation of variables defined as $\bst = \bsPsi(\bsx)$ where $\bsPsi:\calX \to \calT$.  This leads to
 \begin{align}
-	\nonumber 
+	\nonumber
  \mu &= \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \int_\calX g\bigl(\bsPsi(\bsx)\bigr) \, \lambda\bigl(\bsPsi(\bsx)\bigr) \,\QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}} \, \D \bsx =  \int_\calX f(\bsx) \, \varrho(\bsx) \, \D \bsx  \\
  \label{eq:transVar}
   & \qquad \qquad \text{where } f(\bsx)  = g\bigl(\bsPsi(\bsx)\bigr)  \, \frac{\lambda(\bsPsi(\bsx))}{\varrho(\bsx)} \,\QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}},
@@ -789,19 +788,19 @@ and $\QMCPYabs{\partial \bsPsi/\partial \bsx}$ represents the Jacobian of the va
 
 We illustrate the use of the \texttt{Integrand} class via an example of Keister \cite{Kei96}:
 \begin{equation} \label{eq:KeisterIntegral}
-	\mu 
-	= \int_{\bbR^d} \cos(\lVert \bst \rVert) \exp(-\bst^T \bst) \, \D \bst \\ 
+	\mu
+	= \int_{\bbR^d} \cos(\lVert \bst \rVert) \exp(-\bst^T \bst) \, \D \bst \\
 	= \int_{\bbR^d} \underbrace{\pi^{d/2} \cos(\lVert \bst \rVert)}_{g(\bst)}\, \underbrace{\pi^{-d/2} \exp(-\bst^T \bst) }_{\lambda(\bst)} \, \D \bst.
 \end{equation}
-We will use QMC methods to approximate this integral, which means that it will be transformed according to \eqref{eq:transVar} for the case where $\calX = [0,1]^d$ and $\varrho(\bsx) = 1$.  Since $\lambda$ is the density for $\calN(0,\mI/2)$, it is natural to choose $\bsPsi$ according to \eqref{eq:exampleVarTransGauss} with $\mA = \sqrt{1/2} \, \mI$, in which case $\lambda(\bsPsi(\bsx)) \QMCPYabs{\partial \bsPsi/\partial \bsx} / \varrho(\bsx) = 1$, and so 
+We will use QMC methods to approximate this integral, which means that it will be transformed according to \eqref{eq:transVar} for the case where $\calX = [0,1]^d$ and $\varrho(\bsx) = 1$.  Since $\lambda$ is the density for $\calN(0,\mI/2)$, it is natural to choose $\bsPsi$ according to \eqref{eq:exampleVarTransGauss} with $\mA = \sqrt{1/2} \, \mI$, in which case $\lambda(\bsPsi(\bsx)) \QMCPYabs{\partial \bsPsi/\partial \bsx} / \varrho(\bsx) = 1$, and so
 \[
-\mu = \int_{[0,1]^d} \underbrace{\pi^{d/2} \cos(\lVert \bsPsi(\bsx) \rVert)}_{f(\bsx)} \, \D \bsx, \qquad 
+\mu = \int_{[0,1]^d} \underbrace{\pi^{d/2} \cos(\lVert \bsPsi(\bsx) \rVert)}_{f(\bsx)} \, \D \bsx, \qquad
 \bsPsi(\bsx) := \sqrt{1/2} \,\bsPhi^{-1}(\bsx).
 \]
 
 The code below sets up an \texttt{Integrand} instance using QMCPy's \texttt{CustomFun} wrapper to tie a user-defined function $g$ into the QMCPy framework.  Then we evaluate the sample mean of $n=1000$ $f$ values obtained by sampling at transformed Halton points.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/i_keister.txt}
-We have no indication yet of how accurate our approximation is.  This aspect of QMCPy is described in the next section.  Figure \ref{fig:ikc} visualizes sampling on the original integrand, $g$, and sampling on the transformed integrand, $f$. 
+We have no indication yet of how accurate our approximation is.  This aspect of QMCPy is described in the next section.  Figure \ref{fig:ikc} visualizes sampling on the original integrand, $g$, and sampling on the transformed integrand, $f$.
 
 \begin{figure}
 	\includegraphics[height=6cm]{QMCSoftwareArticle/figs/i_keister_contours.png}
@@ -809,8 +808,8 @@ We have no indication yet of how accurate our approximation is.  This aspect of 
 \end{figure}
 
 Another way to approximate the Keister integral in \eqref{eq:KeisterIntegral} is to write it as an integral with respect to the Lebesgue measure:
-\begin{align*} 
-	\mu 
+\begin{align*}
+	\mu
 	& = \int_{\bbR^d} \underbrace{\cos(\lVert \bst \rVert) \exp(-\bst^T \bst) }_{g(\bst)} \, \underbrace{1}_{\lambda(\bst)} \,\D \bst \\
 	& = \int_{[0,1]^d} \underbrace{\cos(\lVert \bsPsi(\bsx) \rVert) \exp(-\bsPsi^T\!\!(\bsx) \bsPsi(\bsx)) \QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}} }_{f(\bsx)} \, \D \bsx,
 \end{align*}
@@ -818,7 +817,7 @@ where $\bsPsi$ is any transformation from $\bbR^d$ to $[0,1]^d$.  QMCPy can perf
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/i_keisterLebesgue.txt}
 The $\bsPsi$ chosen when transforming uniform points on the unit cube to fill the $\bbR^d$ is the one given by \eqref{eq:exampleVarTransGauss} with $\mA = \mI$.
 
-In the examples above, one needed to input the correct $g$ into \texttt{CustomFun} along with the correct \texttt{TrueMeasure} $\lambda$ to define the integration problem. The \texttt{Keister} integrand included in the QMCPy library takes a more flexible approach of defining the integration problem $\mu$ in \eqref{eq:KeisterIntegral}. Selecting a different \texttt{sampler} $\bsPsi$ performs  \emph{importance sampling} which leaves $\mu$ unchanged.  
+In the examples above, one needed to input the correct $g$ into \texttt{CustomFun} along with the correct \texttt{TrueMeasure} $\lambda$ to define the integration problem. The \texttt{Keister} integrand included in the QMCPy library takes a more flexible approach of defining the integration problem $\mu$ in \eqref{eq:KeisterIntegral}. Selecting a different \texttt{sampler} $\bsPsi$ performs  \emph{importance sampling} which leaves $\mu$ unchanged.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/i_keisterBuiltIn.txt}
 
 \section{Stopping Criteria} \label{CDHS_sec:stopping_crit}
@@ -838,11 +837,11 @@ Figure \ref{fig:sc_comp} compares the time and sample sizes needed to compute th
 	\label{fig:sc_comp}
 \end{figure}
 
-For another illustration of QMC cubature, we turn to pricing an Asian arithmetic mean call option. The payoff of this option is the positive difference between the strike price averaged over the time horizon and the strike price, $K$: 
+For another illustration of QMC cubature, we turn to pricing an Asian arithmetic mean call option. The payoff of this option is the positive difference between the strike price averaged over the time horizon and the strike price, $K$:
 $$
 \text{payoff}(\bsS) = \max\left(\frac{1}{2d}\sum_{j=1}^d (S_{j-1}+S_j)-K,0\right), \quad \bsS = (S_0, \ldots, S_d).
 $$
-where $S_j$ denotes the stock price at time $\tau j/d$.  A basic model for stock prices is a geometric Brownian motion, 
+where $S_j$ denotes the stock price at time $\tau j/d$.  A basic model for stock prices is a geometric Brownian motion,
 \[
 S_j(\bsT) = S_0 \exp((r - \sigma^2) \tau j/d + \sigma T_j),   \;  j = 1, \ldots, d, \; \bsT = (T_1, \ldots, T_d)\sim \calN(0,\mSigma),
 \]
@@ -859,12 +858,12 @@ Out of the money option price calculations can be sped up by adding a drift to t
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/wo_imp_samp_aco.txt}
 Adding the drift gives us the answer faster:
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/w_imp_samp_aco.txt}
-The choice of a good drift is an art.  
+The choice of a good drift is an art.
 
 The improvement in time is less than improvement in $n$ because the integrand $f$ is more expensive to compute when the drift is added.  In the case of no drift, the $\lambda$ in \eqref{eq:transVar} corresponds to the density for the discrete Brownian motion, and the variable transformation $\bsPsi$ is chosen so that $\lambda\bigl(\bsPsi(\cdot)\bigr) \QMCPYabs{\partial \bsPsi/\partial \bsx} = \varrho(\bsx) = 1$ and $f(\bsx) = g\left(\bsPsi(\bsx) \right)$.  However, if we choose $\lambda_{\IMP}$ as our importance sampling density and $\bsPsi_{\IMP}$ as the variable transformation corresponding to $\lambda_\IMP\bigl(\bsPsi_\IMP(\cdot)\bigr) \QMCPYabs{\partial \bsPsi_\IMP/\partial \bsx} = \varrho(\bsx) = 1$, then
 \begin{align}
-	\nonumber 
-	\mu &= \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \int_\calT g(\bst) \, \frac{\lambda(\bst)}{\lambda_\IMP(\bst) } \, \lambda_\IMP(\bst) \D \bst  \\ 
+	\nonumber
+	\mu &= \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \int_\calT g(\bst) \, \frac{\lambda(\bst)}{\lambda_\IMP(\bst) } \, \lambda_\IMP(\bst) \D \bst  \\
 	\nonumber
 	& =  \int_\calX g\bigl(\bsPsi_\IMP(\bsx)\bigr) \, \frac{\lambda\bigl(\bsPsi_\IMP(\bsx)\bigr)} {\lambda_\IMP\bigl(\bsPsi_\IMP(\bsx)\bigr) } \lambda_\IMP\bigl(\bsPsi_\IMP(\bsx)\bigr) \,\QMCPYabs{\frac{\partial \bsPsi_\IMP}{\partial \bsx}} \, \D \bsx \\
 	\nonumber
@@ -876,21 +875,21 @@ The improvement in time is less than improvement in $n$ because the integrand $f
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1\textwidth]{QMCSoftwareArticle/figs/i_aco.png} 
+	\includegraphics[width=1\textwidth]{QMCSoftwareArticle/figs/i_aco.png}
 	\caption{Left: Brownian Motion paths with drift $a=2$. Right: Corresponding Asian Call option paths with $S_0=30$, $K=45$, $\sigma=0.5$, and $r=0$.}
 	\label{fig:aco}
 \end{figure}
 
-Figure \ref{fig:aco} shows drifted Brownian motion paths and their corresponding option pricing paths. 
+Figure \ref{fig:aco} shows drifted Brownian motion paths and their corresponding option pricing paths.
 \AGSComment{Bayesian stopping criterion}
 
 \section{Under the Hood}
 
-In this section, we look at the inner workings of QMCPy and points out available features we hope will benefit the community of QMC researchers and practitioners. We also highlight important idiosyncrasies of QMC methods and how QMCPy addresses these challenges. 
+In this section, we look at the inner workings of QMCPy and points out available features we hope will benefit the community of QMC researchers and practitioners. We also highlight important idiosyncrasies of QMC methods and how QMCPy addresses these challenges.
 
 \subsection{Link to LatNetBuilder}
 
-QMCPy provides users access to high quality lattice and digital net generators (defined in Table \ref{tab:GroupProp}). A low-discrepancy generator is comprised of two parts: the static generating vectors $\bsZ_1,\bsZ_2,\bsZ_4, \dots \in [0,1)^d$ and the callable generator function. QMCPy integrates nicely with latnetbuilder \AGSComment{CITE}, a package centered around search algorithms to find high quality generating vectors. QMCPy's lattice and digital net generators can accept a vectors from latnetbuilder and use them to generate custom ordinary lattice, polynomial lattice, polynomial net, or digital net sequence. We defer readers to latnetbuilder and QMCPy documentation \AGSComment{CITE BOTH} for details. 
+QMCPy provides users access to high quality lattice and digital net generators (defined in Table \ref{tab:GroupProp}). A low-discrepancy generator is comprised of two parts: the static generating vectors $\bsZ_1,\bsZ_2,\bsZ_4, \dots \in [0,1)^d$ and the callable generator function. QMCPy integrates nicely with latnetbuilder \AGSComment{CITE}, a package centered around search algorithms to find high quality generating vectors. QMCPy's lattice and digital net generators can accept a vectors from latnetbuilder and use them to generate custom ordinary lattice, polynomial lattice, polynomial net, or digital net sequence. We defer readers to latnetbuilder and QMCPy documentation \AGSComment{CITE BOTH} for details.
 
 \subsection{Customization Options for Low Discrepancy Generators}
 
@@ -902,7 +901,7 @@ Low-discrepancy sequences differ from IID node sets in that they fill the domain
 
 \subsection{\texttt{print}ing  QMCPy Instances}
 
-A helpful features of QMCPy is the ability to print out components instances to see more detailed information. This allows users to quickly see the properties that have been set and defaulted for any given component. This feature was already used to print the data object returned by the stopping criterion's \texttt{integrate} method in Section \ref{CDHS_sec:stopping_crit}. The following code prints a drifted \texttt{BrownianMotion} instance and displays the connection to an underlying Gaussian measure. 
+A helpful features of QMCPy is the ability to print out components instances to see more detailed information. This allows users to quickly see the properties that have been set and defaulted for any given component. This feature was already used to print the data object returned by the stopping criterion's \texttt{integrate} method in Section \ref{CDHS_sec:stopping_crit}. The following code prints a drifted \texttt{BrownianMotion} instance and displays the connection to an underlying Gaussian measure.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/print_bm.txt}
 
 
@@ -929,7 +928,7 @@ A helpful features of QMCPy is the ability to print out components instances to 
 \end{itemize}}
 
 \begin{acknowledgement}
-The authors would like to thank the organizers for a wonderful MCQMC 2020. 
+The authors would like to thank the organizers for a wonderful MCQMC 2020.
 We also thank the referees for their many helpful suggestions.  This work is supported in part by National Science Foundation grants DMS-1522687 and SigOpt.
 \end{acknowledgement}
 
@@ -952,18 +951,18 @@ $$ \det(J) = \det\left(A . \text{diag}\left(\frac{1}{\phi(\Phi^{-1}(\bsx))}\righ
 
 \FJHComment{Given $g$ and $\lambda$ to define your integral, suppose that $\lambda(\bst)$ is some multiple of some multivariate normal distribution:
 	\begin{equation*}
-		\lambda(\bst)  = \frac{c \exp\bigl(-(\bst -\bsb)^T \mLambda^{-1}(\bst -\bsb)/2\bigr)}{\sqrt{ (2\pi)^d \det(\mLambda)}} 
+		\lambda(\bst)  = \frac{c \exp\bigl(-(\bst -\bsb)^T \mLambda^{-1}(\bst -\bsb)/2\bigr)}{\sqrt{ (2\pi)^d \det(\mLambda)}}
 	\end{equation*}
 Suppose that we use the variable transformation $\bsPsi$ defined in \eqref{eq:exampleVarTransGauss}.  By what you have derived above:
 \begin{align*}
-	\QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}} 
+	\QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}}
 	& = \frac{\det(\mA^T)}{\prod_{j=1}^d \phi(\Phi^{-1}(x_j))} = \sqrt{(2\pi)^d \det(\mSigma)} \exp\bigl( \QMCPYnormnorm[2]{\bsPhi^{-1}(\bsx)}^2/2\bigr) \\
 	\MoveEqLeft[2]{\lambda\bigl(\bsPsi(\bsx)\bigr) \QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}}} \\
 	& =  c \sqrt{\frac{\det(\mSigma)}{\det(\mLambda)}} \exp \bigl( [ \bsPhi^{-1}(\bsx)^T \bsPhi^{-1}(\bsx) \\
 	& \qquad \qquad -   (\mA\bsPhi^{-1}(\bsx) +\bsa -\bsb)^T\mLambda^{-1}(\mA\bsPhi^{-1}(\bsx) +\bsa -\bsb)        ] /2   \bigr) \\
-	& =  c \sqrt{\frac{\det(\mSigma)}{\det(\mLambda)}} \exp \bigl( [ \bsPhi^{-1}(\bsx)^T \bsPhi^{-1}(\bsx) 
+	& =  c \sqrt{\frac{\det(\mSigma)}{\det(\mLambda)}} \exp \bigl( [ \bsPhi^{-1}(\bsx)^T \bsPhi^{-1}(\bsx)
 	-   \bsPhi^{-1}(\bsx)^T\mA^T\mLambda^{-1}\mA \bsPhi^{-1}(\bsx)\\
-	& \qquad \qquad  - 2(\bsa -\bsb)^T \mLambda^{-1}\mA\bsPhi^{-1}(\bsx) - (\bsa -\bsb)^T \mLambda^{-1} (\bsa -\bsb)] /2   \bigr) 
+	& \qquad \qquad  - 2(\bsa -\bsb)^T \mLambda^{-1}\mA\bsPhi^{-1}(\bsx) - (\bsa -\bsb)^T \mLambda^{-1} (\bsa -\bsb)] /2   \bigr)
 \end{align*}
 If $\mLambda = \mSigma$, then this simplifies to
 \begin{equation*}
@@ -971,11 +970,11 @@ If $\mLambda = \mSigma$, then this simplifies to
 	 =  c \exp \bigl( - (\bsa -\bsb)^T \mA^{-T} [
 	2 \bsPhi^{-1}(\bsx) + \mA^{-1}(\bsa -\bsb)] /2   \bigr) .
 \end{equation*}
-If $\mLambda = \lambda^2 \mI$ and  $\mA = \sigma \mI$, then 
+If $\mLambda = \lambda^2 \mI$ and  $\mA = \sigma \mI$, then
 \begin{align*}
 	\lambda\bigl(\bsPsi(\bsx)\bigr) \QMCPYabs{\frac{\partial \bsPsi}{\partial \bsx}}
-	& = \frac{c\sigma}{\lambda} 
-	\exp \bigl( [ (\lambda^2 -\sigma^2)\bsPhi^{-1}(\bsx)^T\bsPhi^{-1}(\bsx) 
+	& = \frac{c\sigma}{\lambda}
+	\exp \bigl( [ (\lambda^2 -\sigma^2)\bsPhi^{-1}(\bsx)^T\bsPhi^{-1}(\bsx)
 	\\
 	& -  (\bsa -\bsb)^T [
 	2\sigma \bsPhi^{-1}(\bsx) + (\bsa -\bsb)] /(2\lambda^2)   \bigr) .
@@ -985,7 +984,7 @@ If $\mLambda = \lambda^2 \mI$ and  $\mA = \sigma \mI$, then
 \AGSComment{
 
 \subsection{Chaining Transforms}
-With $k$ transforms, let $\hat{\bsPsi}_j(\bsx) = (\bsPsi_j \circ \bsPsi_{j-1} \circ \dots \circ \bsPsi_1)(\bsx)$ denote the first $j$ compositions and $\bst = \hat{\bsPsi}_k(\bsx)$ be the complete transformation. Then, 
+With $k$ transforms, let $\hat{\bsPsi}_j(\bsx) = (\bsPsi_j \circ \bsPsi_{j-1} \circ \dots \circ \bsPsi_1)(\bsx)$ denote the first $j$ compositions and $\bst = \hat{\bsPsi}_k(\bsx)$ be the complete transformation. Then,
 $$f(\bsx) = g(\hat{\bsPsi}_k(\bsx)) \frac{\lambda(\hat{\bsPsi}_k(\bsx))}{\varrho(\bsx)} \prod_{i=1}^{k} \left\lvert \frac{\D \, \bsPsi_i}{\D \, \hat{\bsPsi}_{i-1}(\bsx)} \right\rvert$$
 where $\hat{\bsPsi}_0(\bsx) = \bsx$.
 }
@@ -1008,9 +1007,9 @@ where $\hat{\bsPsi}_0(\bsx) = \bsx$.
 
 \begin{itemize}
     \item One way is to have these \texttt{Integrand} classes assume a \tm and only need a \dd input. If you do not like the default \tm, then you need to input your own.
-    
+
     \item Another way is to have these \texttt{Integrand} classes take a \tm input and use that, plus their knowledge of $g$ and $\lambda$ to find $f$, perhaps by what could be considered importance sampling.
-    
+
 \end{itemize}
 \end{itemize}
 }

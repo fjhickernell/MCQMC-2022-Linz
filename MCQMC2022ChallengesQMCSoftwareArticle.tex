@@ -143,14 +143,22 @@ Expanding on the problem formulation in the introduction, we want to approximate
 \end{gather}
 Progressing from the original problem to a satisfactory solution requires several software components.  Great QMC software environment allows different implementations of these components to be interchanged.
 
-\subsection{LD Generators} A lattice, digital net, or Halton point generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
+\subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
-LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"nschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, SciPy \cite{virtanen2020scipy}, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tfqfQMC2021a}, and MatBuilder \cite{paulin2022}.  Joe and Kuo
+LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"nschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, SciPy \cite{virtanen2020scipy}, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tfqfQMC2021a}, and MatBuilder \cite{paulin2022}.
+
+Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can by shared across software libraries.
 
 
+\subsection{Integrands and Variable Transformations} The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
+\begin{itemize}
+	\item $g$ may represent the discounted payoff of a financial derivative and $\lambda$ be the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
 
+	\item  $g$ may represent the velocity of flow at a point in rock and $\lambda$ is the PDF of the porosity field , or
 
-The \emph{integrand}, $g$, and the non-negative weight, $\lambda$, define the original integral arising from an application.  The function $g$ may represent the discounted payoff of a financial derivative, or the velocity of flow at a point in rock with stochastic porosity.  If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.
+	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by parameter of interest.
+\end{itemize},
+If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.
 
 To put $\mu$ into the form that is directly accessible to QMC methods requires a \emph{variable transformation}, $\bsPsi$, such that
 \begin{equation*}
@@ -174,8 +182,7 @@ No one software library contains all of these features, which is why great QMC s
 
 
 
-
-
+\iffalse
 LatNetBuilder \cite{LatNet}
    and MatBuilder \cite{paulin2022}
     \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
@@ -185,7 +192,7 @@ LatNetBuilder \cite{LatNet}
     \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
 ago
     \item CUBA \cite{CUBA}
-
+\fi
 
 
 

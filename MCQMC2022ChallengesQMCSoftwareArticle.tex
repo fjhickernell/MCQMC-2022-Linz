@@ -141,7 +141,7 @@ Expanding on the problem formulation in the introduction, we want to approximate
  \label{CDHS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
-Progressing from the original problem to a satisfactory solution requires several software components.  Great QMC software environment allows different implementations of these components to be interchanged.
+Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be interchanged.
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
@@ -149,22 +149,24 @@ LD generators are the most prevalent generally available components of QMC softw
 
 Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can by shared across software libraries.
 
+For the comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, including the LD sequence generators allow users to a ????
+
 
 \subsection{Integrands and Variable Transformations} The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
 \begin{itemize}
-	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ be the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
+	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ is the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
 
-	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$, or
+	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$ \cite{}, or
 
 	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by parameter of interest.
 \end{itemize}
-If $\lambda$ is a probability density function for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.
 
 To put $\mu$ into the form that is directly accessible to QMC methods requires a \emph{variable transformation}, $\bsPsi$, such that
 \begin{equation*}
-    \Psi((0,1)^d) = \calT, \qquad f(x) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial{\bsx}}}.
+    \Psi((0,1)^d) = \calT, \qquad f(\bsx) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial\bsx}}.
 \end{equation*}
-Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.
+Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  Moreover, one might choose $\bsPsi$ such that $\bsT = \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$.
+
 
  Joe and Kuo
 

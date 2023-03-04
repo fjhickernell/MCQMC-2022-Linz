@@ -190,34 +190,29 @@ Although correctness is an obvious feature of great QMC software, it cannot alwa
 
 MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu/'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
 
-SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale is that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, and this point becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the next structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other libraries with LD sequences still omit the first point.
+SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale is that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, and this point becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the next structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequences still omit the first point.
 
-QMC software is sometimes written by those not intimately involved in the QMC community.  Those of us who are most familiar with good QMC practice need to vigilantly be aware of QMC software in popular practices and inform the developers when bugs are spotted.
+QMC software is sometimes written by those not intimately a part of the QMC community.  Those of us who are most familiar with good QMC practice need to vigilantly be aware of QMC software in popular practices and inform the developers when bugs are spotted.
 
 \section{Efficient} \label{CDHS_sec:efficient}
-
-
-
-* New architectures
-* Memory and FLOPS
+Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.  
 
 \section{Accessible} \label{CDHS_sec:accessible}
-* Documentation
-* Demos
-* Tutorials
-* Blogs
-* Supported, issues, features
-* Up to date
-*
+One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored on a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software work and forming a basis for a new user to write code to solve their own examples.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  
 
-\section{Sustainable} \label{CDHS_sec:sustainable} Community Owned
+
+\section{Sustainable} \label{CDHS_sec:sustainable} 
+Great QMC software should be alive.  It should be under active development or merged into a libraary that is actively maintained.  Commercial software has a infrastructure to sustain the algorithms in their libraries, but without attention, those algorithms can become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.  
+
+
+
+Community Owned
 * Developers, contributors
 * Use to illustrate research code
 * Use cases, new applications
 * Referenced
 * Build STEM pipeline
 
-\section{Scalable} \label{CDHS_sec:scalable}
 
 
 \section{Tenets of Great Software} \label{CDHS_sec:tenets_of_great_software}

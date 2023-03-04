@@ -48,6 +48,7 @@
 \usepackage{xspace}
 \usepackage[hyphens]{url}
 \providecommand{\HickernellFJ}{Hickernell\xspace}
+\graphicspath{{ProgramsImages/}}
 
 %\input FJHDef.tex
 \newcommand{\AGSComment}[1]{{\color{red} #1}}
@@ -145,11 +146,11 @@ Progressing from the original problem to a satisfactory solution requires severa
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
-LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, SciPy \cite{virtanen2020scipy}, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
+LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy}, and TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
 Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can by shared across software libraries.
 
-For the comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, the LD sequence generators included already allow users to easily access them while drawing from other packages in these environments.  However, the developers of smaller libraries, like BRODA and QMCPy should assume the responsibility of showing how their libraries can connect well with others.
+For the comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, the LD sequence generators included already allow users to easily access them while drawing from other packages in these environments.  Some large environments, like Dakota \cite{DakotaUsersManual} and SAS have limited LD generators and should expand their offerings.  Developers of smaller libraries, like BRODA and QMCPy, should take initiative to show how their libraries can connect well with others.
 
 \subsection{Integrands and Variable Transformations} The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
 \begin{itemize}
@@ -166,66 +167,29 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 \end{equation*}
 Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  Moreover, one might choose $\bsPsi$ such that $\bsT = \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$.
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UM-Bridge \cite{umbridge} (the UQ and Model Bridge), which connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate how UM-Bridge connects QMCPy with a differential equation solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}.  
-
-
 \begin{figure}
     \centering
-    \includegraphics[width=0.3\textwidth]{cantileveredbeam.eps}
-    \caption{Caption}
-    \label{fig:my_label}
+    \includegraphics[width=0.5\textwidth]{cantileveredbeam.eps}
+    \includegraphics[width=0.7\textwidth]{ldparallelbeam.eps}
+    \caption{The expected deflection of a beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five.}
+    \label{fig:beam}
 \end{figure}
 
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UM-Bridge \cite{umbridge} (the UQ and Model Bridge), which connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a} where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $30$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of the laptop computer to decrease execution time.
+
+We need more connections of QMC software to other libraries, like what has been done with  QMCPy with and UM-Bridge.  This will facilitate the newer and better QMC algorithms tackling new applications.
 
 \subsection{Stopping Criteria}
-Finally, a \emph{stopping criterion} is determines the sample size, $n$, required to satisfy the error criterion \eqref{CDHS_eq:error_tol} given in terms of the absolute error tolerance, $\varepsilon$.  One can also imagine error criteria involving a relative error tolerance or a combination of absolute and relative error tolerances.
+The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
 
-
-\subsection{??}
-No one software library contains all of these features, which is why great QMC software must be well integrated into other software libraries.  This may mean large libraries including QMC routines and/or building connections between QMC libraries and other libraries.
-
-
-
-
-
-
-
-
-
-
-\iffalse
-LatNetBuilder \cite{LatNet}
-   and MatBuilder \cite{paulin2022}
-    \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
-    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb}
-    \item Multi-level software \cite{GilesSoft,GilesQSoft}
-    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}
-    \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
-ago
-    \item CUBA \cite{CUBA}
-\fi
-
-
-
-
-
-
-This requires four components, which we implement as QMCPy classes.
-
-
-Software should be \emph{integrated} into the environment's scientific software ecosystem. More simply, libraries should play nicely together and utilize the mature developments of other teams. A simple example in \AGSComment{CITE} shows a straightforward integration between the QMC package QMCPy \cite{QMCPy2020a} and the PDE package FEniCS/Dolfin \cite{LoggEtal_10_2012}, both in Python.
-
-
-
-
-* Standard definitions, e.g., for LD generator
-* UM-Bridge, Dolfin
-* Move to other libraries
-* Demos, bridges
-
+We emphasize again that no one software library contains all of these features, which is why great QMC software must be well integrated into other software libraries.  This may mean large libraries incorporating more QMC routines and/or building connections between QMC libraries and other libraries.
 
 
 \section{Correct} \label{CDHS_sec:correct}
+Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  
+
+
+
 * Matlab randomization
 * Don't omit first point
 *

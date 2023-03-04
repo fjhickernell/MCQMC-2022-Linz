@@ -1,7 +1,7 @@
 %% This BibTeX bibliography file was created using BibDesk.
-%% https://bibdesk.sourceforge.io/
+%% http://bibdesk.sourceforge.net/
 
-%% Created for Fred Hickernell at 2023-02-11 14:50:49 -0600 
+%% Created for Fred Hickernell at 2023-03-01 21:58:21 -0600 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
@@ -75,6 +75,25 @@
 @string{sub = {\Ignore{u}Manuscripts Under Review}}
 
 
+@webpage{SAS_LD,
+	author = {{SAS Institute}},
+	date-added = {2023-03-01 19:44:00 -0600},
+	date-modified = {2023-03-01 19:46:09 -0600},
+	lastchecked = {2023},
+	title = {SAS Documentation for the MODEL Procedure},
+	url = {https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.4/etsug/etsug_model_sect197.htm},
+	year = {2023},
+	bdsk-url-1 = {https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.4/etsug/etsug_model_sect197.htm}}
+
+@webpage{ParSee22a,
+	author = {M. Parno and L. Seelinger},
+	date-added = {2023-02-25 22:20:15 -0600},
+	date-modified = {2023-02-25 22:21:38 -0600},
+	title = {Uncertainty propagation of material properties of a cantilevered beam},
+	url = {https://um-bridge-benchmarks.readthedocs.io/en/docs/forward-benchmarks/muq-beam-propagation.html},
+	year = {2022},
+	bdsk-url-1 = {https://um-bridge-benchmarks.readthedocs.io/en/docs/forward-benchmarks/muq-beam-propagation.html}}
+
 @article{osti_1846008,
 	author = {Bernholdt, David E. and Cary, John and Heroux, Michael and McInnes, Lois Curfman},
 	doi = {10.2172/1846008},
@@ -85,6 +104,22 @@
 	year = {2022},
 	bdsk-url-1 = {https://www.osti.gov/biblio/1846008},
 	bdsk-url-2 = {https://doi.org/10.2172/1846008}}
+
+@article{GodLec2022,
+	abstract = { We study quasi-Monte Carlo (QMC) integration of smooth functions defined over the multidimensional unit cube. Inspired by a recent work of Pan and Owen, we study a new construction-free median QMC rule which can exploit the smoothness and the weights of function spaces adaptively. For weighted Korobov spaces, we draw a sample of \$r\$ independent generating vectors of rank-1 lattice rules, compute the integral estimate for each, and approximate the true integral by the median of these \$r\$ estimates. For weighted Sobolev spaces, we use the same approach but with the rank-1 lattice rules replaced by high-order polynomial lattice rules. A major advantage over the existing approaches is that we do not need to construct good generating vectors by a computer search algorithm, while our median QMC rule achieves almost the optimal worst-case error rate for the respective function space with any smoothness and weights, with a probability that converges to 1 exponentially fast as \$r\$ increases. Numerical experiments illustrate and support our theoretical findings. },
+	author = {Goda, Takashi and L'Ecuyer, Pierre},
+	date-added = {2023-01-19 12:36:01 -0600},
+	date-modified = {2023-01-19 12:36:17 -0600},
+	doi = {10.1137/22M1473625},
+	eprint = {https://doi.org/10.1137/22M1473625},
+	journal = {SIAM Journal on Scientific Computing},
+	number = {4},
+	pages = {A2765-A2788},
+	title = {Construction-Free Median Quasi-Monte Carlo Rules for Function Spaces with Unspecified Smoothness and General Weights},
+	url = {https://doi.org/10.1137/22M1473625},
+	volume = {44},
+	year = {2022},
+	bdsk-url-1 = {https://doi.org/10.1137/22M1473625}}
 
 @inproceedings{pmlr-v80-chen18f,
 	abstract = {An important task in computational statistics and machine learning is to approximate a posterior distribution $p(x)$ with an empirical measure supported on a set of representative points $\{x_i\}_{i=1}^n$. This paper focuses on methods where the selection of points is essentially deterministic, with an emphasis on achieving accurate approximation when $n$ is small. To this end, we present Stein Points. The idea is to exploit either a greedy or a conditional gradient method to iteratively minimise a kernel Stein discrepancy between the empirical measure and $p(x)$. Our empirical results demonstrate that Stein Points enable accurate approximation of the posterior at modest computational cost. In addition, theoretical results are provided to establish convergence of the method.},
@@ -431,10 +466,11 @@
 
 @webpage{QMCJulia,
 	date-added = {2022-07-15 13:07:31 -0500},
-	date-modified = {2022-07-15 13:08:30 -0500},
+	date-modified = {2023-03-01 21:57:34 -0600},
 	lastchecked = {2022},
 	title = {{SciML QuasiMonteCarlo.jl}},
 	url = {https://github.com/SciML/QuasiMonteCarlo.jl},
+	year = {2022},
 	bdsk-url-1 = {https://github.com/SciML/QuasiMonteCarlo.jl}}
 
 @manual{DakotaUsersManual,

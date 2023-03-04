@@ -186,16 +186,18 @@ We emphasize again that no one software library contains all of these features, 
 
 
 \section{Correct} \label{CDHS_sec:correct}
-Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  
+Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  Here are two examples.
 
+MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu/'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
 
+SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale is that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, and this point becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the next structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other libraries with LD sequences still omit the first point.
 
-* Matlab randomization
-* Don't omit first point
-*
-
+QMC software is sometimes written by those not intimately involved in the QMC community.  Those of us who are most familiar with good QMC practice need to vigilantly be aware of QMC software in popular practices and inform the developers when bugs are spotted.
 
 \section{Efficient} \label{CDHS_sec:efficient}
+
+
+
 * New architectures
 * Memory and FLOPS
 

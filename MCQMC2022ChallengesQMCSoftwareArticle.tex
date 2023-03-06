@@ -180,52 +180,50 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \label{fig:beam}
 \end{figure}
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $30$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of the laptop computer to decrease execution time.
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $31$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
 
-We need more connections of QMC software to other libraries, like what has been done with  QMCPy with and UM-Bridge.  This will facilitate the newer and better QMC algorithms tackling new applications.
+We need more connections of QMC software to other libraries, like what has been done with  QMCPy with and UM-Bridge.  This will facilitate allow newer and better QMC algorithms to tackle new applications.
 
 \subsection{Stopping Criteria}
-The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
+The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
 
-We emphasize again that no one software library contains all of these features, which is why great QMC software must be well integrated into other software libraries.  This may mean large libraries incorporating more QMC routines and/or building connections between QMC libraries and other libraries.
+We emphasize again that no one software library contains all of the best LD generators, integrands, variable transformations, and stopping criteria, which is why great QMC software must be well integrated into other software libraries.  This may take the form of large libraries incorporating more QMC routines and/or building connections among QMC libraries and with other non-QMC libraries.
 
 
 \section{Correct} \label{CDHJS_sec:correct}
 Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  Here are two examples.
 
-MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu/'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
+MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
 
-SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale is that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, and this point becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the next structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequences still omit the first point.
+SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
 
-QMC software is sometimes written by those not intimately a part of the QMC community.  Those of us who are most familiar with good QMC practice need to vigilantly be aware of QMC software in popular practices and inform the developers when bugs are spotted.
+QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practice need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from good practice.
 
 \section{Efficient} \label{CDHJS_sec:efficient}
 Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.  
 
+Efficiency gains in QMC software can also be the result clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
+
 \section{Accessible} \label{CDHJS_sec:accessible}
-One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored on a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software work and forming a basis for a new user to write code to solve their own examples.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  
+One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  
 
 
 \section{Sustainable} \label{CDHJS_sec:sustainable} 
-Great QMC software should be alive.  It should be under active development or merged into a libraary that is actively maintained.  Commercial software has a infrastructure to sustain the algorithms in their libraries, but without attention, those algorithms can become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.  
+Great QMC software libraries should be alive.  They should be under active development or merged into a another library that is actively maintained.  Commercial software has an infrastructure to sustain their algorithms, but without attention, those algorithms may become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.  
 
+The QMC community can help sustain great QMC software in several ways.  Let's use existing QMC software libraries to build our research code and showcase our new algorithms.  Doing this allows the next generation to more easily reproduce our results and build upon them.  We should post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.  When we see bugs or missing features in QMC software, let's persistently request them.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
 
+Many of us QMC researchers don't code.  We rely on transient team members (students and postdocs) to write the code that showcases our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code your team writes will last beyond the time of the membership in your group. 
 
-Community Owned
-* Developers, contributors
-* Use to illustrate research code
-* Use cases, new applications
-* Referenced
-* Build STEM pipeline
+Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
+
+\section{Summary}
+QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
 
 \bibliographystyle{spmpsci}
 \bibliography{FJH23,FJHown23}
 
-\AGSComment{
-
-
-}
 
 \end{document}
 

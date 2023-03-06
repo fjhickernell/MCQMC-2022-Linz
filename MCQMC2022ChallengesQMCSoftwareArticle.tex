@@ -78,7 +78,7 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 \maketitle
 
 \abstract{
-Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software to realize that implements QMC algorithms. We review what QMC software has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
+Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We review what QMC software has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
 }
 
 
@@ -95,7 +95,7 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
         \label{eq:mc_average}
     \end{equation}
 \end{enumerate}
-However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
 
 In the next section we describe why QMC software is important.  We then discuss characteristics of great QMC software:
 
@@ -143,7 +143,7 @@ We next discuss characteristics of great QMC software outlined in the introducti
 Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}$:
 \begin{gather}
 \label{eq:cubSummary}
-	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=0}^{n-1} f(\bsx_i) =: \hat{\mu}_n, \\
+	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=1}^{n} f(\bsx_i) =: \hat{\mu}_n, \\
  \label{CDHJS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
@@ -181,9 +181,9 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \label{fig:beam}
 \end{figure}
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $31$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $31$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
 
-We need more connections of QMC software to other libraries, like what has been done with  QMCPy with and UM-Bridge.  This will facilitate allow newer and better QMC algorithms to tackle new applications.
+We need more connections of QMC software to other libraries, like what has been done with  QMCPy and UM-Bridge.  This will allow newer and better QMC algorithms to tackle new applications.
 
 \subsection{Stopping Criteria}
 The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
@@ -198,7 +198,7 @@ MATLAB's original randomization of Sobol' points was incorrectly implemented.  T
 
 SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
 
-QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practice need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from good practice.
+QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practice need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from best practice.
 
 \section{Efficient} \label{CDHJS_sec:efficient}
 Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.

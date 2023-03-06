@@ -26,7 +26,8 @@
 \usepackage{cite}
 %\usepackage{url}
 \usepackage{array,colortbl}
-\usepackage{amsmath,amsfonts,amssymb,bm,amsthm,mathtools,mathrsfs}
+\usepackage{amsmath,amsfonts,bm,mathtools,mathrsfs} % taken out amssymb, amsthm
+
 \DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
 \DeclareFontShape{U}{mathx}{m}{n}{
       <5> <6> <7> <8> <9> <10>
@@ -146,8 +147,8 @@
 \newcommand{\Rational}{{\mathbb{Q}}}
 \newcommand{\Real}{{\mathbb{R}}}
 % indicator boldface 1:
-\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
-\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
+%\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+%\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
 \newcommand{\ind}{{\mathbbold{1}}}
 \newcommand{\bbone}{{\mathbbold{1}}}
 

@@ -62,7 +62,7 @@
 \author{Sou-Cheng Terrya Choi \and Yuhan Ding \and Fred J. Hickernell \and R. Jagadeeswaran Aleksei G. Sorokin}
 \institute{
 Sou-Cheng Terrya Choi \at Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@hawk.iit.edu}
-\and 
+\and
 Yuhan Ding \at
  Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{yding2@hawk.iit.edu}
 \and
@@ -111,7 +111,7 @@ In the next section we describe why QMC software is important.  We then discuss 
 
 \end{itemize}
 
-In each section we describe the challenges faced and how they might be overcome.  
+In each section we describe the challenges faced and how they might be overcome.
 
 
 
@@ -146,7 +146,7 @@ Expanding on the problem formulation in the introduction, we want to approximate
  \label{CDHJS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
-Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be freely interchanged.  
+Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be freely interchanged.
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
@@ -174,7 +174,7 @@ Such a transformation is typically non-unique, and the choice of a good one is e
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{cantileveredbeam.eps}
+    \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=0.7\textwidth]{ldparallelbeam.eps}
     \caption{The expected deflection of a beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five.}
     \label{fig:beam}
@@ -193,27 +193,27 @@ We emphasize again that no one software library contains all of the best LD gene
 \section{Correct} \label{CDHJS_sec:correct}
 Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  Here are two examples.
 
-MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
+MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.
 
 SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
 
 QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practice need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from good practice.
 
 \section{Efficient} \label{CDHJS_sec:efficient}
-Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.  
+Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.
 
 Efficiency gains in QMC software can also be the result clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
 
 \section{Accessible} \label{CDHJS_sec:accessible}
-One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  
+One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.
 
 
-\section{Sustainable} \label{CDHJS_sec:sustainable} 
-Great QMC software libraries should be alive.  They should be under active development or merged into a another library that is actively maintained.  Commercial software has an infrastructure to sustain their algorithms, but without attention, those algorithms may become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.  
+\section{Sustainable} \label{CDHJS_sec:sustainable}
+Great QMC software libraries should be alive.  They should be under active development or merged into a another library that is actively maintained.  Commercial software has an infrastructure to sustain their algorithms, but without attention, those algorithms may become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
 
 The QMC community can help sustain great QMC software in several ways.  Let's use existing QMC software libraries to build our research code and showcase our new algorithms.  Doing this allows the next generation to more easily reproduce our results and build upon them.  We should post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.  When we see bugs or missing features in QMC software, let's persistently request them.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
 
-Many of us QMC researchers don't code.  We rely on transient team members (students and postdocs) to write the code that showcases our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code your team writes will last beyond the time of the membership in your group. 
+Many of us QMC researchers don't code.  We rely on transient team members (students and postdocs) to write the code that showcases our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code your team writes will last beyond the time of the membership in your group.
 
 Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
 

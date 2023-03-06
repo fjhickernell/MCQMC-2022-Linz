@@ -59,12 +59,17 @@
 
 \title*{Challenges in Developing Great Quasi-Monte Carlo Software}
 \authorrunning{S.-C.\ T.\ Choi et al}
-\author{Sou-Cheng Terrya Choi \and Yuhan Ding \and Fred J. Hickernell \and Aleksei G. Sorokin}
-\institute{Sou-Cheng Terrya Choi \at Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@hawk.iit.edu}
+\author{Sou-Cheng Terrya Choi \and Yuhan Ding \and Fred J. Hickernell \and R. Jagadeeswaran Aleksei G. Sorokin}
+\institute{
+Sou-Cheng Terrya Choi \at Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@hawk.iit.edu}
+\and 
+Yuhan Ding \at
+ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{yding2@hawk.iit.edu}
 \and
 Fred J. Hickernell \at Center for Interdisciplinary Scientific Computation and \\
 Department of Applied Mathematics, Illinois Institute of Technology \\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{hickernell@iit.edu}
-\and Yuhan Ding \at
+\and
+R. Jagadeeswaran \at ???
 \and
 Aleksei G. Sorokin \at
 Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{asorokin@hawk.iit.edu}}
@@ -75,7 +80,6 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software to realize that implements QMC algorithms. We review what QMC software has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
 }
 
-\newpage
 
 \section{Introduction}
 
@@ -90,28 +94,28 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
         \label{eq:mc_average}
     \end{equation}
 \end{enumerate}
-However, the practice of QMC is often more complicated.  The original problem may need to be rewritten fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a desired error tolerance.
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
 
 In the next section we describe why QMC software is important.  We then discuss characteristics of great QMC software:
 
 \begin{itemize}
-\item Integrated with related libraries (Sect.\ \ref{CDHS_sec:integrated}),
+\item Integrated with related libraries (Sect.\ \ref{CDHJS_sec:integrated}),
 
-\item Correct (Sect.\ \ref{CDHS_sec:correct}),
+\item Correct (Sect.\ \ref{CDHJS_sec:correct}),
 
-\item Efficient in computational time and memory (Sect.\ \ref{CDHS_sec:efficient}),
+\item Efficient in computational time and memory (Sect.\ \ref{CDHJS_sec:efficient}),
 
-\item Accessible to practitioners and theorists alike (Sect.\ \ref{CDHS_sec:accessible}),
+\item Accessible to practitioners and theorists alike (Sect.\ \ref{CDHJS_sec:accessible}), and
 
-\item Sustainable by a community that owns it (Sect.\ \ref{CDHS_sec:sustainable}), and
-
-\item Scalable to advanced hardware architectures (Sect.\  \ref{CDHS_sec:scalable}).
+\item Sustainable by a community that owns it (Sect.\ \ref{CDHJS_sec:sustainable}).
 
 \end{itemize}
 
-Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}.
+In each section we describe the challenges faced and how they might be overcome.  
 
-\section{Why Develop QMC Software} \label{CDHS_sec:why_we_need_software}
+
+
+\section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
 Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. Three cross-cutting themes that arose in this workshop were
 \begin{itemize}
@@ -125,24 +129,24 @@ These themes apply to QMC software in particular, as well as scientific software
 
 \subsection{QMC Theory to Software}
 
-QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerical stable, and provides reasonable default choices of tuning parameters. Good QMC software relieves users of these concerns.
+QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerical stable, and provides reasonable default choices of tuning parameters. Great QMC software relieves users of these concerns.
 
 \subsection{QMC Software to Theory}
 
-Good QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results leads to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
+Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results leads to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
 We next discuss characteristics of great QMC software outlined in the introduction.  For each characteristic we identify what is lacking and what might be done to remedy the lack.
 
-\section{Integrated} \label{CDHS_sec:integrated}
+\section{Integrated} \label{CDHJS_sec:integrated}
 
 Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}$:
 \begin{gather}
 \label{eq:cubSummary}
 	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=0}^{n-1} f(\bsx_i) =: \hat{\mu}_n, \\
- \label{CDHS_eq:error_tol}
+ \label{CDHJS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
-Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be interchanged.  
+Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be freely interchanged.  
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
@@ -150,18 +154,19 @@ LD generators are the most prevalent generally available components of QMC softw
 
 Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can by shared across software libraries.
 
-For the comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, the LD sequence generators included already allow users to easily access them while drawing from other packages in these environments.  Some large environments, like Dakota \cite{DakotaUsersManual} and SAS have limited LD generators and should expand their offerings.  Developers of smaller libraries, like BRODA and QMCPy, should take initiative to show how their libraries can connect well with others.
+Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these could provide more flexibility in their LD offerings.  Some large environments, such as  Dakota \cite{DakotaUsersManual} and SAS, have quite limited LD generators and should expand their offerings.  Developers of smaller libraries with more QMC features, like BRODA and QMCPy, should demonstrate how their libraries can connect well with other software environments.  An example involving QMCPy is given in the next subsection.
 
-\subsection{Integrands and Variable Transformations} The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
+\subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
+The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
 \begin{itemize}
 	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ is the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
 
-	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$ \cite{}, or
+	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$ \cite{KuoNuy16a}, or
 
-	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by parameter of interest.
+	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by parameter of interest \cite{GelEtal13}.
 \end{itemize}
 
-To put $\mu$ into the form that is directly accessible to QMC methods requires a \emph{variable transformation}, $\bsPsi$, such that
+To put $\mu$ into the form that is directly accessible to QMC methods requires a variable transformation, $\bsPsi$, such that
 \begin{equation*}
     \Psi((0,1)^d) = \calT, \qquad f(\bsx) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial\bsx}}.
 \end{equation*}
@@ -175,17 +180,17 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \label{fig:beam}
 \end{figure}
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UM-Bridge \cite{umbridge} (the UQ and Model Bridge), which connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a} where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $30$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of the laptop computer to decrease execution time.
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $30$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, the evaluation of the beam deflection can be computed in parallel in multiple cores of the laptop computer to decrease execution time.
 
 We need more connections of QMC software to other libraries, like what has been done with  QMCPy with and UM-Bridge.  This will facilitate the newer and better QMC algorithms tackling new applications.
 
 \subsection{Stopping Criteria}
-The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
+The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
 
 We emphasize again that no one software library contains all of these features, which is why great QMC software must be well integrated into other software libraries.  This may mean large libraries incorporating more QMC routines and/or building connections between QMC libraries and other libraries.
 
 
-\section{Correct} \label{CDHS_sec:correct}
+\section{Correct} \label{CDHJS_sec:correct}
 Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  Here are two examples.
 
 MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu/'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.  
@@ -194,14 +199,14 @@ SciPy and PyTorch's original implementations of Sobol' sequences omitted the fir
 
 QMC software is sometimes written by those not intimately a part of the QMC community.  Those of us who are most familiar with good QMC practice need to vigilantly be aware of QMC software in popular practices and inform the developers when bugs are spotted.
 
-\section{Efficient} \label{CDHS_sec:efficient}
+\section{Efficient} \label{CDHJS_sec:efficient}
 Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.  
 
-\section{Accessible} \label{CDHS_sec:accessible}
+\section{Accessible} \label{CDHJS_sec:accessible}
 One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored on a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software work and forming a basis for a new user to write code to solve their own examples.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  
 
 
-\section{Sustainable} \label{CDHS_sec:sustainable} 
+\section{Sustainable} \label{CDHJS_sec:sustainable} 
 Great QMC software should be alive.  It should be under active development or merged into a libraary that is actively maintained.  Commercial software has a infrastructure to sustain the algorithms in their libraries, but without attention, those algorithms can become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.  
 
 
@@ -218,21 +223,8 @@ Community Owned
 \bibliography{FJH23,FJHown23}
 
 \AGSComment{
-\tableofcontents
-\section*{TODO}
-\begin{itemize}
-    \item Flesh out Section \ref{CDHS_sec:encouraging_collaborative_developement}
-    \item QMC Software Architecture section: better way then description of components and list of softwares?
-    \item For Section \ref{CDHS_sec:tenets_of_great_software}, the slides also include
-    \begin{itemize}
-        \item  Complete---contain the components or  easily access components in other libraries to solve real, complex problems
-        \item Current---include the latest and best algorithms
-    \end{itemize}
-    which I think fall under the umbrella of software being \emph{integrated} with the community.
-    \item update QMCPy citation \cite{QMCPy2020a}
-    \item figures?
-    \item I have left out or been breif about material from the following slides: QMCPy + FEniCS/Dolfin,  Building a Developer Team for Your Library
-\end{itemize}
+
+
 }
 
 \end{document}
@@ -441,7 +433,7 @@ Community Owned
 
 
 
-\section{Introduction} \label{CDHS_sec:intro}
+\section{Introduction} \label{CDHJS_sec:intro}
 Quasi-Monte Carlo (QMC) methods promise great efficiency gains over independent and identically distributed (IID) Monte Carlo (MC) methods.  In some cases QMC  achieves one hundredth of the error of IID MC in the same amount of time. Often, these efficiency gains are obtained simply by  replacing IID sampling by low discrepancy (LD) sampling, which is the heart of QMC.
 
 As a practitioner, you might wish to test whether QMC would speed your computation.  You would like easy access to the best QMC algorithms available.  As a theoretician or an algorithm developer, you would want to demonstrate your best ideas on  various  use cases to show their practical value.
@@ -491,7 +483,7 @@ The variation is a (semi-) norm of the integrand in a suitable Banach space.  Th
 
 In the sections that follow we first overview available QMC software.  We next describe an architecture for good QMC software, i.e., what are the key components and how should they interact.  We then describe how we have implemented this architecture in QMCPy.  Finally, we summarize further directions that we hope QMCPy and related software projects will take.  Those interested in following the development of QMCPy or even contributing to that development are urged to visit the GitHub repository at \href{https://qmcsoftware.github.io/QMCSoftware/}{\nolinkurl{https://qmcsoftware.github.io/QMCSoftware/}}.
 
-\section{Available Software for QMC} \label{CDHS_sec:available}
+\section{Available Software for QMC} \label{CDHJS_sec:available}
 QMC software spans  LD sequence generators, algorithms, and applications.  We review the better known software collections, recognizing that some software overlaps multiple categories.
 Software focusing on generating high quality LD sequences  or their generators includes
 \begin{description}[format=\textup,format=\textbf]
@@ -537,7 +529,7 @@ This requires four components, which we implement as QMCPy classes.
 	\item[Stopping Criterion] that determines how large $n$ should be to ensure that $\QMCPYabs{\mu - \hmu_n} \le \varepsilon$.
 \end{description}
 
-The software libraries referenced in Section \ref{CDHS_sec:available} provide one or more of these components. QMCPy combines multiple examples of them all under and object oriented framework. Each example is implemented as a concrete class that realizes the properties and methods required by the abstract class for that component. The following sections detail descriptions and use cases for each component and select implementations.
+The software libraries referenced in Section \ref{CDHJS_sec:available} provide one or more of these components. QMCPy combines multiple examples of them all under and object oriented framework. Each example is implemented as a concrete class that realizes the properties and methods required by the abstract class for that component. The following sections detail descriptions and use cases for each component and select implementations.
 
 Thorough documentation of all QMCPy classes can be found in \cite{QMCPyDocs}. Demonstrations of how QMCPy work are given in Google Colab notebooks \cite{QMCPyTutColab2020,QMCPyTutColab2020_paper} \AGSComment{Update \cite{QMCPyTutColab2020_paper}'s link}. The project may be installed from PyPI into your Python 3 environment via the command \texttt{pip install qmcpy}. In the codes that follows, we assume QMCPy has been imported alongside Numpy \cite{numpy}
 %and Scipy \cite{scipy}
@@ -711,7 +703,7 @@ The $\bsPsi$ chosen when transforming uniform points on the unit cube to fill th
 In the examples above, one needed to input the correct $g$ into \texttt{CustomFun} along with the correct \texttt{TrueMeasure} $\lambda$ to define the integration problem. The \texttt{Keister} integrand included in the QMCPy library takes a more flexible approach of defining the integration problem $\mu$ in \eqref{eq:KeisterIntegral}. Selecting a different \texttt{sampler} $\bsPsi$ performs  \emph{importance sampling} which leaves $\mu$ unchanged.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/i_keisterBuiltIn.txt}
 
-\section{Stopping Criteria} \label{CDHS_sec:stopping_crit}
+\section{Stopping Criteria} \label{CDHJS_sec:stopping_crit}
 
 The \texttt{StoppingCriterion} object determines the number of samples $n$ that are required for the sample mean approximation $\hmu$ to be within error tolerance $\varepsilon$ of the true mean $\mu$.  Several QMC stopping criteria have been implemented in QMCPy, including replications, stopping criteria that track the decay of the Fourier complex exponential or Walsh coefficients of the integrand \cite{HicJim16a,HicEtal17a,JimHic16a}, and stopping criteria based on Bayesian credible intervals \cite{RatHic19a,JagHic22a}.
 
@@ -720,7 +712,7 @@ Let us return to the Keister example from the previous section.  After setting u
 The second output of the stopping criterion provides helpful diagnostic information.  This computation required $n=2^{13}$ Sobol' points and $0.028$ seconds to complete.  The error bound is $0.000517$, which falls below the absolute tolerance.
 
 QMC, which uses LD sequences, is touted as providing substantially greater computational efficiency compared to IID MC.
-Figure \ref{fig:sc_comp} compares the time and sample sizes needed to compute the $5$-dimensional Keister integral \eqref{eq:KeisterIntegral} using IID sequences and LD lattice sequences. Consistent with what is stated in Section \ref{CDHS_sec:intro}, the error of IID MC is $\calO(n^{-1/2})$, which means that the time and sample size to obtain an absolute error tolerance of $\varepsilon$ is $\calO(\varepsilon^{-2})$.  By contrast, the  error of QMC using LD sequences is $\calO(n^{-1+\epsilon})$, which implies $\calO(\varepsilon^{-1-\epsilon})$ times and sample sizes.  We see that QMC methods often require orders of magnitude fewer samples that MC methods to achieve the same error tolerance.
+Figure \ref{fig:sc_comp} compares the time and sample sizes needed to compute the $5$-dimensional Keister integral \eqref{eq:KeisterIntegral} using IID sequences and LD lattice sequences. Consistent with what is stated in Section \ref{CDHJS_sec:intro}, the error of IID MC is $\calO(n^{-1/2})$, which means that the time and sample size to obtain an absolute error tolerance of $\varepsilon$ is $\calO(\varepsilon^{-2})$.  By contrast, the  error of QMC using LD sequences is $\calO(n^{-1+\epsilon})$, which implies $\calO(\varepsilon^{-1-\epsilon})$ times and sample sizes.  We see that QMC methods often require orders of magnitude fewer samples that MC methods to achieve the same error tolerance.
 
 \begin{figure}
 	\includegraphics[height=6cm]{QMCSoftwareArticle/figs/sc_comp.png}
@@ -792,7 +784,7 @@ Low-discrepancy sequences differ from IID node sets in that they fill the domain
 
 \subsection{\texttt{print}ing  QMCPy Instances}
 
-A helpful features of QMCPy is the ability to print out components instances to see more detailed information. This allows users to quickly see the properties that have been set and defaulted for any given component. This feature was already used to print the data object returned by the stopping criterion's \texttt{integrate} method in Section \ref{CDHS_sec:stopping_crit}. The following code prints a drifted \texttt{BrownianMotion} instance and displays the connection to an underlying Gaussian measure.
+A helpful features of QMCPy is the ability to print out components instances to see more detailed information. This allows users to quickly see the properties that have been set and defaulted for any given component. This feature was already used to print the data object returned by the stopping criterion's \texttt{integrate} method in Section \ref{CDHJS_sec:stopping_crit}. The following code prints a drifted \texttt{BrownianMotion} instance and displays the connection to an underlying Gaussian measure.
 \lstinputlisting[style=Python]{QMCSoftwareArticle/python/print_bm.txt}
 
 
@@ -805,7 +797,7 @@ A helpful features of QMCPy is the ability to print out components instances to 
     \item PCA and Cholesky decomposition for Gaussian (and Brownian Motion which is a subclass of Gaussian)
 \end{itemize}}
 
-\section{Further Work} \label{CDHS_sec:further}
+\section{Further Work} \label{CDHJS_sec:further}
 
 \AGSComment{
 \begin{itemize}
@@ -911,7 +903,7 @@ where $\hat{\bsPsi}_0(\bsx) = \bsx$.
 
 
 
-\section{Tenets of Great Software} \label{CDHS_sec:tenets_of_great_software}
+\section{Tenets of Great Software} \label{CDHJS_sec:tenets_of_great_software}
 
 In this section we lay out common aspirations of scientific software. While some objectives are expected by practitioners, e.g. correctly written software, others may better be characterized as features that are pursued as a project matures, e.g. supporting scalable computation. The following paragraphs highlight aspirations with more important, expected behaviours coming earlier in the discussion.
 
@@ -919,15 +911,15 @@ Software is expected to be \emph{correct}. A practitioner generating a digital s
 
 Algorithms should be implemented in an \emph{efficient} manner. Both the compute time and memory requirements should match theoretical developments which in turn should be as close to the state of the art as possible. As a classical example, it is expected that an implementation of the discrete Fourier transform for $n$ points has complexity $\mathcal{O}(n\log n)$.
 
-Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Sect.\ \ref{CDHS_sec:language_library_environment}.
+Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Sect.\ \ref{CDHJS_sec:language_library_environment}.
 
-Libraries should be \emph{sustainable} for future development. The goal should be to have a sufficient user base and developer community for updates and maintenance. Similar to accessibility, sustainability is often overlooked for aspirations discussed later in this section. However, we contend that a sub-optimal but user-friendly library with community engagement may be more impactful than an optimal library which lacks support. We promote collaborative, community driven development further in Sect.\ \ref{CDHS_sec:encouraging_collaborative_developement}.
+Libraries should be \emph{sustainable} for future development. The goal should be to have a sufficient user base and developer community for updates and maintenance. Similar to accessibility, sustainability is often overlooked for aspirations discussed later in this section. However, we contend that a sub-optimal but user-friendly library with community engagement may be more impactful than an optimal library which lacks support. We promote collaborative, community driven development further in Sect.\ \ref{CDHJS_sec:encouraging_collaborative_developement}.
 
 Software should be \emph{integrated} into the environment's scientific software ecosystem. More simply, libraries should play nicely together and utilize the mature developments of other teams. A simple example in \AGSComment{CITE} shows a straightforward integration between the QMC package QMCPy \cite{QMCPy2020a} and the PDE package FEniCS/Dolfin \cite{LoggEtal_10_2012}, both in Python.
 
 Routines should be \emph{scalable} to advanced computer architectures. The widespread availability of on demand computing with multi-core and multi-GPU machines encourages software that can take advantage of parallel computation. Scalable algorithms lend themselves to a larger class or problems and provide practitioners the opportunity to more quickly test ideas.
 
-\section{(Quasi-)Monte Carlo Software Architecture} \label{CDHS_sec:qmc_software_architecture}
+\section{(Quasi-)Monte Carlo Software Architecture} \label{CDHJS_sec:qmc_software_architecture}
 
 An important step in the development of any software is to determine its' architecture. How should components interact with each other? Which aspects should be modular? Object oriented? Procedural? Answers to these questions form the blueprint of software design and guide implementation.
 
@@ -965,7 +957,7 @@ A variety of QMC materials and the their categorizations into the above framewor
     \item CUBA \cite{CUBA}
 \end{itemize}
 
-\section{Choosing a Environment} \label{CDHS_sec:language_library_environment}
+\section{Choosing a Environment} \label{CDHJS_sec:language_library_environment}
 
 This section discusses the challenges in choosing environments for development and distribution. The development environment includes the choice of which languages, architectures, testing methods, and documentation methods to support. The deployment environment will often be influenced by the choice of programming languages.
 
@@ -973,7 +965,7 @@ The choice of programming language should be aligned with the communities the te
 
 Many programming languages come bundled with their own preferred distribution systems. Python has PyPI, R has CRAN, Julia has Pkg. However, many projects support multiple languages and have complex dependency requirements. In such cases, it can be helpful to containerize your application using a service like Docker.
 
-\section{Encouraging Collaborative Development} \label{CDHS_sec:encouraging_collaborative_developement}
+\section{Encouraging Collaborative Development} \label{CDHJS_sec:encouraging_collaborative_developement}
 
 We now discuss ways a team may encourage collaborative development while touching on a few best practices. As discussed earlier, collaborative development promotes greater community engagement, ecosystem integration, and software longevity.
 
@@ -983,7 +975,7 @@ Accessibility is key to community engagment. It is paramount that your package b
 
 It is also important for a development team to make a clear path for collaborators to contributors to the software. Templates for issues and pull requests are a good place to start. Contributors should also be encouraged to write robust tests for their updates and highlight their new features in a demo for greater accessibility.
 
-\section{Example Collaboration with UMBridge and QMCPy} \label{CDHS_sec:example_collaboration_umbridge}
+\section{Example Collaboration with UMBridge and QMCPy} \label{CDHJS_sec:example_collaboration_umbridge}
 
 This section discusses a collaboration between the UM-Bridge (the UQ and Model Bridge) \AGSComment{CITE} and QMCPy (the Quasi-Monte Carlo Python library) \cite{QMCPy2020a} softwares. The UM-Bridge documentation describes its' mission is to, ``provide a unified interface for numerical models that is accessible from virtually any programming language or framework. It is primarily intended for coupling advanced models (e.g. simulations of complex physical processes) to advanced statistics or optimization methods.'' QMCPy is a high level framework for combining QMC components in a compatible and consistent manner. The collaboration between these two packages focused on making the UQ methods of QMCPy compatible with the abstract model representations from UM-Bridge. Specifically, UM-Bridge models are made compatible with the QMCPy framework through an integrand wrapper for seamless compatibility with a variety of existing point generators, transformations, and stopping criterion already available in QMCPy.
 
@@ -997,3 +989,22 @@ A fully coded example of this problem is available at \url{https://github.com/QM
     \caption{QMCPy approximate expected displacement at $31$ locations subject to random uniform stiffness. }
     \label{fig:umbridge_muq}
 \end{figure}
+
+\section*{TODO}
+\begin{itemize}
+    \item Flesh out Section \ref{CDHJS_sec:encouraging_collaborative_developement}
+    \item QMC Software Architecture section: better way then description of components and list of softwares?
+    \item For Section \ref{CDHJS_sec:tenets_of_great_software}, the slides also include
+    \begin{itemize}
+        \item  Complete---contain the components or  easily access components in other libraries to solve real, complex problems
+        \item Current---include the latest and best algorithms
+    \end{itemize}
+    which I think fall under the umbrella of software being \emph{integrated} with the community.
+    \item update QMCPy citation \cite{QMCPy2020a}
+    \item figures?
+    \item I have left out or been breif about material from the following slides: QMCPy + FEniCS/Dolfin,  Building a Developer Team for Your Library
+\end{itemize}
+
+
+
+Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHJS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHJS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHJS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHJS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHJS_sec:encouraging_collaborative_developement}.

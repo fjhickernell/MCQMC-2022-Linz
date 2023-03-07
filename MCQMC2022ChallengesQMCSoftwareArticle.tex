@@ -57,6 +57,7 @@
 \newcommand{\YDComment}[1]{{\color{orange} Yuhan: #1}}
 \newcommand{\JagsComment}[1]{{\color{violet} Jags: #1}}
 \DeclareMathOperator{\disc}{disc}
+\newcommand{\FJHNote}[1]{{\color{blue}Fred: #1}}
 
 %%%%Fred end
 
@@ -83,7 +84,7 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 \maketitle
 
 \abstract{
-Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We review what QMC software has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
+Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We summarize the  QMC software that has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.
 }
 
 
@@ -94,7 +95,7 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
     \item Draw a sequence of $n$ a low discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
     $\bsx_1,\dots,\bsx_n$ that mimic $\calU[0,1]^d$.
     \item Evaluate the integrand $f$ at these nodes to obtain $f(\bsx_i)$, $i=1,\dots,n$.
-    \item Estimate the true mean, $\mu$, by the sample mean
+    \item Estimate the true mean, $\mu$, by the sample mean,
     \begin{equation}
         \hat{\mu} := \frac{1}{n} \sum_{i=1}^n f(\bsx_i).
         \label{eq:mc_average}
@@ -116,15 +117,14 @@ In the next section, we describe why QMC software is important.  We then discuss
 \item Sustainable by a community that owns it (Sect.\ \ref{CDHJS_sec:sustainable}).
 
 \end{itemize}
-
 In each section we describe the challenges faced and how they might be overcome.
 
-\SCComment{Somewhere in this section or Section 8, perhaps we could say that we will use QMCPy for illustration. Something like: We draw on our collective experiences as 
-members of the academic community in the (Q)MC area; developers of open-source and commercial scientific software; users of (Q)MC and a wide range of scientific software as research scientists or data scientists. We highlight the insights we have gained in developing the (Q)MC scientific software packages, QMCPy~\cite{} and GAIL~\cite{}. In particular, QMCPy is not only a QMC software, but also a scientific middleware framework, which provides access to  more than X (Q)MC scientific software such as A~\cite{}, B~\cite{}, C~\cite{}.}
+We draw on our collective experiences as
+members of the academic QMC community in the, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteeed Automatic Integration Library (GAIL)~\cite{ChoEtal22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~ \cite{QMCPy2020a}.   \FJHNote{Sou-Cheng, not sure what this means. In particular, QMCPy is not only a QMC software, but also a scientific middleware framework, which provides access to  more than X (Q)MC scientific software such as A~\cite{}, B~\cite{}, C~\cite{}.}
 
 \section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
-Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. Three cross-cutting themes that arose in this workshop were
+Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU,osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. Three cross-cutting themes arose in this workshop:
 \begin{itemize}
     \item  We need to consider both human and technical elements to better understand how to improve the development and use of scientific software.
 
@@ -141,6 +141,8 @@ QMC software makes theoretical advances in QMC available to practitioners. Howev
 \subsection{QMC Software to Theory}
 
 Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results lead to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
+
+Great QMC software in eliminates the need researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer errors.
 
 We next discuss the characteristics of great QMC software outlined in the introduction.  For each characteristic, we identify what is lacking and what might be done to remedy the lack.
 
@@ -159,9 +161,9 @@ Progressing from the original problem to a satisfactory solution requires severa
 
 LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy}, and TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
-Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
+Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During a lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
 
-Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these could provide more flexibility in their LD offerings.  Some large environments, such as  Dakota \cite{DakotaUsersManual} and SAS, have quite limited LD generators and should expand their offerings.  Developers of smaller libraries with more QMC features, like BRODA and QMCPy, should demonstrate how their libraries can connect well with other software environments.  An example involving QMCPy is given in the next subsection.
+Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries could provide more flexible LD offerings.  Some large environments, such as  Dakota \cite{DakotaUsersManual} and SAS, have quite limited LD generators and should expand their offerings.  Developers of smaller libraries with more QMC features, like BRODA and QMCPy, should demonstrate how their libraries can connect well with other software environments.  An example of QMCPy connecting with other software is given in the next subsection.
 
 \subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
 The original integral or expectation arising from the application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
@@ -177,13 +179,13 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 \begin{equation*}
     \Psi((0,1)^d) = \calT, \qquad f(\bsx) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial\bsx}}.
 \end{equation*}
-Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  Moreover, one might choose $\bsPsi$ such that $\bsT = \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$.
+Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  In this case, one might choose $\bsPsi$ such that $\bsT \sim \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=0.7\textwidth]{ldparallelbeam.eps}
-    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five.}
+    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five. These plots may be reproduced using the Jupyter notebook \url{???}.}
     \label{fig:beam}
 \end{figure}
 
@@ -198,31 +200,40 @@ We emphasize again that no one software library contains all of the best LD gene
 
 
 \section{Correct} \label{CDHJS_sec:correct}
-Although correctness is an obvious feature of great QMC software, it cannot always be assumed in popular packages.  Here are two examples.
+Although correctness is an obvious feature of great QMC software, it should not always be assumed in popular packages.  Here are two examples.
 
-MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama who informed the developer.  The error was corrected in MATLAB R2018a.
+MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama, who informed the developer.  The error was corrected in MATLAB R2018a.
 
 SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a,pytorchSoboldiscussion2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
 
-QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practices need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from best practices.
+QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practices need to pay attention to QMC algorithms in popular software libraries and inform the developers when their software contains bugs or deviates from best practices.
 
 \section{Efficient} \label{CDHJS_sec:efficient}
-Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  The intensive computations may need to be rewritten in lower-level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.
+Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computations may need to be rewritten in lower-level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt to take advantage of them.
 
-Efficiency gains in QMC software can also be the result of clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
+Efficiency gains in QMC software can also result from clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
+
+In spite of the desire for efficiency, great QMC software will be written in a variety of computer languages since different communities tend to favor different languages. Trade-offs will be made between efficiency and convenience.
 
 \section{Accessible} \label{CDHJS_sec:accessible}
-One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.
+One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  A suite of unit tests should be run regularly to ensure that new features do not introduce bugs. There should be a place for users to report bugs and make feature requests.
 
 
 \section{Sustainable} \label{CDHJS_sec:sustainable}
-Great QMC software libraries should be alive.  They should be under active development or merged into a another library that is actively maintained.  Commercial software has an infrastructure to sustain their algorithms, but without attention, those algorithms may become stale.  Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
+Great QMC software libraries should be alive.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing, Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
 
-The QMC community can help sustain great QMC software in several ways.  Let's use existing QMC software libraries to build our research code and showcase our new algorithms.  Doing this allows the next generation to more easily reproduce our results and build upon them.  We should post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.  When we see bugs or missing features in QMC software, let's persistently request them.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
+The QMC community can help sustain great QMC software in several ways.  \begin{itemize}
+	\item Let's build our research code and showcase our new algorithms using existing QMC software libraries or build and maintain new libraries, if needed.  This allows the next generation to more easily reproduce our results and build upon them.
 
-Many of us QMC researchers don't code.  We rely on transient team members (students and postdocs) to write the code that showcases our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code your team writes will last beyond the time of the membership in your group.
+	\item Many of us QMC researchers rely on transient team members (students and postdocs) to write the code that illustrates our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code our team members write lasts beyond their involvement in our teams.
 
-Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
+	\item It is relatively easy to post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.
+
+	\item When we see bugs or missing features in QMC software, let's persistently request fixes and improvements.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
+\end{itemize}
+
+
+Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International \url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
 
 \section{Summary}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
@@ -238,199 +249,6 @@ QMC has experienced decades of exciting growth in theory since the late 1950s.  
 
 
 
-\begin{frame}{Why Do We Need Software?}
-	\vspace{-4ex}
-	\begin{itemize}
-		\item Theory
-		\begin{itemize}
-			\item Explains, justifies, and leads to algorithms
-			\item Assumptions$\implies$success can be viewed as failure$\implies$what went wrong
-		\end{itemize}
-		\item Software
-		\begin{itemize}
-			\item Makes algorithms practical
-			\item Solves (new) applications
-			\item Eliminates do-it-yourself
-		\end{itemize}
-		\item Applications
-  		\begin{itemize}
-			\item Make societal impact
-			\item Inspire new theory
-		\end{itemize}
-
-	\end{itemize}
-
-\uncover<2->{The US Department of Energy is investing in studying how to develop great scientific software, including a recent \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{Her19a,ASCR-SSSDU}}
-\end{frame}
-
-\section{Structure}
-
-\begin{frame}{Software Architecture}
-	\vspace{-6ex}
-
-\[
-\mu :=  \int_{\ct} g(\vt) \, \lambda(\vt) \, \dif \vt = \cdots =
-\underbrace{\Ex[f(\vX)]}_{\text{expectation}} = \underbrace{\int_{[0,1]^d}  f(\vx) \, \dif \vx}_{\text{integration}} \approx  \frac 1{n} \sum_{i=1}^{n} f(\vX_i) =: \hmu_{n}
-\]
-
-\vspace{-3ex}
-
-\begin{description}[alabel]
-	%\setlength{\labelwidth}{5ex}
-
-	\item[Low Discrepancy Generator] producing $\{\vX_1, \vX_2, \dots \}$ that mimics the uniform distribution
-
-	\item[True Measure] that defines the original integral, e.g., Lebesgue; embodies the transformation $\vt = \vPsi(\vx)$
-
-	\item[Integrand] $g$, which defines the original integral, plus the transformed version, $f$, to fit the LD generator
-
-	\item[Stopping Criterion] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\abs{\mu - \hmu_n} \le \varepsilon$
-\end{description}
-
-\vspace{-1ex}
-\uncover<2->{May we agree on a common software definition for these these objects like we have for floating point numbers or basic mathematical functions?}
-\end{frame}
-
-\begin{frame}{Choosing a Language, Library, or Environment}
-	\vspace{-5ex}
-	\begin{itemize}
-    \item Language/library choices of the users are driven by familiarity and speed
-
-  	\item  Favorites aligned with various communities, but no one dominates all
-
-	\item Difference between prototyping environments and ninja written production code
-
-
-    \item Growth of multi-processor environments
-    \begin{itemize}
-    	\item Provides opportunity
-    	\item Complicates software development; where does parallelism really help?
-    \end{itemize}
-
-
-    \item<2-> Recommendations if you want to contribute software
-    \begin{itemize}
-    \item Realize your new idea as a demo in your favorite library
-    \item Add a significant idea as a feature to other libraries
-    \item Move basic features of your library to larger library
-    \item Write wrappers or demos to connect other libraries to your library
-
-    \end{itemize}
- \end{itemize}
-\end{frame}
-
-\begin{frame}{Ex.\ QMCPy $+$ FEniCS/Dolfin \cite{LoggEtal_10_2012}}
-\vspace{-3ex}
-	\begin{itemize}
-		\item Want to demonstrate how our QMC software could work with a popular DE solver for DEs with random coefficients
-		\item Partial success \only<3->{Why?}
-	\end{itemize}
- 	\only<1>{\vspace{-3ex}}\only<2>{\vspace{-2ex}}\only<3>{\vspace{0ex}}
- \begin{minipage}{0.48\textwidth}
- 	\only<1-2>{\begin{gather*}
- 		-\frac{\dif }{\dif x}\biggl(a(x,\vW) \frac{\dif}{\dif x} u(x,\vW) \biggr) = 200( 2x - 1)\\
- 		 0 \leq x \leq 1, \qquad
- 		u(0) = u(1) = 0 \\
- 		a(x,\vW) = 1 + 0.6 \sum_{k=1}^d \frac{W_k T_{k}(2x-1)}{k^2} \\
- 		 \vW \sim \cu[-1,1]^d \\
- 		 \Ex[u(0.25,\vW)] = \only<1>{\, ?}\only<2>{ -1.7462}
- 	\end{gather*}}
-  \only<3->{
-\begin{itemize}
-\item Even with FEniCS/Dolfin's extensive documentation we had difficulties
-\begin{itemize}
-    \item Did not understand the latest version, so reverted to an older version
-    \item Had to learn how to change the random instance of the coefficient without tiggering the JIT compiler
-    \item Do not yet know how to express the random coefficient in terms of the covariance kernel
-\end{itemize}
-\end{itemize}
-  }
- \end{minipage}%
-\hfill
- \begin{minipage}{0.48\textwidth}
- 	\only<1-2>{\centering
- 	\includegraphics<1>[width=\textwidth]{ProgramsImages/axwtrue0.6.eps}
- 	\includegraphics<2->[width=\textwidth]{ProgramsImages/timing-4.eps}}%
-  \only<3->{
-\begin{itemize}
-\item But
-\begin{itemize}
-    \item It  works
-    \item If we can overcome the challenges, will post a blog and demo at \cite{QMCBlog}
-\end{itemize}
-\end{itemize}
-
-  }
-\end{minipage}
-
-\end{frame}
-
-\section{Support}
-\begin{frame}{Encouraging Users of Your Library Requires}
-
-	\vspace{-4ex}
-	\begin{itemize}
-		\item A repository where
-		\begin{itemize}
-		\item  Your library can be easily downloaded
-		\item There is documentation
-		\item Issues or queries can be posted
-		\item There are updates
-		\item Tests are run regularly to mitigate against bugs
-		\end{itemize}
-		\item (Elementary) demos on how to use the software and highlighting  its advantages
-		\item Demos connecting  your library with others
-		\item Recommending your students and postdocs to use your library
-		\item Welcoming instructions on how to contribute an algorithm or a demo
-	\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{Building a Developer Team for Your Library}
-
-	\vspace{-4ex}
-\begin{itemize}
-
-\item Many senior researchers don't code, and rely on transient team members (students, postdocs)
-\begin{itemize}
-	\item Encourage a sense of ownership that lasts beyond the time your team members are part of your lab
-	\item Encourage those outside your own group to contribute
-\end{itemize}
-
-\item Those of us who understand theory and appreciate software need to encourage and steer popular software to ensure that it is implemented well.
-
-\item Recognize good software as valuable scholarly output
-
-\item Recognize research software engineer as a valued vocation; see Research Software Engineers International 	\url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research. They go by various job titles but the term Research Software Engineer (RSE) is fast gaining international recognition.}
-  \end{itemize}
-\end{frame}
-
-\section{Next Steps}
-
-\begin{frame}{Next Steps}
-
-	\vspace{-2ex}
-	\begin{minipage}{0.48\textwidth}
-		\begin{itemize}
-			\item Which exemplary theoretical developments are not yet implemented in readily available software?
-			\item What potential MCQMC user communities are ill-served by existing  software libraries?
-			\item Should those of us interested in software gather regularly for show-and-tell to foster more collaboration?
-		\end{itemize}
-	\end{minipage}
-	\begin{minipage}{0.48\textwidth}
-		Join us for a lunch discussion at Bella Casa tomorrow, July 19, at 12:45 PM
-
-		\vspace{2ex}
-
-		\includegraphics[width=\textwidth]{ProgramsImages/PizeriaBellaCasa.png}
-\end{minipage}
-
-\end{frame}
-
-\begin{frame}[allowframebreaks]{References}
-	\printbibliography
-\end{frame}
 
 
 

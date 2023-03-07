@@ -102,7 +102,7 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
 \end{enumerate}
 However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
 
-In the next section we describe why QMC software is important.  We then discuss characteristics of great QMC software:
+In the next section, we describe why QMC software is important.  We then discuss the characteristics of great QMC software:
 
 \begin{itemize}
 \item Integrated with related libraries (Sect.\ \ref{CDHJS_sec:integrated}),
@@ -136,13 +136,13 @@ These themes apply to QMC software in particular, as well as scientific software
 
 \subsection{QMC Theory to Software}
 
-QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerical stable, and provides reasonable default choices of tuning parameters. Great QMC software relieves users of these concerns.
+QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerically stable, and provides reasonable default choices of tuning parameters. Great QMC software relieves users of these concerns.
 
 \subsection{QMC Software to Theory}
 
-Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results leads to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
+Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results lead to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
-We next discuss characteristics of great QMC software outlined in the introduction.  For each characteristic we identify what is lacking and what might be done to remedy the lack.
+We next discuss the characteristics of great QMC software outlined in the introduction.  For each characteristic, we identify what is lacking and what might be done to remedy the lack.
 
 \section{Integrated} \label{CDHJS_sec:integrated}
 
@@ -153,13 +153,13 @@ Expanding on the problem formulation in the introduction, we want to approximate
  \label{CDHJS_eq:error_tol}
  \abs{\mu - \hat{\mu}_n} \le \varepsilon.
 \end{gather}
-Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allows different implementations of these components to be freely interchanged.
+Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allow different implementations of these components to be freely interchanged.
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
 LD generators are the most prevalent generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy}, and TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
-Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can by shared across software libraries.
+Lattice and digital sequences are not unique, and improved or alternative versions continue to be constructed.  Joe and Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of the early LD sequence software.  L'Ecuyer and colleagues have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. As was raised during a lunch at MCQMC 2022, we should agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
 
 Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these could provide more flexibility in their LD offerings.  Some large environments, such as  Dakota \cite{DakotaUsersManual} and SAS, have quite limited LD generators and should expand their offerings.  Developers of smaller libraries with more QMC features, like BRODA and QMCPy, should demonstrate how their libraries can connect well with other software environments.  An example involving QMCPy is given in the next subsection.
 
@@ -187,7 +187,7 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \label{fig:beam}
 \end{figure}
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $31$ points.  QMCPy computes the expected deflection of the beam a these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  We illustrate in Figure \ref{fig:beam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam with random Young's modulus \cite{ParSee22a}, where the randomness is given by $\bsX \sim \calU[1,1.2]^3$.  The beam position is discretized at $31$ points.  QMCPy computes the expected deflection of the beam at these points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
 
 We need more connections of QMC software to other libraries, like what has been done with  QMCPy and UM-Bridge.  This will allow newer and better QMC algorithms to tackle new applications.
 
@@ -204,12 +204,12 @@ MATLAB's original randomization of Sobol' points was incorrectly implemented.  T
 
 SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a,pytorchSoboldiscussion2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
 
-QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practice need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from best practice.
+QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practices need to vigilantly be aware of QMC algorithms in popular software and inform the developers when their software contains bugs or deviates from best practices.
 
 \section{Efficient} \label{CDHJS_sec:efficient}
-Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computation may need to be rewritten in lower level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.
+Another obvious feature of great QMC software is numerical efficiency.  This requires developers to identify bottlenecks in performance.  The intensive computations may need to be rewritten in lower-level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt.
 
-Efficiency gains in QMC software can also be the result clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
+Efficiency gains in QMC software can also be the result of clever algorithm choices.  The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels.
 
 \section{Accessible} \label{CDHJS_sec:accessible}
 One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.  Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  There should be a place for users to report bugs and make feature requests.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.

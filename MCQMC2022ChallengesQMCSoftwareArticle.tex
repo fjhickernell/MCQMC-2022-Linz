@@ -28,7 +28,7 @@
 % when including figure files
 \usepackage{multicol}        % used for the two-column index
 \usepackage[bottom]{footmisc}% places footnotes at page bottom
-
+\usepackage{epstopdf,psfrag}
 
 \usepackage{newtxtext}       %
 \usepackage[varvw]{newtxmath}       % selects Times Roman as basic font
@@ -92,7 +92,7 @@ Quasi-Monte Carlo (QMC) methods have developed over several decades. With the ex
 
 A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be implemented in a few steps:
 \begin{enumerate}
-    \item Draw a sequence of $n$ a low discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
+    \item Draw a sequence of $n$ low-discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
     $\bsx_1,\dots,\bsx_n$ that mimic $\calU[0,1]^d$.
     \item Evaluate the integrand $f$ at these nodes to obtain $f(\bsx_i)$, $i=1,\dots,n$.
     \item Estimate the true mean, $\mu$, by the sample mean,
@@ -185,7 +185,7 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \centering
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=0.7\textwidth]{ldparallelbeam.eps}
-    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five. These plots may be reproduced using the Jupyter notebook \url{???}.}
+    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$, and parallel processing gives a speed-up of factor four to five. These plots may be reproduced using the Jupyter notebook \SCComment{Add url}.}
     \label{fig:beam}
 \end{figure}
 

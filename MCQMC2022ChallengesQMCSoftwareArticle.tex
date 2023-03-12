@@ -97,11 +97,11 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
     \item Evaluate the integrand $f$ at these nodes to obtain $f(\bsx_i)$, $i=1,\dots,n$.
     \item Estimate the true mean, $\mu$, by the sample mean,
     \begin{equation}
-        \hat{\mu} := \frac{1}{n} \sum_{i=1}^n f(\bsx_i).
+        \hat{\mu_n} := \frac{1}{n} \sum_{i=1}^n f(\bsx_i).
         \label{eq:mc_average}
     \end{equation}
 \end{enumerate}
-However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with small $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance. \SCComment{Use $\hat{\mu}_n$ in (1) so that it is consistent with (3).}
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with a small number of sampling points, $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
 
 In the next section, we describe why QMC software is important.  We then discuss the characteristics of great QMC software:
 
@@ -117,14 +117,14 @@ In the next section, we describe why QMC software is important.  We then discuss
 \item Sustainable by a community that owns it (Sect.\ \ref{CDHJS_sec:sustainable}).
 
 \end{itemize}
-In each section we describe the challenges faced and how they might be overcome.
+In each section, we describe the challenges faced and how they might be overcome.
 
 We draw on our collective experiences as
-members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteeed Automatic Integration Library (GAIL)~\cite{ChoEtal22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~ \cite{QMCPy2020a}.   \FJHNote{Sou-Cheng, not sure what this means.} \SCComment{Fred, more elaboration here, but maybe it fits better in Section 3: In particular, QMCPy is not just a QMC software containing our own algorithms; from the outset, it is designed to serve as a middleware framework, allowing users to tap into a collection of QMC libraries originally written in various languages by different researchers at different times. Using object-oriented design, QMCPy specifies a few  extensible high-level mathematical objects essential in multiple integration (see Sect.\ \ref{CDHJS_sec:integrated}). Developers of other (Q)MC software could easily extend these objects to incorporate their existing or working algorithms by a combination of mechanism: object inheritance; Python package inclusion; direct code translation; interfaces to compiled C or Java libraries. Hence QMCPy has been able to provide access to an increasing number of well established (Q)MC algorithmic or application software such as QRNG~\cite{}, MLMC~\cite{}, GAIL~\cite{}, UM-Bridge~\cite{}.}
+members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{ChoEtal22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~ \cite{QMCPy2020a}.   \FJHNote{Sou-Cheng, not sure what this means.} \SCComment{Fred, more elaboration here, but maybe it fits better in Section 3: In particular, QMCPy is not just a QMC software containing our own algorithms; from the outset, it is designed to serve as a middleware framework, allowing users to tap into a collection of QMC libraries originally written in various languages by different researchers at different times. Using object-oriented design, QMCPy specifies a few  extensible high-level mathematical objects essential in multiple integration (see Sect.\ \ref{CDHJS_sec:integrated}). Developers of other (Q)MC software could easily extend these objects to incorporate their existing or working algorithms by a combination of mechanism: object inheritance; Python package inclusion; direct code translation; interfaces to compiled C or Java libraries. Hence QMCPy has been able to provide access to an increasing number of well-established (Q)MC algorithmic or application software.}
 
 \section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
-Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy \SCComment{report,} \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU, osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well written, accessible software libraries. Three cross-cutting themes arose in this workshop:
+Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy report, \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU, osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well-written, accessible software libraries. Three cross-cutting themes arose in this workshop:
 \begin{itemize}
     \item  We need to consider both human and technical elements to better understand how to improve the development and use of scientific software.
 
@@ -142,13 +142,13 @@ QMC software makes theoretical advances in QMC available to practitioners. Howev
 
 Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results lead to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
-Great QMC software eliminates the need researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer errors. \AGSComment{Aleksei: Put in previous subsection.}
+Great QMC software eliminates the need for researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer errors. \AGSComment{Aleksei: Put in previous subsection.}
 
 We next discuss the characteristics of great QMC software outlined in the introduction.  For each characteristic, we identify what is lacking and what might be done to remedy the lack.
 
 \section{Integrated} \label{CDHJS_sec:integrated}
 
-Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}$:
+Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu_n}$:
 \begin{gather}
 \label{eq:cubSummary}
 	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=1}^{n} f(\bsx_i) =: \hat{\mu}_n, \\
@@ -159,14 +159,14 @@ Progressing from the original problem to a satisfactory solution requires severa
 
 \subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.
 
-LD generators are the most prevalent generally available \SCComment{do we need `generally available'?} components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy}, and TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
+LD generators are the most prevalent, generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy},  TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
 Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,JoeKuo08,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During a lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
 
-Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries could provide more flexible \SCComment{what does more flexible means?} LD offerings.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. \SCComment{Other established software such as SAS expand offerings of trustworthy and efficient analytics through continuous internal implementation as well as flexible integration of third-party open-source software; see \url{https://www.sas.com/en_us/software/viya/open.html}. Such latter strategy represents opportunities for}  developers of smaller libraries with more QMC features, like BRODA and QMCPy, to demonstrate how their libraries can connect well with other software environments.  An example of QMCPy connecting with other software is given in the next subsection.
+Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries could provide more flexible \SCComment{what does more flexible mean?} LD offerings.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. \SCComment{Other established software such as SAS expand offerings of trustworthy and efficient analytics through continuous internal implementation as well as flexible integration of third-party open-source software; see \url{https://www.sas.com/en_us/software/viya/open.html}. Such a latter software development strategy presents opportunities for}  developers of smaller libraries with more QMC features, like BRODA and QMCPy, to demonstrate how their libraries can connect well with other software environments.  An example of QMCPy connecting with other software is given in the next subsection.
 
 \subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
-The original integral or expectation arising from the \SCComment{an?} application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
+The original integral or expectation arising from an application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
 \begin{itemize}
 	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ is the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
 
@@ -185,7 +185,7 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \centering
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=0.7\textwidth]{ldparallelbeam.eps}
-    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(n^{-1})$ \SCComment{typo:$\calO(\varepsilon^{-1})$}, and parallel processing gives a speed-up factor of four to five. These plots may be reproduced using the Jupyter notebook \SCComment{(1) Add url. (2) What is the meaning of min and sec on the y-axis of lower left graph (The label says (s), which means seconds right?)? Are there numerical values on (left and right) y-axis? (3) The font size of the axis labels for the lower graphs could be made larger more like the top graph. (4) I guess the blue colors are covered by the orange colors in the bottom right graph. Maybe we can use blue crosses and orange broken lines instead.}}
+    \caption{The expected deflection of a cantilevered beam with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$, and parallel processing gives a speed-up factor of four to five. These plots may be reproduced using the Jupyter notebook \SCComment{(1) Add url or citation. (2) What is the meaning of min and sec on the y-axis of lower left graph (The label says (s), which means seconds right?)? Are there numerical values on (left and right) y-axis? (3) The font size of the axis labels for the lower graphs could be made larger more like the top graph. (4) I guess the blue colors are covered by the orange colors in the bottom right graph. Maybe we can use blue crosses and orange broken lines instead.}}
     \label{fig:beam}
 \end{figure}
 
@@ -194,7 +194,7 @@ Complex integrands might be best evaluated by libraries that have no direct conn
 We need more connections of QMC software to other libraries, like what has been done with  QMCPy and UM-Bridge.  This will allow newer and better QMC algorithms to tackle new applications.
 
 \subsection{Stopping Criteria}
-The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
+The cantilevered beam example illustrated in Figure \ref{fig:beam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules and \cite{HicEtal18a} for a review on automatic QMC stopping criteria.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
 
 We emphasize again that no one software library contains all of the best LD generators, integrands, variable transformations, and stopping criteria, which is why great QMC software must be well integrated into other software libraries.  This may take the form of large libraries incorporating more QMC routines and/or building connections among QMC libraries and with other non-QMC libraries.
 
@@ -224,7 +224,7 @@ Accessible QMC software has greater impact.  Accessibility also depends on the n
 
 
 \section{Sustainable} \label{CDHJS_sec:sustainable}
-Great QMC software libraries should be alive.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing, Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
+Great QMC software libraries should be alive.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing. Open source software requires a community of active users and developers to keep the library up-to-date and bug-free. 
 
 The QMC community can help sustain great QMC software in several ways.  \begin{itemize}
 	\item Let's build our research code and showcase our new algorithms using existing QMC software libraries or build and maintain new libraries, if needed.  This allows the next generation to more easily reproduce our results and build upon them.
@@ -234,17 +234,27 @@ The QMC community can help sustain great QMC software in several ways.  \begin{i
 	\item It is relatively easy to post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.
 
 	\item When we see bugs or missing features in QMC software, let's persistently request fixes and improvements.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
+
+    \item \SCComment{Let's publish our QMC  software with journals such as ACM TOMS, JORS, etc. to obtain code review and
+    feedback.}
+    
+    \item \SCComment{When we find QMC scientific software useful in our research or applications, let's encourage and recognize such software by giving them proper citations~\cite{smith2016software}. }
+
+    \item \SCComment{Encourage QMC community members to learn about software development through interdisciplinary education, internship, or hackathon. }
+
 \end{itemize}
 
 
-Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International \url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
+Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).  \SCComment{The previous sentence is about publishing software. The next point is about a career path.}  The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International, \url{https://researchsoftware.org}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
+
+
 
 \section{Summary}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
-
+\SCComment{Change `sobol' to `Sobol' in reference items 29 and 30. Change `scipy' to `SciPy' in 44 and 45. }
 \bibliographystyle{spmpsci}
-\bibliography{FJH23,FJHown23}
+\bibliography{FJH23,FJHown23,sc}
 
 
 \end{document}

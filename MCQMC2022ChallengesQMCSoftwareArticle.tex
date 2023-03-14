@@ -208,6 +208,8 @@ SciPy and PyTorch's original implementations of Sobol' sequences omitted the fir
 
 QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practices need to pay attention to QMC algorithms in popular software libraries and inform the developers when their software contains bugs or deviates from best practices.
 
+\SCComment{The above examples and discussion also underscore the importance of continuous testing in QMC software development. This involves creating a comprehensive test suite that covers a wide range of scenarios and input parameters. Additionally, QMC software should be benchmarked against known results to ensure that it is both accurate and efficient.}
+
 
 \section{Efficient} \label{CDHJS_sec:efficient}
 Another obvious feature of great QMC software is computational efficiency.  This requires developers to identify bottlenecks in performance.  Intensive computations may need to be rewritten in lower-level languages, like C.  Code may need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt to take advantage of them.
@@ -219,7 +221,7 @@ In spite of the desire for efficiency, great QMC software will be written in a v
 \section{Accessible} \label{CDHJS_sec:accessible}
 One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.
 
-Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  A suite of unit tests should be run regularly to ensure that new features do not introduce bugs.\SCComment{Move the last sentence to section on Correct} There should be a place for users to report bugs and make feature requests.
+Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  There should be a place for users to report bugs and make feature requests.
 
 Accessible QMC software has greater impact.  Accessibility also depends on the next characteristic of great QMC software.
 

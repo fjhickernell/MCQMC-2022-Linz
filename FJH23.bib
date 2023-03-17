@@ -1,7 +1,7 @@
 %% This BibTeX bibliography file was created using BibDesk.
-%% https://bibdesk.sourceforge.io/
+%% http://bibdesk.sourceforge.net/
 
-%% Created for Fred Hickernell at 2023-03-06 09:50:57 -0600 
+%% Created for Fred J Hickernell at 2023-03-16 21:56:44 -0500 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
@@ -75,12 +75,23 @@
 @string{sub = {\Ignore{u}Manuscripts Under Review}}
 
 
+@article{smith2016software,
+	author = {Smith, Arfon M and Katz, Daniel S and Niemeyer, Kyle E},
+	date-added = {2023-03-16 21:52:43 -0500},
+	date-modified = {2023-03-16 21:52:43 -0500},
+	journal = {PeerJ Computer Science},
+	pages = {e86},
+	publisher = {PeerJ Inc.},
+	title = {Software citation principles},
+	volume = {2},
+	year = {2016}}
+
 @webpage{pytorchSoboldiscussion2020a,
-	author = {{SciPy Developers}},
+	author = {{PyTorch Developers}},
 	date-added = {2023-03-06 09:49:00 -0600},
-	date-modified = {2023-03-06 09:50:00 -0600},
-	title = {scipy discussion of {S}obol' sequence implementation},
-	url = { https://github.com/pytorch/pytorch/issues/32047},
+	date-modified = {2023-03-16 21:56:40 -0500},
+	title = {{S}obol point implementation},
+	url = {https://github.com/pytorch/pytorch/issues/32047},
 	year = {2020},
 	bdsk-url-1 = {https://github.com/scipy/scipy/pull/10844}}
 
@@ -113,22 +124,6 @@
 	year = {2022},
 	bdsk-url-1 = {https://www.osti.gov/biblio/1846008},
 	bdsk-url-2 = {https://doi.org/10.2172/1846008}}
-
-@article{GodLec2022,
-	abstract = { We study quasi-Monte Carlo (QMC) integration of smooth functions defined over the multidimensional unit cube. Inspired by a recent work of Pan and Owen, we study a new construction-free median QMC rule which can exploit the smoothness and the weights of function spaces adaptively. For weighted Korobov spaces, we draw a sample of \$r\$ independent generating vectors of rank-1 lattice rules, compute the integral estimate for each, and approximate the true integral by the median of these \$r\$ estimates. For weighted Sobolev spaces, we use the same approach but with the rank-1 lattice rules replaced by high-order polynomial lattice rules. A major advantage over the existing approaches is that we do not need to construct good generating vectors by a computer search algorithm, while our median QMC rule achieves almost the optimal worst-case error rate for the respective function space with any smoothness and weights, with a probability that converges to 1 exponentially fast as \$r\$ increases. Numerical experiments illustrate and support our theoretical findings. },
-	author = {Goda, Takashi and L'Ecuyer, Pierre},
-	date-added = {2023-01-19 12:36:01 -0600},
-	date-modified = {2023-01-19 12:36:17 -0600},
-	doi = {10.1137/22M1473625},
-	eprint = {https://doi.org/10.1137/22M1473625},
-	journal = {SIAM Journal on Scientific Computing},
-	number = {4},
-	pages = {A2765-A2788},
-	title = {Construction-Free Median Quasi-Monte Carlo Rules for Function Spaces with Unspecified Smoothness and General Weights},
-	url = {https://doi.org/10.1137/22M1473625},
-	volume = {44},
-	year = {2022},
-	bdsk-url-1 = {https://doi.org/10.1137/22M1473625}}
 
 @inproceedings{pmlr-v80-chen18f,
 	abstract = {An important task in computational statistics and machine learning is to approximate a posterior distribution $p(x)$ with an empirical measure supported on a set of representative points $\{x_i\}_{i=1}^n$. This paper focuses on methods where the selection of points is essentially deterministic, with an emphasis on achieving accurate approximation when $n$ is small. To this end, we present Stein Points. The idea is to exploit either a greedy or a conditional gradient method to iteratively minimise a kernel Stein discrepancy between the empirical measure and $p(x)$. Our empirical results demonstrate that Stein Points enable accurate approximation of the posterior at modest computational cost. In addition, theoretical results are provided to establish convergence of the method.},
@@ -443,23 +438,13 @@
 	url = {https://web.maths.unsw.edu.au/~fkuo/sobol/},
 	bdsk-url-1 = {https://web.maths.unsw.edu.au/~fkuo/sobol/}}
 
-@article{JoeKuo08,
-	author = {S. Joe and F. Y. Kuo},
-	date-added = {2022-07-17 11:30:12 +0200},
-	date-modified = {2022-07-17 11:31:27 +0200},
-	journal = sisc,
-	pages = {2635--2654},
-	title = {Constructing Sobol sequences with better two-dimensional projections},
-	volume = {30},
-	year = {2008}}
-
 @article{JoeKuo03,
 	author = {S. Joe and F. Y. Kuo},
 	date-added = {2022-07-17 11:28:19 +0200},
-	date-modified = {2022-07-17 11:30:00 +0200},
+	date-modified = {2023-03-16 21:49:27 -0500},
 	journal = acmtoms,
 	pages = {49--57},
-	title = {Remark on Algorithm 659: Implementing Sobol's quasirandom sequence generator},
+	title = {Remark on Algorithm 659: Implementing {S}obol's quasirandom sequence generator},
 	volume = {29},
 	year = {2003}}
 
@@ -1027,8 +1012,8 @@
 @webpage{scipySobol2020a,
 	author = {{SciPy Developers}},
 	date-added = {2020-09-07 20:32:04 -0500},
-	date-modified = {2020-09-14 20:39:08 -0500},
-	title = {scipy discussion of {S}obol' sequence implementation},
+	date-modified = {2023-03-16 21:55:15 -0500},
+	title = {{SciPy} discussion of {S}obol' sequence implementation},
 	url = {https://github.com/scipy/scipy/pull/10844},
 	year = {2020},
 	bdsk-url-1 = {https://github.com/scipy/scipy/pull/10844}}

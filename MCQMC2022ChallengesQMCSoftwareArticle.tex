@@ -16,7 +16,7 @@
 %%%%%%% Author sign off on this first submission, last revision
 % Sou-Cheng Choi signed off on
 % Yuhan Ding signed off on
-% Fred J. Hickernell signed off on
+% Fred J. Hickernell signed off on 3/17
 % Jagadeeswaran Rathinavel signed off on
 % Aleksei Sorokin signed off on 3/17/2023
 
@@ -168,7 +168,7 @@ Progressing from the original problem to a satisfactory solution requires severa
 
 LD generators are the most prevalent, generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy},  TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
-Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,JoeKuo08a,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During a lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
+Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,KuoJoe08a,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNetBuilder \cite{LatNet} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During a lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
 
 Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries would benefit a wider menu of LD offerings, including custom generators from LatNetBuilder or other sources.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. SAS facilitates flexible integration of third-party open-source software; see \url{https://www.sas.com/en_us/software/viya/open.html}. This presents opportunities for  developers of smaller libraries with more QMC features, like BRODA and QMCPy, to connect their libraries with larger software environments. An example of QMCPy connecting with other software is given in the next subsection.
 
@@ -268,7 +268,7 @@ The term research software engineer (RSE) is becoming a more valued vocation.  A
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
 \bibliographystyle{spmpsci}
-\bibliography{FJH23,FJHown23,sc}
+\bibliography{FJH23,FJHown23}
 
 
 \end{document}
@@ -320,7 +320,7 @@ A variety of QMC materials and the their categorizations into the above framewor
     %\item BUGS \cite{BUGSBook, BUGSweb} and Stan \cite{STAN} for Markov Chain Monte Carlo (MCMC)
     \item LatMRG \cite{LEcCou97}, RNGStreams \cite{LEcEtal02},  SSJ \cite{LEc2002a,SSJ}, and LatNetBuilder \cite{LatNet}
     \item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022}
-    \item Sobol' direction numbers \cite{JoeKuo03,JoeKuo08,SobolDirection}
+    \item Sobol' direction numbers \cite{JoeKuo03,KuoJoe08a,SobolDirection}
     \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb}
     \item Multi-level software \cite{GilesSoft,GilesQSoft}
     \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}

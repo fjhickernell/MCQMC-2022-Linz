@@ -17,7 +17,7 @@
 % Sou-Cheng Choi signed off on 3/17/20223
 % Yuhan Ding signed off on
 % Fred J. Hickernell signed off on 3/17/2023
-% Jagadeeswaran Rathinavel signed off on
+% Jagadeeswaran Rathinavel signed off on 3/17/2023
 % Aleksei Sorokin signed off on 3/17/2023
 
 % RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -164,7 +164,7 @@ Expanding on the problem formulation in the introduction, we want to approximate
 \end{gather}
 Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allow different implementations of these components to be freely interchanged.
 
-\subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  Figure \ref{CDHJSfiglatticepts} illustrates an example of a lattice sequence.
+\subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  Figure \ref{CDHJSfiglatticepts} illustrates an example of a (randomly shifted) lattice sequence.
 
 \begin{figure}
     \centering
@@ -179,7 +179,7 @@ Lattice and digital sequences are not unique, and improved or alternate versions
 
 Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries would benefit a wider menu of LD offerings, including custom generators from LatNetBuilder or other sources.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. SAS facilitates flexible integration of third-party open-source software; see \url{https://www.sas.com/en_us/software/viya/open.html}. This presents opportunities for  developers of smaller libraries with more QMC features, like BRODA and QMCPy, to connect their libraries with larger software environments. An example of QMCPy connecting with other software is given in the next subsection.
 
-In fact, QMCPy is designed not simply to contain our own algorithms.  It is designed to serve as a middleware framework, allowing users to tap into a collection of QMC libraries originally written in various languages by different researchers at different times. Using object-oriented design, QMCPy specifies a few  extensible high-level mathematical objects as described in this section and in \cite{ChoEtal22a}. Developers of other (Q)MC software can  extend these objects to incorporate their existing algorithms by a combination of mechanisms: object inheritance, Python package inclusion, direct code translation, and/or interfaces to compiled C or Java libraries.
+In fact, QMCPy is designed not simply to contain our own algorithms.  It is designed to serve as a middleware framework, allowing users to tap into a collection of QMC libraries originally written in various languages by different researchers at different times. Using the object-oriented design, QMCPy specifies a few  extensible high-level mathematical objects as described in this section and in \cite{ChoEtal22a}. Developers of other (Q)MC software can  extend these objects to incorporate their existing algorithms by a combination of mechanisms: object inheritance, Python package inclusion, direct code translation, and/or interfaces to compiled C or Java libraries.
 
 
 \subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
@@ -189,7 +189,7 @@ The original integral or expectation arising from an application is defined in t
 
 	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$ \cite{KuoNuy16a}, or
 
-	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by parameter of interest \cite{GelEtal13}.
+	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by the parameter of interest \cite{GelEtal13}.
 \end{itemize}
 
 To put $\mu$ into the form that is directly accessible to QMC methods requires a variable transformation, $\bsPsi$, such that

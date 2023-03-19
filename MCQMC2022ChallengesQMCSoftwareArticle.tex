@@ -13,9 +13,9 @@
 %
 %%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%% Author sign off on this first submission, last revision 3/17/2023
+%%%%%%% Author sign off on this first submission, last revision 3/19/2023
 % Sou-Cheng Choi signed off on 3/17/20223
-% Yuhan Ding signed off on
+% Yuhan Ding signed off on 3/19/2023
 % Fred J. Hickernell signed off on 3/17/2023
 % Jagadeeswaran Rathinavel signed off on 3/17/2023
 % Aleksei Sorokin signed off on 3/17/2023
@@ -278,119 +278,9 @@ The term research software engineer (RSE) is becoming a more valued vocation.  A
 \section{Summary}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
-\SCComment{Mcqmc in [6] below should be in capital letters.}
 \bibliographystyle{spmpsci}
 \bibliography{FJH23,FJHown23}
 
 
 \end{document}
 
-
-
-
-
-\section{Tenets of Great Software} \label{CDHJS_sec:tenets_of_great_software}
-
-In this section we lay out common aspirations of scientific software. While some objectives are expected by practitioners, e.g. correctly written software, others may better be characterized as features that are pursued as a project matures, e.g. supporting scalable computation. The following paragraphs highlight aspirations with more important, expected behaviours coming earlier in the discussion.
-
-Software is expected to be \emph{correct}. A practitioner generating a digital sequence expects the routine to produce theoretically accurate points. For example, the QMC community has helped developers ensure implementations of low discrepancy sequence generators include the zeroth point \cite{Owe22a, scipySobol2020a} and  have correct randomization routines. %, and disallow thinning / leaping: taking every $k^\text{th}$ value in the sequence.
-
-Algorithms should be implemented in an \emph{efficient} manner. Both the compute time and memory requirements should match theoretical developments which in turn should be as close to the state of the art as possible. As a classical example, it is expected that an implementation of the discrete Fourier transform for $n$ points has complexity $\mathcal{O}(n\log n)$.
-
-Software should be \emph{accessible} in terms of installation, presentation, navigation, exemplification, and communication. A library should be straightforward to install from a common distribution platform, consistent in user interface, intuitive to navigate to modules and documentation, comprehensible in its' examples, and supportive in user engagement. Software accessibility considerations are further discussed in Sect.\ \ref{CDHJS_sec:language_library_environment}.
-
-Libraries should be \emph{sustainable} for future development. The goal should be to have a sufficient user base and developer community for updates and maintenance. Similar to accessibility, sustainability is often overlooked for aspirations discussed later in this section. However, we contend that a sub-optimal but user-friendly library with community engagement may be more impactful than an optimal library which lacks support. We promote collaborative, community driven development further in Sect.\ \ref{CDHJS_sec:encouraging_collaborative_developement}.
-
-Software should be \emph{integrated} into the environment's scientific software ecosystem. More simply, libraries should play nicely together and utilize the mature developments of other teams. A simple example in \AGSComment{CITE} shows a straightforward integration between the QMC package QMCPy \cite{QMCPy2020a} and the PDE package FEniCS/Dolfin \cite{LoggEtal_10_2012}, both in Python.
-
-Routines should be \emph{scalable} to advanced computer architectures. The widespread availability of on demand computing with multi-core and multi-GPU machines encourages software that can take advantage of parallel computation. Scalable algorithms lend themselves to a larger class or problems and provide practitioners the opportunity to more quickly test ideas.
-
-\section{(Quasi-)Monte Carlo Software Architecture} \label{CDHJS_sec:qmc_software_architecture}
-
-An important step in the development of any software is to determine its' architecture. How should components interact with each other? Which aspects should be modular? Object oriented? Procedural? Answers to these questions form the blueprint of software design and guide implementation.
-
-This section proposes an object oriented design for (Q)MC software. The authors have implemented this architecture into the QMCPy \cite{QMCPy2020a} Python package which is further detailed in the MCQMC 2020 proceedings article \AGSComment{CITE}. While this is not the only possible architecture for (Q)MC problems, we hope the high level object definitions facilitate easy collaboration and integration for research across the (Q)MC community.
-
-The standard (Q)MC problem is to approximate the true mean $\mu := \mathbb{E}[g(\boldsymbol{T})]$ where $\boldsymbol{T}$ is some $d$ dimensional random variable. For nice $\boldsymbol{T}$, one may perform a change of variables to write $\mu = \mathbb{E}[f(\boldsymbol{X})]$ where $\boldsymbol{X} \sim \mathcal{U}[0,1]^d$. For example, if $\boldsymbol{T} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{I})$, then one may set $f(\boldsymbol{x}) := g(\boldsymbol{\Phi}^{-1}(\boldsymbol{x}))$ for $\boldsymbol{x} \in [0,1]^d$ where $\boldsymbol{\Phi}^{-1}$ is the inverse CDF of a standard normal distribution taken element wise. One may then approximate $\mu$ by the $n$ sample average $\hat{\mu} = 1/n \sum_{i=1}^n f(\boldsymbol{x}_i)$ where $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen so their empirical distribution is ``close'' to the uniform distribution. The approximation error $\varepsilon = \lvert \mu - \hat{\mu} \rvert$ is $\mathcal{O}(n^{-1/2})$ when $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen to be IID standard uniform as in the case of simple Monte Carlo (MC) and almost $\mathcal{O}(n^{-1})$ when $\{\boldsymbol{x}_i\}_{i=1}^n$ are chosen from a low discrepancy sequence as done for Quasi-Monte Carlo (QMC). Instead of selecting the number of samples $n$ and then determining the error $\varepsilon$, it is often desirable to select $\varepsilon$ and then adaptively determine $n$. From this view, $n$ is $\mathcal{O}(\varepsilon^{-2})$ for MC and almost $\mathcal{O}(\varepsilon^{-1})$ for QMC. A more detailed account of MC and QMC can be found in \AGSComment{CITE}.
-
-The (Q)MC pipeline above can be decomposed into $4$ main components:
-\begin{description}
-    \item[\textbf{Generator:}] producing $\{\boldsymbol{x}_i\}_{i=1}^n$ whose empirical distribution is ``close'' to the standard uniform distribution in $d$ dimensions for any $n \geq 1$.  May produce IID or low discrepancy sequences depending on the problem.
-    \item[\textbf{Measure:}] that defines the distribution of $\boldsymbol{T}$ e.g., uniform, Gaussian, Lebesgue. This definition facilitates choosing a change of variables to determine $f$.
-    \item[\textbf{Integrand:}] $g$, which defines the original integral. When provided knowledge of the true measure, the integrand can also evaluate $f$ via the change of variables.
-    \item[\textbf{Stopping Criterion:}] based on a data-driven error bound, which determines how large $n$ should be to ensure that $\varepsilon$ is less than some user-provided error threshold.
-\end{description}
-A variety of QMC materials and the their categorizations into the above framework are described in the following list.
-\begin{itemize}
-    %\item \cite{LEc2017a} provides a history of random number generation
-    %\item Notorious RANDU from the 1960s \cite{RANDU}, which fails the spectral test
-    %\item VEGAS \cite{Lep78a, Lep21a} importance sampling Monte Carlo algorithm favored by physicists
-    \item ACM low discrepancy point generators \cite{BraFox88,BraFoxNie92,HonHic00a}
-    \item FinDer \cite{PasTra95,FinDer} and BRODA \cite{BRODA20a} targeting quantitative finance
-    \item Korobov cubature and scrambled Sobol' generators in NAG \cite{NAG27} for decades
-    \item Scrambled Sobol' and Halton generators in MATLAB \cite{MAT9.13} since 2008, and fixed a few years later
-    %\item BUGS \cite{BUGSBook, BUGSweb} and Stan \cite{STAN} for Markov Chain Monte Carlo (MCMC)
-    \item LatMRG \cite{LEcCou97}, RNGStreams \cite{LEcEtal02},  SSJ \cite{LEc2002a,SSJ}, and LatNetBuilder \cite{LatNet}
-    \item Low discrepancy generators \cite{FriKel02,FriKelweb}, SamplePack \cite{SamplePack}, \cite{GruWeb},  and MatBuilder \cite{paulin2022}
-    \item Sobol' direction numbers \cite{JoeKuo03,KuoJoe08a,SobolDirection}
-    \item Fast CBC, Magic Point Shop, QMC4PDE and other code since 2004  at \cite{NuyWeb}
-    \item Multi-level software \cite{GilesSoft,GilesQSoft}
-    \item Data-driven error bounds and stopping criteria in GAIL \cite{ChoEtal21a} and QMCPy \cite{QMCPy2020a, ChoEtal22a}
-    \item Uncertainty quantification libraries Dakota \cite{DakotaUsersManual}, UQTk \cite{DebEtal04,UQTk}, and MUQ \cite{MUQ}  have some basic level low discrepancy sampling
-    \item QMC framework in Julia since 2019 \cite{QMCJulia} by Robbe and others
-    \item Scrambled Sobol' in SciPy \cite{virtanen2020scipy} and PyTorch \cite{paszke2019pytorch} since several years ago
-    \item TensorFlow QMC framework \cite{tfqfQMC2021a} since a year or so ago
-    \item CUBA \cite{CUBA}
-\end{itemize}
-
-\section{Choosing a Environment} \label{CDHJS_sec:language_library_environment}
-
-This section discusses the challenges in choosing environments for development and distribution. The development environment includes the choice of which languages, architectures, testing methods, and documentation methods to support. The deployment environment will often be influenced by the choice of programming languages.
-
-The choice of programming language should be aligned with the communities the team wishes to reach with their software. The choice should also account for developer familiarity and ability to quickly prototype ideas. A team should align their choice of language to balance the desire to have user-friendly prototyping code versus the desire to have high performance computing (HPC) ``ninja'' code written for production setting. To the second point, it is also important to consider which language will best facilitate the parallel and GPU computations the team wishes to support.
-
-Many programming languages come bundled with their own preferred distribution systems. Python has PyPI, R has CRAN, Julia has Pkg. However, many projects support multiple languages and have complex dependency requirements. In such cases, it can be helpful to containerize your application using a service like Docker.
-
-\section{Encouraging Collaborative Development} \label{CDHJS_sec:encouraging_collaborative_developement}
-
-We now discuss ways a team may encourage collaborative development while touching on a few best practices. As discussed earlier, collaborative development promotes greater community engagement, ecosystem integration, and software longevity.
-
-The authors have found the Git version control system to be an invaluable for software development. Git hosts such as GitHub or Bitbucket may offer teams additional features such as tracking issues, managing discussion threads, and setting up automated workflows for jobs such as testing and documentation compilation.
-
-Accessibility is key to community engagment. It is paramount that your package be easy to install, well documented, and tested regularly. Aside from static communications, a team should also be engaged in addressing users bugs and be attentive to collaborating with proposed code changes.
-
-It is also important for a development team to make a clear path for collaborators to contributors to the software. Templates for issues and pull requests are a good place to start. Contributors should also be encouraged to write robust tests for their updates and highlight their new features in a demo for greater accessibility.
-
-\section{Example Collaboration with UMBridge and QMCPy} \label{CDHJS_sec:example_collaboration_umbridge}
-
-This section discusses a collaboration between the UM-Bridge (the UQ and Model Bridge) \AGSComment{CITE} and QMCPy (the Quasi-Monte Carlo Python library) \cite{QMCPy2020a} softwares. The UM-Bridge documentation describes its' mission is to, ``provide a unified interface for numerical models that is accessible from virtually any programming language or framework. It is primarily intended for coupling advanced models (e.g. simulations of complex physical processes) to advanced statistics or optimization methods.'' QMCPy is a high level framework for combining QMC components in a compatible and consistent manner. The collaboration between these two packages focused on making the UQ methods of QMCPy compatible with the abstract model representations from UM-Bridge. Specifically, UM-Bridge models are made compatible with the QMCPy framework through an integrand wrapper for seamless compatibility with a variety of existing point generators, transformations, and stopping criterion already available in QMCPy.
-
-To exemplify the integration, we focus on quantifying uncertainty propagation of material properties of a cantilevered beam. It is assumed the beam is split into $3$ regions of random stiffness dependent on uncertain material properties. Given a sample of $3$ stiffness values, the UM-Bridge model provides the displacement at $31$ equidistant nodes along the beam. Our task is to quantify the uncertainty in displacement at each of these $31$ locations along the beam.
-
-A fully coded example of this problem is available at \url{https://github.com/QMCSoftware/QMCSoftware/blob/master/demos/umbridge.ipynb}. At a high level, one begins by running the UM-Bridge model in a Docker container. A model is then initialized in the UM-Bridge Python client which is then provided to QMCPy alongside a low discrepancy point generator and distribution governing the $3$ beam stiffness values. QMCPy then performs adaptive QMC cubature to simultaneously approximate the expected displacement at the $31$ locations of interest. When the cubature method queries the model, the QMCPy wrapper around UM-Bridge model sends requests to the Docker UM-Bridge model in parallel. The load balancing provided by UM-Bridge may be utilized to evaluate the model in parallel, a potentially advantageous feature for models which are costly to evaluate. Figure \ref{CDHJSfigumbridge_muq} depicts the $31$ approximate expected displacement values subject to uniform stiffness.
-
-\begin{figure}
-    \centering
-    \includegraphics[height=4cm]{umbridge_muq.png}
-    \caption{QMCPy approximate expected displacement at $31$ locations subject to random uniform stiffness. }
-    \label{CDHJSfigumbridge_muq}
-\end{figure}
-
-\section*{TODO}
-\begin{itemize}
-    \item Flesh out Section \ref{CDHJS_sec:encouraging_collaborative_developement}
-    \item QMC Software Architecture section: better way then description of components and list of softwares?
-    \item For Section \ref{CDHJS_sec:tenets_of_great_software}, the slides also include
-    \begin{itemize}
-        \item  Complete---contain the components or  easily access components in other libraries to solve real, complex problems
-        \item Current---include the latest and best algorithms
-    \end{itemize}
-    which I think fall under the umbrella of software being \emph{integrated} with the community.
-    \item update QMCPy citation \cite{QMCPy2020a}
-    \item figures?
-    \item I have left out or been breif about material from the following slides: QMCPy + FEniCS/Dolfin,  Building a Developer Team for Your Library
-\end{itemize}
-
-
-
-Developing software to implement such enhanced MC strategies poses a number of challenges. First, a development team must determine the value of the software to the users. We discuss why great (Q)MC software in necessary in Sect.\ \ref{CDHJS_sec:why_we_need_software}. Second, a team must determine high level objectives for the software; the tenets of great software are described in Sect.\ \ref{CDHJS_sec:tenets_of_great_software}. Third, an architecture for the  (Q)MC software should be determined. We propose a modularization of the (Q)MC pipeline in Sect.\ \ref{CDHJS_sec:qmc_software_architecture}. Next, a team must choose which programming languages, hardware environments, and distribution platforms they wish to support. We discuss the nuance and challenges in these decisions in Sect.\ \ref{CDHJS_sec:language_library_environment}. Finally, a project which hopes to stand the test of time must draw attention and support from the broader (Q)MC community. To this end, we encourage collaborative community development and describe its' best practices in  Sect.\ \ref{CDHJS_sec:encouraging_collaborative_developement}.

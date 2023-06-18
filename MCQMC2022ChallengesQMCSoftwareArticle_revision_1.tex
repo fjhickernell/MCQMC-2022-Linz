@@ -215,8 +215,8 @@ Such a transformation is typically non-unique, and the choice of a good one is e
 Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{umbridge}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$.  
 
 We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam, with a random Young's modulus \SCComment{$m(x)$ of length $L$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and 
-the vertical deflection $u(x)$ when the beam is subject to an external load $f(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
-$$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = f(x),$$
+the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
+$$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
 %where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The  
 with the following boundary conditions:
 $$ \left.u(x)\right|_{x=0} = 0, \qquad 
@@ -225,7 +225,7 @@ $$ \left.u(x)\right|_{x=0} = 0, \qquad
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{f}$, where $\hat{u}$ and $\hat{f} \in \mathbb{R}^N$. }
 %approximates $u(x)$ and $m(x)$ at the nodes, respectively. 
 %The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$. 
-QMCPy computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
+QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
 
 
 

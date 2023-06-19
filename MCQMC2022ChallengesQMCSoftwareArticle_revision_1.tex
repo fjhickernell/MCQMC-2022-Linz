@@ -294,17 +294,21 @@ The term research software engineer (RSE) is becoming a more valued vocation.  A
 
 
 
-\section{Summary}
+\section{Summary and Future Work}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
-\SCComment{Perhaps we could respond to referee's comment \#2 and \#4 here by framing it as future work.}
+\SCComment{Response to comment \#2: In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation, simulation of Markov chains,  density estimation, and many MC-based randomized algorithms. For instance, Array-RQMC has proven invaluable for maintaining and sorting arrays of Markov chains \cite{l2018sorting,puchhammer2021variance}.  
+The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to extend its applicability to an increasingly wider scope of  problems in computational mathematics and statistics.
+}
+
+\SCComment{Perhaps we could respond to referee's comment \#4 here.}
 
 \section*{Acknowledgements}\SCComment{Added this section}
 The authors are grateful to the referee's constructive comments. 
 
 
 \bibliographystyle{spmpsci}
-\bibliography{FJH23,FJHown23}
+\bibliography{FJH23,FJHown23,sc}
 
 
 \end{document}

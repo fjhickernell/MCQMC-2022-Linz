@@ -225,8 +225,7 @@ $$ \left.u(x)\right|_{x=0} = 0, \qquad
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$. }
 %approximates $u(x)$ and $m(x)$ at the nodes, respectively. 
 %The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$. 
-QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation.% the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time.
-
+QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of virtual machines and docker containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. % the evaluation of the beam deflection can be computed in parallel in multiple cores of a single CPU to decrease execution time. 
 
 
 
@@ -298,10 +297,13 @@ The term research software engineer (RSE) is becoming a more valued vocation.  A
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
 \SCComment{Response to comment \#2: In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation, simulation of Markov chains,  density estimation, and many MC-based randomized algorithms. For instance, Array-RQMC has proven invaluable for maintaining and sorting arrays of Markov chains \cite{l2018sorting,puchhammer2021variance}.  
-The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to extend its applicability to an increasingly wider scope of  problems in computational mathematics and statistics.
+The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to become applicable to an increasingly wider scope of problems and applications of computational mathematics and statistics.
 }
 
-\SCComment{Perhaps we could respond to referee's comment \#4 here.}
+\SCComment{Response to comment \#4:  Python is known for its versatility, but it can be slower than highly optimized implementations in languages like Java or C++.  For QMCPy developers, it would be beneficial to investigate such underlying interfaces or consider other code acceleration techniques by leveraging Numba, Joblib, or Ray in the future.
+}
+
+\SCComment{Question: Do we have only one referee's report for this paper?}
 
 \section*{Acknowledgements}\SCComment{Added this section}
 The authors are grateful to the referee's constructive comments. 

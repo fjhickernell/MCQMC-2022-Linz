@@ -129,7 +129,7 @@ In the next section, we describe why QMC software is important.  We then discuss
 In each section, we describe the challenges faced and how they might be overcome.
 
 We draw on our collective experiences as
-members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{ChoEtal22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~ \cite{QMCPy2020a}.
+members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{TonEtAl22a} in MATLAB and the Quasi-Monte Carlo Python library (ChoEtal22a)~ \cite{QMCPy2020a}.
 
 \section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
@@ -147,14 +147,14 @@ These themes apply to QMC software in particular, as well as scientific software
 
 QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerically stable, and provides reasonable default choices of tuning parameters. Great QMC software relieves users of these concerns.
 
-Great QMC software eliminates the need for researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer errors.
+Great QMC software eliminates the need for researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer the errors.
 
 
 \subsection{QMC Software to Theory}
 
 Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results lead to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
-We next discuss the characteristics of great QMC software outlined in the introduction.  For each characteristic, we identify what is lacking and what might be done to remedy the lack.
+We next discuss the characteristics of great QMC software as outlined in the introduction.  For each characteristic, we identify potential deficiencies and suggest possible remedies.
 
 \section{Integrated} \label{CDHJS_sec:integrated}
 

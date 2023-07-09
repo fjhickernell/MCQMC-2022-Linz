@@ -130,7 +130,7 @@ In the next section, we describe why QMC software is important.  We then discuss
 In each section, we describe the challenges faced and how they might be overcome.
 
 We draw on our collective experiences as
-members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{TonEtAl22a} in MATLAB and the Quasi-Monte Carlo Python library (ChoEtal22a)~ \cite{QMCPy2020a}.
+members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\SCComment{\cite{TonEtAl22a}} in MATLAB and the Quasi-Monte Carlo Python library (ChoEtal22a)~\SCComment{\cite{QMCPy2020a}}.
 
 \section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
@@ -213,7 +213,7 @@ Such a transformation is typically non-unique, and the choice of a good one is e
 \end{figure}
 
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \LSComment{\cite{UMBridge23}}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$   \LSComment{and optionally, their derivatives. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.}
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \LSComment{\cite{UMBridge23}}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$   \LSComment{, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.}
 
 We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam \SCComment{of length~$L$}, with a random Young's modulus \SCComment{$m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and 
 the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):

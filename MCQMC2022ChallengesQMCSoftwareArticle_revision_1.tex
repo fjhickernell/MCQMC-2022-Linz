@@ -226,7 +226,7 @@ $$ \left.u(x)\right|_{x=0} = 0, \qquad
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$. }
 %approximates $u(x)$ and $m(x)$ at the nodes, respectively. 
 %The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$. 
-\LSComment{The beam model was written in C++ using the MUQ's model framework~\cite{MUQ}. It is one of the UM-Bridge's benchmark problem library, available as a container.}
+\LSComment{The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. It is one of the UM-Bridge's benchmark problem library, available as a container.}
 QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of \LSComment{clusters and containers}, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. \LSComment{As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.}
 
 

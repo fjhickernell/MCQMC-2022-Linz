@@ -155,6 +155,8 @@ Great QMC software eliminates the need for researchers to resort to  ``do-it-you
 
 Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results prompt theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
+\bigskip
+
 We next discuss the characteristics of great QMC software as outlined in the introduction.  For each characteristic, we identify potential deficiencies and suggest possible remedies.
 
 \section{Integrated} \label{CDHJS_sec:integrated}
@@ -179,7 +181,7 @@ Progressing from the original problem to a satisfactory solution requires severa
 
 LD generators are the most prevalent, generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy},  TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
 
-Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,KuoJoe08a,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNet Builder \cite{LEcEtal22a} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries. \SCComment{Changed LatNet Builder's reference in response to Referee's \#3, but the citation relies on another reference ArnGilKel22a which is not found}
+Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,KuoJoe08a,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNet Builder \cite{LEcEtal22a} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
 
 Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries would benefit a wider menu of LD offerings, including custom generators from LatNet Builder or other sources.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. SAS facilitates flexible integration of third-party open-source software; see \href{https://www.sas.com/en_us/software/viya/open.html}{\url{https://www.sas.com/en_us/software/viya/open.html}}.
 This presents opportunities for developers of smaller libraries with more QMC features, like BRODA and QMCPy, to connect their libraries with larger software environments. An example of QMCPy connecting with other software is given in the next subsection.
@@ -188,7 +190,7 @@ In fact, QMCPy is designed not simply to contain our own algorithms.  It is desi
 
 
 \subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
-The original integral or expectation arising from an application is defined in terms of the integrand, $g$, and the non-negative weight, $\lambda$.  For example,
+The original integral or expectation arising from an application is defined in terms of the integrand, $g :\mathcal{T} \to \R$, and the non-negative weight, $\lambda$, as described in \eqref{eq:cubSummary}.  For example,
 \begin{itemize}
 	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ is the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
 
@@ -201,21 +203,21 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 \begin{equation*}
     \bsPsi((0,1)^d) = \calT, \qquad f(\bsx) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial\bsx}}.
 \end{equation*}
-Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  In this case, one might choose $\bsPsi$ such that $\bsT \sim \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$. Software such as SciPy and QMCPy facilitate such variable transformations by providing default $\bsPsi$ for common $\bsT$. This alleviates the burden on the user to determine a transformation and implement the Jacobian.
+Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is the PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  In this case, one might choose $\bsPsi$ such that $\bsT \sim \bsPsi(\bsX)$, $\bsX \sim \calU(0,1)^d$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$. Software such as SciPy and QMCPy facilitate such variable transformations by providing default $\bsPsi$ for common $\bsT$. This alleviates the burden on the user to determine a transformation and implement the Jacobian.
 
 \begin{figure}[t]
     \centering
     \raisebox{0.5cm}{\includegraphics[width=0.4\textwidth]{BeamDrawing.png}}
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=1\textwidth]{ldparallelbeam.eps}
-    \caption{The expected deflection (upper left, image reproduced from~\cite{ParSee22a} with permission) of a cantilevered beam (upper right, \SCComment{what is $n$ for this figure?}) with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$ (lower right), and parallel processing gives a speed-up factor of four to five (lower left). These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
+    \caption{The expected deflection (upper left, image reproduced from~\cite{ParSee22a} with permission) of a cantilevered beam (upper right) with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$ (lower right), and parallel processing gives a speed-up factor of four to five (lower left). These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
     \label{CDHJSfigbeam}
 \end{figure}
 
 
-Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \LSComment{\cite{UMBridge23}}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$   \LSComment{, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.}
-
-We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam \SCComment{of length~$L$}, with a random Young's modulus \SCComment{$m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{UMBridge23}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.
+{eq:cubSummary}
+We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random Young's modulus $m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
 the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
 $$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
 %where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The
@@ -226,14 +228,18 @@ $$ \left.u(x)\right|_{x=0} = 0, \qquad
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$. }
 %approximates $u(x)$ and $m(x)$ at the nodes, respectively.
 %The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$.
-\LSComment{The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. It is one of the UM-Bridge's benchmark problem library, available as a container.}
-QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of \LSComment{clusters and containers}, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. \LSComment{As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.}
+The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. It is one of the UM-Bridge's benchmark problem library, available as a container.
+
+QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of clusters and containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.
 
 
 We need more connections of QMC software to other libraries, like what has been done with  QMCPy and UM-Bridge.  This will allow newer and better QMC algorithms to tackle new applications.
 
 \subsection{Stopping Criteria}
 The cantilevered beam example illustrated in Figure \ref{CDHJSfigbeam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules and \cite{HicEtal18a} for a review on automatic QMC stopping criteria.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
+
+
+\bigskip
 
 We emphasize again that no one software library contains all of the best LD generators, integrands, variable transformations, and stopping criteria, which is why great QMC software must be well integrated into other software libraries.  This may take the form of large libraries incorporating more QMC routines and/or building connections among QMC libraries and with other non-QMC libraries.
 
@@ -256,6 +262,7 @@ Another obvious feature of great QMC software is computational efficiency.  This
 Efficiency gains in QMC software can also result from clever algorithm choices. Adaptive QMC algorithms as in \cite{JimHic16a, HicJim16a, HicEtal17a, RatHic19a,JagHic22a} can be used to dynamically increase the number of sampling points based on estimated error bounds. They can lead to significant efficiency gains by reducing the number of unnecessary function evaluations. The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels. Consequently, computing the stopping criterion is roughly the same order of magnitude as computing the solution.
 
 In spite of the desire for efficiency, great QMC software will be written in a variety of computer languages since different communities tend to favor different languages. Trade-offs will be made between efficiency and convenience.
+For example, as noted by a referee, QMCPy is not particularly fast at generating tens of thousands of replicates of randomized QMC sample means in comparison to SSJ, which is based on Java. Such cases may point to the need for a Python layer over a faster implementation.
 
 \section{Accessible} \label{CDHJS_sec:accessible}
 One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.
@@ -292,23 +299,22 @@ Encouraging students and postdocs to invest time in developing QMC software will
 The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International,
 \href{https://researchsoftware.org}{\url{https://researchsoftware.org}}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
 
-\SCComment{In QMCPy, we recognize the crucial role of non-code contributors to the project~\cite{K23}. Besides coding, we also need documentation, data visualization,  testing, user interface or experience design, web content development, community management, and release management. These non-code contributions help make the project more  accessible. Non-coding roles offer opportunities for individuals with less coding experiences to develop technical and non-technical skills over time.  Additionally, the emergence of no-code or low-code analytical software such as RapidMiner, KNIME, Orange, SAS Studio, or SAS Viya enable individuals less experienced with complex coding to learn and contribute in a user-friendly environment.  We need and welcome non-code contributors to work alongside code contributors for QMCPy, enhancing the overall health of the project and the diversity of the community. }
+We recognize the crucial role of non-code contributors to the project~\cite{K23}. Besides coding, we also need documentation, data visualization, testing, user interface or experience design, web content development, community management, and release management. These non-code contributions help make the project more  accessible. Non-coding roles offer opportunities for individuals with less coding experiences to develop technical and non-technical skills over time.  Additionally, the emergence of no-code or low-code analytical software such as RapidMiner, KNIME, Orange, SAS Studio, or SAS Viya enable individuals less experienced with complex coding to learn and contribute in a user-friendly environment.
+%We need and welcome non-code contributors to work alongside code contributors for QMCPy, enhancing the overall health of the project and the diversity of the community.
 
 
 \section{Summary and Future Work}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
-\SCComment{Response to comment \#2: In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation, simulation of Markov chains,  density estimation, and many MC-based randomized algorithms. For instance, Array-RQMC has proven invaluable for maintaining and sorting arrays of Markov chains \cite{l2018sorting,puchhammer2021variance}.
+In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation \cite{Kmmerer2015, PotSch21}, simulation of Markov chains \cite{l2018sorting,puchhammer2021variance},  density estimation \cite{LEcuyer2022b}.
 The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to become applicable to an increasingly wider scope of problems and applications of computational mathematics and statistics.
-}
 
-\SCComment{Response to comment \#4:  Python is known for its versatility, but it can be slower than highly optimized implementations in languages like Java or C++.  For QMCPy developers, it would be beneficial to investigate such underlying interfaces or consider other code acceleration techniques by leveraging high-performance libraries such as Numba, JAX, Joblib, or Ray in the future.
-}
 
-\SCComment{Question: Do we have only one referee's report for this paper?}
+Python is known for its versatility, but it can be slower than highly optimized implementations in languages like Java or C++.  For QMCPy developers, it would be beneficial to investigate such underlying interfaces or consider other code acceleration techniques by leveraging high-performance libraries such as Numba, JAX, Joblib, or Ray in the future.
+
 
 \section*{Acknowledgements}
-\SCComment{The authors are grateful to the referee's constructive comments. We also want to thank Linus Seelinger for feedback and discussion. }
+The authors are grateful to the referee's constructive comments. We also want to thank Linus Seelinger for feedback and discussion. The authors acknowledge many students and collaborators who have provided insight in our journey to develop great QMC software.
 
 
 \bibliographystyle{spmpsci}

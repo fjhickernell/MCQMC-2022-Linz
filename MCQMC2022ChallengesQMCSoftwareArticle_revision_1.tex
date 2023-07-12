@@ -94,7 +94,7 @@ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 1
 \maketitle
 
 \abstract{
-Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We summarize the  QMC software that has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.  We illustrate these criteria and steps in practice with the Quasi-Monte Carlo Python library (QMCPy), an open-source community software framework, extensible by design with common programming interfaces to an increasing number of existing or emerging QMC libraries developed by the greater community of QMC researchers. 
+Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We summarize the  QMC software that has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.  We illustrate these criteria and steps with the Quasi-Monte Carlo Python library (QMCPy), an open-source community software framework, extensible by design with common programming interfaces to an increasing number of existing or emerging QMC libraries developed by the greater community of QMC researchers.
 }
 
 
@@ -130,7 +130,7 @@ In the next section, we describe why QMC software is important.  We then discuss
 In each section, we describe the challenges faced and how they might be overcome.
 
 We draw on our collective experiences as
-members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\SCComment{\cite{TonEtAl22a}} in MATLAB and the Quasi-Monte Carlo Python library (ChoEtal22a)~\SCComment{\cite{QMCPy2020a}}.
+members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{TonEtAl22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~\cite{QMCPy2020a}.
 
 \section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
 
@@ -153,7 +153,7 @@ Great QMC software eliminates the need for researchers to resort to  ``do-it-you
 
 \subsection{QMC Software to Theory}
 
-Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results lead to open theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
+Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results prompt theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
 
 We next discuss the characteristics of great QMC software as outlined in the introduction.  For each characteristic, we identify potential deficiencies and suggest possible remedies.
 
@@ -204,7 +204,7 @@ To put $\mu$ into the form that is directly accessible to QMC methods requires a
 Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is a PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  In this case, one might choose $\bsPsi$ such that $\bsT \sim \bsPsi(\bsX)$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$. Software such as SciPy and QMCPy facilitate such variable transformations by providing default $\bsPsi$ for common $\bsT$. This alleviates the burden on the user to determine a transformation and implement the Jacobian.
 
 \begin{figure}[t]
-    \centering 
+    \centering
     \raisebox{0.5cm}{\includegraphics[width=0.4\textwidth]{BeamDrawing.png}}
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=1\textwidth]{ldparallelbeam.eps}
@@ -215,17 +215,17 @@ Such a transformation is typically non-unique, and the choice of a good one is e
 
 Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \LSComment{\cite{UMBridge23}}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$   \LSComment{, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.}
 
-We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam \SCComment{of length~$L$}, with a random Young's modulus \SCComment{$m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and 
+We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam \SCComment{of length~$L$}, with a random Young's modulus \SCComment{$m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
 the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
 $$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
-%where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The  
+%where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The
 with the following boundary conditions:
-$$ \left.u(x)\right|_{x=0} = 0, \qquad 
+$$ \left.u(x)\right|_{x=0} = 0, \qquad
 \left.\frac{\partial u(x)}{\partial x}\right|_{x=0} = 0, \qquad
 \left.\frac{\partial^2 u(x)}{\partial x^2}\right|_{x=L} = 0, \qquad  \left.\frac{\partial^3 u(x)}{\partial x^3}\right|_{x=L} = 0. $$
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$. }
-%approximates $u(x)$ and $m(x)$ at the nodes, respectively. 
-%The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$. 
+%approximates $u(x)$ and $m(x)$ at the nodes, respectively.
+%The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$.
 \LSComment{The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. It is one of the UM-Bridge's benchmark problem library, available as a container.}
 QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of \LSComment{clusters and containers}, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. \LSComment{As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.}
 
@@ -289,7 +289,7 @@ The QMC community can help sustain great QMC software in several ways.  \begin{i
 
 Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).
 
-The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International, 
+The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International,
 \href{https://researchsoftware.org}{\url{https://researchsoftware.org}}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
 
 \SCComment{In QMCPy, we recognize the crucial role of non-code contributors to the project~\cite{K23}. Besides coding, we also need documentation, data visualization,  testing, user interface or experience design, web content development, community management, and release management. These non-code contributions help make the project more  accessible. Non-coding roles offer opportunities for individuals with less coding experiences to develop technical and non-technical skills over time.  Additionally, the emergence of no-code or low-code analytical software such as RapidMiner, KNIME, Orange, SAS Studio, or SAS Viya enable individuals less experienced with complex coding to learn and contribute in a user-friendly environment.  We need and welcome non-code contributors to work alongside code contributors for QMCPy, enhancing the overall health of the project and the diversity of the community. }
@@ -298,7 +298,7 @@ The term research software engineer (RSE) is becoming a more valued vocation.  A
 \section{Summary and Future Work}
 QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
 
-\SCComment{Response to comment \#2: In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation, simulation of Markov chains,  density estimation, and many MC-based randomized algorithms. For instance, Array-RQMC has proven invaluable for maintaining and sorting arrays of Markov chains \cite{l2018sorting,puchhammer2021variance}.  
+\SCComment{Response to comment \#2: In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation, simulation of Markov chains,  density estimation, and many MC-based randomized algorithms. For instance, Array-RQMC has proven invaluable for maintaining and sorting arrays of Markov chains \cite{l2018sorting,puchhammer2021variance}.
 The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to become applicable to an increasingly wider scope of problems and applications of computational mathematics and statistics.
 }
 

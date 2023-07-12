@@ -18,7 +18,7 @@
 % Yuhan Ding signed off on 
 % Fred J. Hickernell signed off on 
 % Jagadeeswaran Rathinavel signed off on
-% Aleksei Sorokin signed off on 
+% Aleksei Sorokin signed off on 7/12/2023
 
 % RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \PassOptionsToPackage{hyphens}{url}
@@ -210,14 +210,16 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \raisebox{0.5cm}{\includegraphics[width=0.4\textwidth]{BeamDrawing.png}}
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=1\textwidth]{ldparallelbeam.eps}
-    \caption{The upper left shows the piecewise log effective stiffness (image reproduced from~\cite{ParSee22a} with permission). The expected deflection of a cantilevered beam with random log effective stiffness is shown in the upper right.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$ (lower right), and parallel processing gives a speed-up factor of four to five (lower left). These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
+    \caption{The upper left plot shows a piecewise log effective stiffness (image reproduced from~\cite{ParSee22a} with permission). The upper right plot shows the expected deflection of a cantilevered beam with random log effective stiffness. In the lower plots, QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size are $\calO(\varepsilon^{-1})$ and parallel processing gives a speed-up factor of four to five. These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
     \label{CDHJSfigbeam}
 \end{figure}
 
 
 Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{UMBridge23}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.
-{eq:cubSummary}
-We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random log effective stiffness $m(\cdot)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
+
+We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random log effective stiffness $m(\cdot)$. Following ~\cite{ParSee22a}, we assume $m(\cdot)$ is piecewise constant over three regions and the three constants take a $\calU[1,1.2]^3$ distribution.
+%, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  
+The beam position $x$ is discretized at $N=31$ equidistant points, and
 the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
 $$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
 %where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The
@@ -228,7 +230,7 @@ $$ \left.u(x)\right|_{x=0} = 0, \qquad
 This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$. 
 %approximates $u(x)$ and $m(x)$ at the nodes, respectively.
 %The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$.
-The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. It is one of the UM-Bridge's benchmark problem library, available as a container.
+The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. %It is one of the UM-Bridge's benchmark problem library, available as a container.
 
 QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of clusters and containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.
 
@@ -309,7 +311,7 @@ QMC has experienced decades of exciting growth in theory since the late 1950s.  
 In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation \cite{Kmmerer2015, PotSch21}, simulation of Markov chains \cite{l2018sorting,puchhammer2021variance},  density estimation \cite{LEcuyer2022b}.
 The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to become applicable to an increasingly wider scope of problems and applications of computational mathematics and statistics.
 
-Although Python is popular and versatile, but it can be slower than highly optimized implementations in languages like Java or C++.  Developers of QMC software in Python  developers would do well to investigate interfaces to optimized code in other languages or consider other code acceleration techniques provided by libraries such as Numba, JAX, Joblib, or Ray.  With time, languages rise and fall in popularity, and those who wish to provide great QMC software may need to pivot to new software environments.
+Although Python is popular and versatile, it can be slower than highly optimized implementations in languages like Java or C++.  Developers of QMC software in Python would do well to investigate interfaces to optimized code in other languages or consider other code acceleration techniques provided by libraries such as Numba, JAX, Joblib, or Ray.  With time, languages rise and fall in popularity, and those who wish to provide great QMC software may need to pivot to new software environments.
 
 
 \section*{Acknowledgements}

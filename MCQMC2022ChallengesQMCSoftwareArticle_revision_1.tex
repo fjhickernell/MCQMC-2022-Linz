@@ -13,12 +13,12 @@
 %
 %%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%% Author sign off on this first submission, last revision 3/19/2023
-% Sou-Cheng Choi signed off on 3/17/20223
-% Yuhan Ding signed off on 3/19/2023
-% Fred J. Hickernell signed off on 3/17/2023
-% Jagadeeswaran Rathinavel signed off on 3/17/2023
-% Aleksei Sorokin signed off on 3/17/2023
+%%%%%%% Author sign off on this revised submission, last revision 7/12/2023
+% Sou-Cheng Choi signed off on 
+% Yuhan Ding signed off on 
+% Fred J. Hickernell signed off on 
+% Jagadeeswaran Rathinavel signed off on
+% Aleksei Sorokin signed off on 
 
 % RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \PassOptionsToPackage{hyphens}{url}
@@ -210,14 +210,14 @@ Such a transformation is typically non-unique, and the choice of a good one is e
     \raisebox{0.5cm}{\includegraphics[width=0.4\textwidth]{BeamDrawing.png}}
     \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
     \includegraphics[width=1\textwidth]{ldparallelbeam.eps}
-    \caption{The expected deflection (upper left, image reproduced from~\cite{ParSee22a} with permission) of a cantilevered beam (upper right) with random Young's modulus.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$ (lower right), and parallel processing gives a speed-up factor of four to five (lower left). These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
+    \caption{The upper left shows the piecewise log effective stiffness (image reproduced from~\cite{ParSee22a} with permission). The expected deflection of a cantilevered beam with random log effective stiffness is shown in the upper right.  QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size is $\calO(\varepsilon^{-1})$ (lower right), and parallel processing gives a speed-up factor of four to five (lower left). These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
     \label{CDHJSfigbeam}
 \end{figure}
 
 
 Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{UMBridge23}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.
 {eq:cubSummary}
-We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random Young's modulus $m(x)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
+We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random log effective stiffness $m(\cdot)$, assumed to be piecewise constant over three regions, each of which with a uniform distribution of uncertainty~\cite{ParSee22a}, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.  The beam position $x$ is discretized at $N=31$ equidistant points, and
 the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
 $$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
 %where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The

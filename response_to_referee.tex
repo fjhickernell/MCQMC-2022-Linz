@@ -1,0 +1,79 @@
+\documentclass{article}[12pt]
+\usepackage[letterpaper, left=0.8in, top=0.7in, right=0.8in, bottom=1in]{geometry}
+
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsthm}
+
+
+\title{Response to Reviewer Comments for  ``Challenges in Developing Great Quasi-Monte Carlo Software''}
+\author{Sou-Cheng T.~Choi \and Yuhan Ding \and Fred J. Hickernell \and Jagadeeswaran  Rathinavel \and Aleksei G. Sorokin}
+\date{MCQMC 2022
+   \\[1ex]  Authors' response to the reviewer
+   \\[1ex] \today}
+
+\begin{document}
+
+\maketitle    
+
+We appreciate your insightful comments.  In the following, we recap each comment followed by our response summary. In addition, we have added a few changes in the manuscript. 
+
+\begin{enumerate}
+    \item \textbf{Recap of comment:} \textit{The example on page 6 is not very clear to me. What is the meaning of the ``dscretize
+beam position'' here? Where can we see that? What is $f$? I think there should be a
+bit more explanations.}
+
+\textbf{Our response:} We agree that the example on page 6 could have additional clarification. In the revised manuscript, we have added an image in Fig.~2 and  substantially more details on the problem. 
+
+    \item \textbf{Recap of comment:} \textit{The paper is essentially all about estimating the expectation of a function by QMC sampling.
+But (R)QMC is also used for function approximation, simulating Markov chains,
+density estimation, etc. This would required extra (connected) software tools. For example
+to maintain and sort and array of Markov chains in Array-RQMC [102, 103].
+A lot of this is actually implemented in the SSJ library [101], which also implements
+many QMC point sets, sequences, and randomizations in the “hups” and “mcqmctools”
+packages. Maybe this could be mentioned briefly somewhere.}
+
+\textbf{Our response:} In Section 8, we have added these additional problems and important tools as future work for any QMC software, including QMCPy.
+
+    \item \textbf{Recap of comment:} \textit{Refer. [9]: Maybe the authors can give the reference to the MCQMC 2020 paper on
+LatNet Builder instead, because it better explains what the software is doing.}
+    
+       \textbf{Our response:} We have replaced the original reference with the suggested one, which is now listed as reference [37] in the revised manuscript.
+    
+    \item \textbf{Recap of comment:} \textit{Section 5: Although Python is very popular and easy to use, perhaps it should be
+recognized explicitly that it is not the best tool if we want speed. I made the following
+simple experiment to compare the speeds of qmcpy with that of SSJ. We want to
+integrate the simple function $f(u_1, u_2) = u_1 + u_2 - 1$ over the unit square, using
+RQMC with Sobol points $+$ a linear scrambling $+$ a random digital shift, say with
+$n = 214$ points. I computed $20,000$ independent replicates of the RQMC estimator,
+with independent randomizations. With SSJ, this took 4.7 seconds on my Thinkpad
+laptop. With qmcpy, it took about two minutes, which is about 25 times more. I
+am not asking that the authors report this experiment in their paper, but I think
+they should mention that Python can be significantly slower than a good Java or
+\texttt{C++} implementation. One possibility would be to put a Python layer over a fast implementation.
+}
+    
+    	    \textbf{Our response:} We have added encouragement to rewrite looped point generating or randomized routines into low level languages for increased efficiency. Your example of SSJ outperforming QMCPy when getting thousands of scrambles is also mentioned. Additional encouragement has also been added to the concluding section. 
+    
+    \item  \textbf{Other major change in the manuscript:}
+    %\begin{enumerate}
+    %\item  
+    At the end of Section 7, we have highlighted the important role of non-code contributors in high-quality QMC software.
+    %\end{enumerate}
+    
+\end{enumerate}
+
+\end{document}

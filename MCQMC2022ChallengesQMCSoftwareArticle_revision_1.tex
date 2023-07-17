@@ -102,7 +102,7 @@ Quasi-Monte Carlo (QMC) methods have developed over several decades. With the ex
 
 A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be implemented in a few steps:
 \begin{enumerate}
-    \item Draw a sequence of $n$ low-discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
+    \item Draw a sequence of $n$ low discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
     $\bsx_1,\dots,\bsx_n$ that mimic $\calU[0,1]^d$.
     \item Evaluate the integrand $f$ at these nodes to obtain $f(\bsx_i)$, $i=1,\dots,n$.
     \item Estimate the true mean, $\mu$, by the sample mean,
@@ -111,6 +111,7 @@ A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be im
         \label{eq:mc_average}
     \end{equation}
 \end{enumerate}
+
 However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with a small number of sampling points, $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
 
 In the next section, we describe why QMC software is important.  We then discuss the characteristics of great QMC software:
@@ -275,7 +276,7 @@ Accessible QMC software has greater impact.  Accessibility also depends on the n
 
 
 \section{Sustainable} \label{CDHJS_sec:sustainable}
-Great QMC software libraries should be alive.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing. Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
+Great QMC software libraries should be awake, not dormant.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing. Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
 
 The QMC community can help sustain great QMC software in several ways.  \begin{itemize}
 	\item Let's build our research code and showcase our new algorithms using existing QMC software libraries or build and maintain new libraries, if needed.  This allows the next generation to more easily reproduce our results and build upon them.

@@ -1,0 +1,743 @@
+% MCQMC 2022 article on the Challenges of Great MCQMC Software
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% author.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%% Author sign off on this revised submission, last revision 7/12/2023
+% Sou-Cheng Choi signed off on 7/15/2023
+% Yuhan Ding signed off on
+% Fred J. Hickernell signed off on
+% Jagadeeswaran Rathinavel signed off on 7/13/2023
+% Aleksei Sorokin signed off on 7/12/2023
+
+% RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[graybox]{svmult}
+
+% choose options for [] as required from the list
+% in the Reference Guide
+
+\usepackage{type1cm}        % activate if the above 3 fonts are
+% not available on your system
+%
+\usepackage{makeidx}         % allows index generation
+\usepackage{graphicx}        % standard LaTeX graphics tool
+% when including figure files
+\usepackage{multicol}        % used for the two-column index
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+\usepackage{epstopdf,psfrag}
+
+
+\usepackage{newtxtext}       %
+\usepackage[varvw]{newtxmath}       % selects Times Roman as basic font
+
+% see the list of further useful packages
+% in the Reference Guide
+
+%\makeindex             % used for the subject index
+% please use the style svind.ist with
+% your makeindex program
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%Fred start
+\input{common-macros.tex}
+\usepackage{cite}
+\usepackage{xspace}
+\usepackage[bookmarks=false]{hyperref}
+\usepackage[hyphens]{url}
+%\providecommand{\HickernellFJ}{Hickernell\xspace}
+%\graphicspath{{ProgramsImages/}}
+
+%\input FJHDef.tex
+%\newcommand{\AGSComment}[1]{{\color{red} #1}}
+%\newcommand{\FredComment}[1]{{\color{blue} Fred: #1}}
+%\newcommand{\SCComment}[1]{{\color{green} Sou-Cheng: #1}}
+%\newcommand{\YDComment}[1]{{\color{orange} Yuhan: #1}}
+%\newcommand{\JagsComment}[1]{{\color{violet} Jags: #1}}
+%\newcommand{\LSComment}[1]{{\color{blue} Linus Seelinger: #1}}
+%\DeclareMathOperator{\disc}{disc}
+%\newcommand{\FJHNote}[1]{{\color{blue}Fred: #1}}
+
+%%%%Fred end
+
+\begin{document}
+
+\title*{Challenges in Developing Great Quasi-Monte Carlo Software}
+\authorrunning{S.-C.\ T.\ Choi et al.}
+\author{Sou-Cheng T.~Choi \and Yuhan Ding \and Fred J. Hickernell \and Jagadeeswaran  Rathinavel \and Aleksei G. Sorokin}
+\institute{
+Sou-Cheng T.~Choi \at Department of Applied Mathematics, Illinois Institute of Technology; SAS Institute Inc. \\RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{schoi32@iit.edu}
+\and
+Yuhan Ding \at
+ Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{yding2@hawk.iit.edu}
+\and
+Fred J. Hickernell \at Center for Interdisciplinary Scientific Computation and \\
+Department of Applied Mathematics, Illinois Institute of Technology \\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{hickernell@iit.edu}
+\and
+Jagadeeswaran  Rathinavel \at
+Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{jrathin1@hawk.iit.edu}
+\and
+Aleksei G. Sorokin \at
+Department of Applied Mathematics, Illinois Institute of Technology,\\ RE 220, 10 W.\ 32$^{\text{nd}}$ St., Chicago, IL 60616 \email{asorokin@hawk.iit.edu}}
+
+\maketitle
+
+\abstract{
+Quasi-Monte Carlo (QMC) methods have developed over several decades. With the explosion in computational science, there is a need for great software that implements QMC algorithms. We summarize the  QMC software that has been developed to date, propose some criteria for developing great QMC software, and suggest some steps toward achieving great software.  We illustrate these criteria and steps with the Quasi-Monte Carlo Python library (QMCPy), an open-source community software framework, extensible by design with common programming interfaces to an increasing number of existing or emerging QMC libraries developed by the greater community of QMC researchers.
+}
+
+
+\section{Introduction}
+
+A QMC approximation of $\mu := \EE[f(\bsX)]$, $\bsX \sim \calU[0,1]^d$ can be implemented in a few steps:
+\begin{enumerate}
+    \item Draw a sequence of $n$ low discrepancy (LD) \cite{Nie92, SloJoe94, DicEtal14a, DicEtal22a} nodes,
+    $\bsx_1,\dots,\bsx_n$ that mimic $\calU[0,1]^d$.
+    \item Evaluate the integrand $f$ at these nodes to obtain $f(\bsx_i)$, $i=1,\dots,n$.
+    \item Estimate the true mean, $\mu$, by the sample mean,
+    \begin{equation*}
+        \hat{\mu}_n := \frac{1}{n} \sum_{i=1}^n f(\bsx_i).
+        %\label{CDHJSeq:mc_average}
+    \end{equation*}
+\end{enumerate}
+
+However, the practice of QMC is often more complicated.  The original problem may need to be rewritten to fit the above form and/or to facilitate a good approximation with a small number of sampling points, $n$.  Practitioners may wish to determine $n$ adaptively to satisfy a prescribed error tolerance.
+
+In the next section, we describe why QMC software is important.  We then discuss the characteristics of great QMC software:
+
+\begin{itemize}
+\item Integrated with related libraries (Sect.\ \ref{CDHJS_sec:integrated}),
+
+\item Correct (Sect.\ \ref{CDHJS_sec:correct}),
+
+\item Efficient in computational time and memory (Sect.\ \ref{CDHJS_sec:efficient}),
+
+\item Accessible to practitioners and theorists alike (Sect.\ \ref{CDHJS_sec:accessible}), and
+
+\item Sustainable by a community that owns it (Sect.\ \ref{CDHJS_sec:sustainable}).
+
+\end{itemize}
+In each section, we describe the challenges faced and how they might be overcome.
+
+We draw on our collective experiences as
+members of the academic QMC community, developers of open-source and commercial scientific software, and users of a wide range of scientific software as research scientists or data scientists. Many of the insights that we have gained have come through our development of the Guaranteed Automatic Integration Library (GAIL)~\cite{TonEtAl22a} in MATLAB and the Quasi-Monte Carlo Python library (QMCPy)~\cite{QMCPy2020a}.
+
+\section{Why Develop QMC Software} \label{CDHJS_sec:why_we_need_software}
+
+Recent interest in quality scientific software is exemplified by the 2021 US Department of Energy report, \emph{Workshop on the Science of Scientific-Software Development and Use} \cite{ASCR-SSSDU, osti_1846008}. This workshop not only discussed diagnostics and treatments for the challenges of developing great scientific software, but also emphasized the importance of implementing theoretical advancements into well-written, accessible software libraries. Three cross-cutting themes arose in this workshop:
+\begin{itemize}
+    \item  We need to consider both human and technical elements to better understand how to improve the development and use of scientific software.
+
+    \item We need to address urgent challenges in workforce recruitment and retention in the computing sciences with growth through expanded diversity, stable career paths, and the creation of a community and culture that attract and retain new generations of scientists.
+
+    \item Scientific software has become essential to all areas of science and technology, creating opportunities for expanded partnerships, collaboration, and impact.
+\end{itemize}
+These themes apply to QMC software in particular, as well as scientific software in general.
+
+\subsection{QMC Theory to Software}
+
+QMC software makes theoretical advances in QMC available to practitioners. However, translating pseudo-code into good executable code is nuanced.  Software developers must write code that is computationally efficient, numerically stable, and provides reasonable default choices of tuning parameters. Great QMC software relieves users of these concerns.
+
+Great QMC software eliminates the need for researchers to resort to  ``do-it-yourself'' for established algorithms.  The less code we have to write, the fewer the errors.
+
+
+\subsection{QMC Software to Theory}
+
+Great QMC software opens up new application areas for QMC methods by allowing practitioners to compare new methods to existing ones.  QMC software has been successful in quantitative finance, uncertainty quantification, and image rendering. Unexpectedly good or bad computational results prompt theoretical questions.  For example, the early application of QMC to high dimensional integrals arising in financial risk \cite{PasTra95} led to a wave of theoretical results on the tractability of integration in weighted spaces \cite{Woz99a,DicEtal14a,NovWoz10a}.
+
+\bigskip
+
+We next discuss the characteristics of great QMC software as outlined in the introduction.  For each characteristic, we identify potential deficiencies and suggest possible remedies.
+
+\section{Integrated} \label{CDHJS_sec:integrated}
+
+Expanding on the problem formulation in the introduction, we want to approximate well the integral or expectation, $\mu$, by the sample mean, $\hat{\mu}_n$:
+\begin{gather}
+\label{CDHJSeq:cubSummary}
+	\mu : = \int_\calT g(\bst) \, \lambda(\bst) \, \D \bst  = \bbE[f(\bsX)] = \int_{[0,1]^d} f(\bsx)  \, \D \bsx \approx \frac 1n \sum_{i=1}^{n} f(\bsx_i) =: \hat{\mu}_n, \\
+ \label{CDHJS_eq:error_tol}
+ \abs{\mu - \hat{\mu}_n} \le \varepsilon.
+\end{gather}
+Progressing from the original problem to a satisfactory solution requires several software components, which we describe in the subsections below.  Great QMC software environments allow different implementations of these components to be freely interchanged.
+
+\subsection{LD Sequence Generators} A lattice, digital sequence, or Halton sequence generator typically supplies the sequence $\bsx_1, \bsx_2, \ldots$.  These sequences may be deterministic or random and are intended to have an empirical distribution that approximates well the uniform distribution.  Figure \ref{CDHJSfiglatticepts} illustrates an example of a (randomly shifted) lattice sequence.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{latticepts.eps}
+    \caption{A two-dimensional projection of lattice points for increasing sample size.  The later points fill in gaps because they are highly correlated with the earlier points.  These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}. }
+    \label{CDHJSfiglatticepts}
+\end{figure}
+
+LD generators are the most prevalent, generally available components of QMC software.  These generators appear in Association of Computing Machinery  publications \cite{BraFox88,BraFoxNie92,HonHic00a}, FinDer \cite{PasTra95,FinDer}, libseq \cite{FriKel02,FriKelweb}, BRODA \cite{BRODA20a}, NAG \cite{NAG27}, MATLAB \cite{MAT9.13}, SamplePack \cite{SamplePack}, Gr\"unschlo{\ss}'s website \cite{GruWeb}, the Magic Point Shop \cite{NuyWeb}, R \cite{QRNG2020}, Julia \cite{QMCJulia}, PyTorch \cite{paszke2019pytorch}, SAS \cite{SAS_LD}, SciPy \cite{virtanen2020scipy},  TensorFlow \cite{tfqfQMC2021a}, MatBuilder \cite{paulin2022}, and  QMCPy \cite{QMCPy2020a}.
+
+Lattice and digital sequences are not unique, and improved or alternate versions continue to be constructed.  Stephen Joe and Frances Kuo \cite{JoeKuo03,KuoJoe08a,SobolDirection} have proposed  Sobol' generator direction numbers, which are now widely used, but were not part of early LD sequence software.  Pierre L'Ecuyer and collaborators have created LatNet Builder \cite{LEcEtal22a} to construct good lattice and polynomial lattice sequences based on user-defined criteria. During lunch at MCQMC 2022, it was proposed that we  agree on a consistent format for storing the parameters that define good LD sequences so that they can be shared across software libraries.
+
+Users computing solutions in comprehensive software environments, such as NAG, MATLAB, R, SciPy, and TensorFlow, have convenient access to LD sequence generators.  However, most of these implementations in large libraries would benefit a wider menu of LD offerings, including custom generators from LatNet Builder or other sources.  Some large environments such as  Dakota \cite{DakotaUsersManual} have quite limited LD generators and should expand their offerings. SAS facilitates flexible integration of third-party open-source software; see \href{https://www.sas.com/en_us/software/viya/open.html}{\url{https://www.sas.com/en_us/software/viya/open.html}}.
+This presents opportunities for developers of smaller libraries with more QMC features, like BRODA and QMCPy, to connect their libraries with larger software environments. An example of QMCPy connecting with other software is given in the next subsection.
+
+In fact, QMCPy is designed not simply to contain our own algorithms.  It is designed to serve as a middleware framework, allowing users to tap into a collection of QMC libraries originally written in various languages by different researchers at different times. Using the object-oriented design, QMCPy specifies a few  extensible high-level mathematical objects as described in this section and in \cite{ChoEtal22a}. Developers of other (Q)MC software can  extend these objects to incorporate their existing algorithms by a combination of mechanisms: object inheritance, Python package inclusion, direct code translation, and/or interfaces to compiled C or Java libraries.
+
+
+\subsection{Integrands and Variable Transformations} \label{CDHJS:sec:integrands}
+The original integral or expectation arising from an application is defined in terms of the integrand, $g :\mathcal{T} \to \R$, and the non-negative weight, $\lambda$, as described in \eqref{CDHJSeq:cubSummary}.  For example,
+\begin{itemize}
+	\item $g$ is the discounted payoff of a financial derivative and $\lambda$ is the probability density function (PDF) for a discretized Brownian motion \cite{Gla03},
+
+	\item  $g$ is the velocity of a fluid at a point in rock with a random porosity field whose discretized PDF is $\lambda$ \cite{KuoNuy16a}, or
+
+	\item $g\lambda$ is the unnormalized Bayesian posterior density multiplied by the parameter of interest \cite{GelEtal13}.
+\end{itemize}
+
+To put $\mu$ into the form that is directly accessible to QMC methods requires a variable transformation, $\bsPsi$, such that
+\begin{equation*}
+    \bsPsi((0,1)^d) = \calT, \qquad f(\bsx) = g(\bsPsi(\bsx)) \lambda(\bsPsi(\bsx)) \abs{\frac{\partial \bsPsi}{\partial\bsx}}.
+\end{equation*}
+Such a transformation is typically non-unique, and the choice of a good one is equivalent to importance sampling.  If $\lambda$ is the PDF for a random variable $\bsT$, then $\mu = \EE[g(\bsT)]$.  In this case, one might choose $\bsPsi$ such that $\bsT \sim \bsPsi(\bsX)$, $\bsX \sim \calU(0,1)^d$, in which case $\lambda(\bsPsi(\bsx)) \abs{\partial \bsPsi/\partial\bsx} = 1$ and $f(\bsx) = g(\bsPsi(\bsx))$. Software such as SciPy and QMCPy facilitate such variable transformations by providing default $\bsPsi$ for common $\bsT$. This alleviates the burden on the user to determine a transformation and implement the Jacobian.
+
+\begin{figure}[t]
+    \centering
+    \raisebox{0.5cm}{\includegraphics[width=0.4\textwidth]{BeamDrawing.png}}
+    \includegraphics[width=0.5\textwidth]{cantileveredbeamwords.eps}
+    \includegraphics[width=1\textwidth]{ldparallelbeam.eps}
+    \caption{The upper left plot shows a piecewise log effective stiffness (image reproduced from~\cite{ParSee22a} with permission). The upper right plot shows the expected deflection of a cantilevered beam with random log effective stiffness. In the lower plots, QMCPy computes the answer in serial and in parallel using UM-Bridge and docker containers.  For small error tolerances, the time and sample size are $\calO(\varepsilon^{-1})$ and parallel processing gives a speed-up factor of four to five. These plots may be reproduced using the Jupyter notebook \cite{MCQMC2022Figs}.  }
+    \label{CDHJSfigbeam}
+\end{figure}
+
+
+Complex integrands might be best evaluated by libraries that have no direct connection to QMC software libraries.  In the uncertainty quantification (UQ) space, the recently developed UQ and Model Bridge (UM-Bridge) \cite{UMBridge23}, connects libraries that generate sequences of model parameters, $\bsx_1, \bsx_2, \ldots$ with libraries that evaluate models, $f(\bsx_1), f(\bsx_2), \ldots$, and their derivatives if applicable. UM-Bridge allows coupling of UQ codes to models regardless of the programming languages.
+
+We illustrate in Figure~\ref{CDHJSfigbeam} how UM-Bridge connects QMCPy with a differential equation boundary value problem solver for a cantilevered beam of length~$L$, with a random log effective stiffness $m(\cdot)$. Following ~\cite{ParSee22a}, we assume $m(\cdot)$ is piecewise constant over three regions and the three constants take a $\calU[1,1.2]^3$ distribution.
+%, i.e., $m(x) = \left[\begin{matrix} m_1(x), m_2(x), m_3(x) \end{matrix} \right]$ with $m_i(x) \sim \calU[1,1.2]^3$.
+The beam position $x$ is discretized at $N=31$ equidistant points, and
+the vertical deflection $u(x)$ when the beam is subject to a given external load  $g(x)$ satisfies the Euler-Bernoulli partial differential equation (PDE):
+$$ \frac{\partial^2}{\partial x^2}\left[ \exp(m(x)) \frac{\partial^2  u(x)}{\partial x^2}\right] = g(x),$$
+%where $m(x) = \log E(x)$ is the log of an effective stiffness $E(x)$.  The
+with the following boundary conditions:
+$$ \left.u(x)\right|_{x=0} = 0, \qquad
+\left.\frac{\partial u(x)}{\partial x}\right|_{x=0} = 0, \qquad
+\left.\frac{\partial^2 u(x)}{\partial x^2}\right|_{x=L} = 0, \qquad  \left.\frac{\partial^3 u(x)}{\partial x^3}\right|_{x=L} = 0. $$
+This PDE can be discretized with finite differences yielding a linear system $K(m) \hat{u} = \hat{g}$, where $\hat{u}$ and $\hat{g} \in \mathbb{R}^N$.
+%approximates $u(x)$ and $m(x)$ at the nodes, respectively.
+%The forward model $F:\mathbb{R}^3 \rightarrow \mathbb{R}^N $ maps $m = \left[\begin{matrix}m_1, m_2, m_3 \end{matrix}\right]^T$ to $\hat{u}$, while $Q : \mathbb{R}^N \rightarrow \mathbb{R}^2 $ selects the estimated solution at the 10th and 25th nodes, i.e., $ Q(\hat{u}) := \left[\begin{matrix} \hat{u}_{10}, \hat{u}_{25} \end{matrix} \right]^T$. The objective is to determine the distributions of $Q(F(m))$.
+The beam model was written in C++ using the MUQ's model framework~\cite{MUQ2}. %It is one of the UM-Bridge's benchmark problem library, available as a container.
+
+QMCPy simulates the random Young's modulus and computes the expected deflection of the beam at the node points for a sequence of error tolerances using lattice rules.  By taking advantage of clusters and containers, UM-Bridge provides automatic load balancing to facilitate seamless parallel model evaluation. As a result, thread-parallel QMCPy can offload costly model evaluations to remote clusters~\cite{seelinger2023lowering}.
+
+
+We need more connections of QMC software to other libraries, like what has been done with  QMCPy and UM-Bridge.  This will allow newer and better QMC algorithms to tackle new applications.
+
+\subsection{Stopping Criteria}
+The cantilevered beam example illustrated in Figure \ref{CDHJSfigbeam} utilizes QMCPy's stopping criterion to choose the sample size, $n$, based on the input error tolerance, $\varepsilon$, and the observed discrete Fourier series coefficients of the integrand, $f$.  See \cite{HicJim16a} for details of this stopping criterion for lattice rules and \cite{HicEtal18a} for a review on automatic QMC stopping criteria.  Theoretically justified stopping criteria for choosing sample sizes are important and a relatively recent development \cite{HicEtal14a,HicJim16a,JimHic16a,RatHic19a,JagHic22a}.  Some of these stopping criteria for absolute error criteria, \eqref{CDHJS_eq:error_tol},  have been extended to relative error criteria or a combination of absolute and relative error criteria, as well as stopping criteria for approximating functions of several integrals \cite{Jia16a,GilJim16b,HicEtal17a,JagSor23a}.
+
+
+\bigskip
+
+We emphasize again that no one software library contains all of the best LD generators, integrands, variable transformations, and stopping criteria, which is why great QMC software must be well integrated into other software libraries.  This may take the form of large libraries incorporating more QMC routines and/or building connections among QMC libraries and with other non-QMC libraries.
+
+
+\section{Correct} \label{CDHJS_sec:correct}
+Although correctness is an obvious feature of great QMC software, it should not always be assumed in popular packages.  Here are two examples.
+
+MATLAB's original randomization of Sobol' points was incorrectly implemented.  This was discovered by Llu\'is Antoni Jim\'enez Rugama, who informed the developer.  The error was corrected in MATLAB R2018a.
+
+SciPy and PyTorch's original implementations of Sobol' sequences omitted the first point.  The rationale was that the unscrambled first point of the Sobol' sequence is $\bsx_1 = \bszero$, which becomes the undesirable $\boldsymbol{-\infty}$ when transformed to mimic a Gaussian distribution.  A vigorous discussion ensued \cite{scipySobol2020a,pytorchSoboldiscussion2020a}, which prompted an article by Art Owen \cite{Owe22a} on why one should not drop the first point and destroy the digital net structure.  Instead one should randomly scramble the Sobol' sequence (and other LD sequences) so that $\bsx_1 \ne \bszero$.  Although SciPy and PyTorch were corrected, other software libraries with LD sequence generators still omit the first point.
+
+QMC software is sometimes written by those not intimately familiar with QMC.  Those of us most familiar with good QMC practices need to pay attention to QMC algorithms in popular software libraries and inform the developers when their software contains bugs or deviates from best practices.
+
+The above examples and discussion also underscore the importance of continuous testing in QMC software development. This involves creating a comprehensive test suite that covers a wide range of scenarios and input parameters. Additionally, QMC software should be benchmarked against known results to ensure that it is both accurate and efficient.
+
+
+\section{Efficient} \label{CDHJS_sec:efficient}
+Another obvious feature of great QMC software is computational efficiency.  This requires developers to identify bottlenecks in performance. Intensive computations may need to be rewritten in lower-level languages, like C. We have found looped randomization and point generation routines to greatly benefit from low level implementations. Code may also need to be refactored to avoid excessive calls to memory.  As new hardware architectures arise, QMC software should adapt to take advantage of them.
+
+Efficiency gains in QMC software can also result from clever algorithm choices. Adaptive QMC algorithms as in \cite{JimHic16a, HicJim16a, HicEtal17a, RatHic19a,JagHic22a} can be used to dynamically increase the number of sampling points based on estimated error bounds. They can lead to significant efficiency gains by reducing the number of unnecessary function evaluations. The Bayesian stopping rules for lattice and Sobol sequences in \cite{RatHic19a,JagHic22a} choose covariance kernels that match the corresponding LD sequence.  This reduces the computations from what would be $\calO(n^3)$ for arbitrary covariance kernels to only $\calO(n \log n)$ for these well-chosen kernels. Consequently, computing the stopping criterion is roughly the same order of magnitude as computing the solution.
+
+In spite of the desire for efficiency, great QMC software will be written in a variety of computer languages since different communities tend to favor different languages. Trade-offs will be made between efficiency and convenience.
+As noted by a referee, QMCPy is not particularly fast at generating tens of thousands of replicates of randomized QMC sample means in comparison to SSJ, which is based on Java. Such cases may point to the need for a Python layer over a faster implementation.
+
+\section{Accessible} \label{CDHJS_sec:accessible}
+One attribute of great QMC software that often receives insufficient attention is its accessibility.  Developers may write code for their own purposes and move on.
+
+Great software should be stored in a repository, where the latest version can be downloaded.  There should be documentation that guides the user through installation and explains the library's features.  Demos are crucial for showing how the software works and for providing a template for new users to write their own code.  Tutorials help newcomers to QMC understand its advantages. Blogs educate a wider audience and enlarge our QMC community.  There should be a place for users to report bugs and make feature requests.
+
+Accessible QMC software has greater impact.  Accessibility also depends on the next characteristic of great QMC software.
+
+
+\section{Sustainable} \label{CDHJS_sec:sustainable}
+Great QMC software libraries should be awake, not dormant.  They should be under active development or merged into other libraries that are actively maintained.  Commercial software has an infrastructure to maintain their algorithms, but these algorithms need periodic refreshing. Open source software requires a community of active users and developers to keep the library up-to-date and bug-free.
+
+The QMC community can help sustain great QMC software in several ways.  \begin{itemize}
+	\item Let's build our research code and showcase our new algorithms using existing QMC software libraries or build and maintain new libraries, if needed.  This allows the next generation to more easily reproduce our results and build upon them.
+
+	\item Many of us QMC researchers rely on transient team members (students and postdocs) to write the code that illustrates our new ideas.  Building our own QMC libraries or contributing to existing ones helps ensure that the code our team members write lasts beyond their involvement in our teams.
+
+	\item It is relatively easy to post demos of our new ideas on our own web pages, and if possible in the software libraries that we are using.  QMCPy welcomes blogs, short articles introducing a broader audience to important ideas, illustrated by software.
+
+	\item When we see bugs or missing features in QMC software, let's persistently request fixes and improvements.  The more robust our QMC software, the easier it is to open new application areas to QMC and grow our QMC community.
+
+    \item Let's publish our QMC  software with journals such as ACM TOMS, JORS, etc. to obtain code review and
+    feedback.
+
+    \item When we find QMC scientific software useful in our research or applications, let's encourage and recognize such software by properly citing it~\cite{smith2016software}.
+
+    \item Encourage QMC community members to learn about software development through interdisciplinary education, internships, or hackathons.
+
+\end{itemize}
+
+
+Encouraging students and postdocs to invest time in developing QMC software will require us as their mentors valuing software as a research output.  Great software should be published with a digital object identifier (DOI).
+
+The term research software engineer (RSE) is becoming a more valued vocation.  According to the website for  Research Software Engineers International,
+\href{https://researchsoftware.org}{\url{https://researchsoftware.org}}, \emph{Research Software Engineers are people who combine professional software expertise with an understanding of research.}
+
+We recognize the crucial role of non-code contributors to the project~\cite{K23}. Besides coding, we also need documentation, data visualization, testing, user interface or experience design, web content development, community management, and release management. These non-code contributions help make the project more  accessible. Non-coding roles offer opportunities for individuals with less coding experiences to develop technical and non-technical skills over time.  Additionally, the emergence of no-code or low-code analytical software such as RapidMiner, KNIME, Orange, SAS Studio, or SAS Viya enable individuals less experienced with complex coding to learn and contribute in a user-friendly environment.
+%We need and welcome non-code contributors to work alongside code contributors for QMCPy, enhancing the overall health of the project and the diversity of the community.
+
+
+\section{Summary and Future Work}
+QMC has experienced decades of exciting growth in theory since the late 1950s.  The earliest publicly available QMC software dates to the early 1990s and its growth has not matched that of theory.  As a QMC community, we have a responsibility to implement our great theory into great QMC software.
+
+In this paper, we have focused predominantly on employing QMC sampling in estimating the expectations of functions. However, it can be extended to other important mathematical problems such as function approximation \cite{Kmmerer2015, PotSch21}, simulation of Markov chains \cite{l2018sorting,puchhammer2021variance},  density estimation \cite{LEcuyer2022b}.
+The SSJ library~\cite{l2002ssj} is a comprehensive tool kit that includes a wide range of QMC point sets, sequences, and randomizations in the ``hups'' and ``mcqmctools'' packages. It will be of great interest to the QMCPy community to make connections to these and other well established software in order to become applicable to an increasingly wider scope of problems and applications of computational mathematics and statistics.
+
+Although Python is popular and versatile, it can be slower than highly optimized implementations in languages like Java or C++.  Developers of QMC software in Python would do well to investigate interfaces to optimize code in other languages or consider other code acceleration techniques provided by libraries such as Numba, JAX, Joblib, or Ray.  With time, languages rise and fall in popularity, and those who wish to provide great QMC software may need to pivot to new software environments.
+
+
+\section*{Acknowledgements}
+The authors are grateful to the referee's constructive comments. We also want to thank Linus Seelinger for feedback and discussion. The authors acknowledge many students and collaborators who have provided insight in our journey to develop great QMC software.
+
+
+%\bibliographystyle{spmpsci}
+%\bibliography{FJH23,FJHown23,sc}
+
+%\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
+\begin{thebibliography}{10}
+	\providecommand{\url}[1]{{#1}}
+	\providecommand{\urlprefix}{URL }
+	\expandafter\ifx\csname urlstyle\endcsname\relax
+	\providecommand{\doi}[1]{DOI~\discretionary{}{}{}#1}\else
+	\providecommand{\doi}{DOI~\discretionary{}{}{}\begingroup
+		\urlstyle{rm}\Url}\fi
+
+	\bibitem{QMCJulia}
+	{SciML QuasiMonteCarlo.jl} (2022).
+	\newblock \urlprefix\url{https://github.com/SciML/QuasiMonteCarlo.jl}
+
+	\bibitem{DakotaUsersManual}
+	Adams, B.M., Bohnhoff, W.J., Dalbey, K.R., Ebeida, M.S., Eddy, J.P., Eldred,
+	M.S., Hooper, R.W., Hough, P.D., Hu, K.T., Jakeman, J.D., Khalil, M., Maupin,
+	K.A., Monschke, J.A., Ridgway, E.M., Rushdi, A.A., Seidl, D.T., Stephens,
+	J.A., Swiler, L.P., Tran, A., Winokur, J.G.: Dakota, A Multilevel Parallel
+	Object-Oriented Framework for Design Optimization, Parameter Estimation,
+	Uncertainty Quantification, and Sensitivity Analysis: Version 6.16 User's
+	Manual.
+	\newblock Sandia National Laboratories (2022)
+
+	\bibitem{osti_1846008}
+	Bernholdt, D.E., Cary, J., Heroux, M., McInnes, L.C.: The science of
+	scientific-software development and use  (2022).
+	\newblock \doi{10.2172/1846008}.
+	\newblock \urlprefix\url{https://www.osti.gov/biblio/1846008}
+
+	\bibitem{BraFox88}
+	Bratley, P., Fox, B.L.: Algorithm 659: Implementing {Sobol's} quasirandom
+	sequence generator.
+	\newblock ACM Trans.\ Math.\ Software \textbf{14}, 88--100 (1988)
+
+	\bibitem{BraFoxNie92}
+	Bratley, P., Fox, B.L., Niederreiter, H.: Implementation and tests of
+	low-discrepancy sequences.
+	\newblock ACM Trans.\ Model.\ Comput.\ Simul. \textbf{2}, 195--213 (1992)
+
+	\bibitem{MCQMC2022Figs}
+	Choi, S.C.T., Ding, Y., Hickernell, F.J., Jagadeeswaran, R., Sorokin, A.G.:
+	{MCQMC} 2022 figures.
+	\newblock
+	\urlprefix\url{https://github.com/QMCSoftware/QMCSoftware/tree/develop/demos/talk_paper_demos/MCQMC2022_Article_Figures}
+
+	\bibitem{QMCPy2020a}
+	Choi, S.C.T., Hickernell, F.J., Jagadeeswaran, R., McCourt, M., Sorokin, A.:
+	{QMCPy}: A quasi-{M}onte {C}arlo {P}ython library (versions 1--1.4) (2023).
+	\newblock \doi{10.5281/zenodo.3964489}.
+	\newblock \urlprefix\url{https://qmcsoftware.github.io/QMCSoftware/}
+
+	\bibitem{ChoEtal22a}
+	Choi, S.C.T., Hickernell, F.J., Jagadeeswaran, R., McCourt, M.J., Sorokin,
+	A.G.: Quasi-{M}onte {C}arlo software.
+	\newblock In: A.~Keller (ed.) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
+	Methods: {MCQMC}, {O}xford, England, {A}ugust 2020, Springer Proceedings in
+	Mathematics and Statistics, pp. 23--50. Springer, Cham (2022).
+	\newblock \url{https://arxiv.org/abs/2102.07833}
+
+	\bibitem{DicEtal22a}
+	Dick, J., Kritzer, P., Pillichshammer, F.: Lattice Rules: {N}umerical
+	Integration, Approximation, and Discrepancy.
+	\newblock Springer Series in Computational Mathematics. Springer Cham (2022).
+	\newblock \doi{https://doi.org/10.1007/978-3-031-09951-9}
+
+	\bibitem{DicEtal14a}
+	Dick, J., Kuo, F., Sloan, I.H.: High dimensional integration --- the
+	{Q}uasi-{M}onte {C}arlo way.
+	\newblock Acta Numer. \textbf{22}, 133--288 (2013).
+	\newblock \doi{10.1017/S0962492913000044}
+
+	\bibitem{K23}
+	Finley, K.: Non-code contributions are the secret to open source success.
+	\newblock The ReadME Project, GitHub (2023).
+	\newblock
+	\urlprefix\url{https://github.com/readme/featured/open-source-non-code-contributions}
+
+	\bibitem{FriKelweb}
+	Friedel, I., Keller, A.: libseq -- low discrepancy sequence library (2001).
+	\newblock \urlprefix\url{http://www.multires.caltech.edu/software/libseq/}
+
+	\bibitem{FriKel02}
+	Friedel, I., Keller, A.: Fast generation of randomized low-discrepancy point
+	sets.
+	\newblock In: K.T. Fang, F.J. Hickernell, H.~Niederreiter (eds.) {M}onte
+	{C}arlo and Quasi-{M}onte {C}arlo Methods 2000, pp. 257--273.
+	Springer-Verlag, Berlin (2002)
+
+	\bibitem{GelEtal13}
+	Gelman, A., Carlin, J.B., Stern, H.S., Dunson, D.B., Vehtari, A., Rubin, D.B.:
+	Bayesian Data Analysis.
+	\newblock CRC Texts in Statistical Science. Chapman \& Hall (2013)
+
+	\bibitem{Gla03}
+	Glasserman, P.: {M}onte {C}arlo Methods in Financial Engineering,
+	\emph{Applications of Mathematics}, vol.~53.
+	\newblock Springer-Verlag, New York (2004)
+
+	\bibitem{GruWeb}
+	Gr\"unschlo{\ss}, L.: Leonhard gr\"unschlo{\ss}'s webpage.
+	\newblock \urlprefix\url{https://gruenschloss.org}
+
+	\bibitem{HicEtal18a}
+	Hickernell, F.J., Choi, S.C.T., Jiang, L., {Jim\'enez Rugama}, {\relax
+		Ll}.A.: {M}onte {C}arlo simulation, automatic stopping criteria for.
+	\newblock In: M.~Davidian, B.~Everitt, R.S. Kenett, G.~Molenberghs,
+	W.~Piegorsch, F.~Ruggeri (eds.) Wiley StatsRef-Statistics Reference Online.
+	John Wiley \& Sons Ltd. (2018).
+	\newblock \doi{10.1002/9781118445112.stat08035}
+
+	\bibitem{HicEtal14a}
+	Hickernell, F.J., Jiang, L., Liu, Y., Owen, A.B.: Guaranteed conservative
+	fixed width confidence intervals via {M}onte {C}arlo sampling.
+	\newblock In: J.~Dick, F.Y. Kuo, G.W. Peters, I.H. Sloan (eds.) {M}onte {C}arlo
+	and Quasi-{M}onte {C}arlo Methods 2012, \emph{Springer Proceedings in
+		Mathematics and Statistics}, vol.~65, pp. 105--128. Springer-Verlag, Berlin
+	(2013).
+	\newblock \doi{10.1007/978-3-642-41095-6}
+
+	\bibitem{HicJim16a}
+	Hickernell, F.J., {Jim\'enez Rugama}, {\relax Ll}.A.: Reliable adaptive
+	cubature using digital sequences.
+	\newblock In: R.~Cools, D.~Nuyens (eds.) {M}onte {C}arlo and Quasi-{M}onte
+	{C}arlo Methods: {MCQMC}, {L}euven, {B}elgium, {A}pril 2014, \emph{Springer
+		Proceedings in Mathematics and Statistics}, vol. 163, pp. 367--383.
+	Springer-Verlag, Berlin (2016).
+	\newblock ArXiv:1410.8615 [math.NA]
+
+	\bibitem{HicEtal17a}
+	Hickernell, F.J., {Jim\'enez Rugama}, {\relax Ll}.A., Li, D.: Adaptive
+	quasi-{M}onte {C}arlo methods for cubature.
+	\newblock In: J.~Dick, F.Y. Kuo, H.~Wo\'zniakowski (eds.) Contemporary
+	Computational Mathematics --- a celebration of the 80th birthday of {I}an
+	{S}loan, pp. 597--619. Springer-Verlag (2018).
+	\newblock \doi{10.1007/978-3-319-72456-0}
+
+	\bibitem{QRNG2020}
+	Hofert, M., Lemieux, C.: qrng {R} package (2017).
+	\newblock \urlprefix\url{https://cran.r-project.org/web/packages/qrng/qrng.pdf}
+
+	\bibitem{HonHic00a}
+	Hong, H.S., Hickernell, F.J.: Algorithm 823: Implementing scrambled digital
+	nets.
+	\newblock ACM Trans.\ Math.\ Software \textbf{29}, 95--109 (2003).
+	\newblock \doi{10.1145/779359.779360}
+
+	\bibitem{RatHic19a}
+	Jagadeeswaran, R., Hickernell, F.J.: Fast automatic {B}ayesian cubature
+	using lattice sampling.
+	\newblock Stat.\ Comput. \textbf{29}, 1215--1229 (2019).
+	\newblock \doi{10.1007/s11222-019-09895-9}
+
+	\bibitem{JagHic22a}
+	Jagadeeswaran, R., Hickernell, F.J.: Fast automatic {B}ayesian cubature
+	using {S}obol' sampling.
+	\newblock In: Z.~Botev, A.~Keller, C.~Lemieux, B.~Tuffin (eds.) Advances in
+	Modeling and Simulation: {F}estschrift in Honour of {P}ierre {L'E}cuyer, pp.
+	301--318. Springer, Cham (2022).
+	\newblock \doi{10.1007/978-3-031-10193-9\_15}
+
+	\bibitem{Jia16a}
+	Jiang, L.: Guaranteed adaptive {M}onte {C}arlo methods for estimating means of
+	random variables.
+	\newblock Ph.D. thesis, Illinois Institute of Technology (2016)
+
+	\bibitem{GilJim16b}
+	{Jim\'enez Rugama}, {\relax Ll}.A., Gilquin, L.: Reliable error estimation for
+	{S}obol' indices.
+	\newblock Statistics and Computing \textbf{28}, 725--738 (2018).
+	\newblock \doi{10.1007/s11222-017-9759-1}
+
+	\bibitem{JimHic16a}
+	{Jim\'enez Rugama}, {\relax Ll}.A., Hickernell, F.J.: Adaptive
+	multidimensional integration based on rank-1 lattices.
+	\newblock In: R.~Cools, D.~Nuyens (eds.) {M}onte {C}arlo and Quasi-{M}onte
+	{C}arlo Methods: {MCQMC}, {L}euven, {B}elgium, {A}pril 2014, \emph{Springer
+		Proceedings in Mathematics and Statistics}, vol. 163, pp. 407--422.
+	Springer-Verlag, Berlin (2016).
+	\newblock ArXiv:1411.1966
+
+	\bibitem{SobolDirection}
+	Joe, S., Kuo, F.Y.: Sobol sequence generator.
+	\newblock \urlprefix\url{https://web.maths.unsw.edu.au/~fkuo/sobol/}
+
+	\bibitem{JoeKuo03}
+	Joe, S., Kuo, F.Y.: Remark on algorithm 659: Implementing {S}obol's quasirandom
+	sequence generator.
+	\newblock ACM Trans.\ Math.\ Software \textbf{29}, 49--57 (2003)
+
+	\bibitem{KuoJoe08a}
+	Joe, S., Kuo, F.Y.: Constructing {S}obol sequences with better two-dimensional
+	projections.
+	\newblock SIAM J.\ Sci.\ Comput. \textbf{30}, 2635--2654 (2008)
+
+	\bibitem{Kmmerer2015}
+	K\"{a}mmerer, L., Potts, D., Volkmer, T.: Approximation of multivariate
+	periodic functions by trigonometric polynomials based on rank-1 lattice
+	sampling.
+	\newblock J.\ Complexity \textbf{31}(4), 543--576 (2015).
+	\newblock \doi{10.1016/j.jco.2015.02.004}.
+	\newblock \urlprefix\url{https://doi.org/10.1016/j.jco.2015.02.004}
+
+	\bibitem{SamplePack}
+	Kollig, T., Keller, A.: Samplepack (2002).
+	\newblock \urlprefix\url{https://www.uni-kl.de/AG-Heinrich/SamplePack.html}
+
+	\bibitem{BRODA20a}
+	Kucherenko, S.: {BRODA} (2022).
+	\newblock \urlprefix\url{https://www.broda.co.uk/index.html}
+
+	\bibitem{KuoNuy16a}
+	Kuo, F.Y., Nuyens, D.: Application of quasi-{M}onte {C}arlo methods to elliptic
+	{PDE}s with random diffusion coefficients -- a survey of analysis and
+	implementation.
+	\newblock Found.\ Comput.\ Math. \textbf{16}, 1631--1696 (2016).
+	\newblock \urlprefix\url{https://people.cs.kuleuven.be/~dirk.nuyens/qmc4pde/}
+
+	\bibitem{LEcEtal22a}
+	L'Ecuyer, P., Marion, P., Godin, M., Puchhammer, F.: A tool for custom
+	construction of {QMC} and {RQMC} point sets.
+	\newblock In: A.~Keller (ed.) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
+	Methods: {MCQMC}, {O}xford, 2020, Springer Proceedings in Mathematics and
+	Statistics. Springer, Cham (2022)
+
+	\bibitem{l2002ssj}
+	L'Ecuyer, P., Meliani, L., Vaucher, J.: Ssj: A framework for stochastic
+	simulation in {Java}.
+	\newblock In: Proceedings of the Winter Simulation Conference, vol.~1, pp.
+	234--242. IEEE (2002)
+
+	\bibitem{l2018sorting}
+	L'Ecuyer, P., Munger, D., L{\'e}cot, C., Tuffin, B.: Sorting methods and
+	convergence rates for {Array-RQMC}: Some empirical comparisons.
+	\newblock Mathematics and Computers in Simulation \textbf{143}, 191--201 (2018)
+
+	\bibitem{LEcuyer2022b}
+	L'Ecuyer, P., Puchhammer, F., {Ben Abdellah}, A.: Monte carlo and
+	quasi{\textendash}monte carlo density estimation via conditioning.
+	\newblock INFORMS J.\ Comput. \textbf{34}(3), 1729--1748 (2022).
+	\newblock \doi{10.1287/ijoc.2021.1135}.
+	\newblock \urlprefix\url{https://doi.org/10.1287/ijoc.2021.1135}
+
+	\bibitem{Nie92}
+	Niederreiter, H.: Random Number Generation and Quasi-{M}onte {C}arlo Methods.
+	\newblock CBMS-NSF Regional Conference Series in Applied Mathematics. SIAM,
+	Philadelphia (1992)
+
+	\bibitem{NovWoz10a}
+	Novak, E., Wo{\'{z}}niakowski, H.: Tractability of Multivariate Problems
+	{V}olume {II}: {S}tandard Information for Functionals.
+	\newblock No.~12 in EMS Tracts in Mathematics. European Mathematical Society,
+	Z\"urich (2010)
+
+	\bibitem{NuyWeb}
+	Nuyens, D.: Dirk's homepage.
+	\newblock \urlprefix\url{https://people.cs.kuleuven.be/~dirk.nuyens/}
+
+	\bibitem{Owe22a}
+	Owen, A.B.: On dropping the first {Sobol'} point.
+	\newblock In: A.~Keller (ed.) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
+	Methods: {MCQMC}, {O}xford, England, {A}ugust 2020, Springer Proceedings in
+	Mathematics and Statistics, pp. 71--86. Springer, Cham (2022).
+	\newblock \urlprefix\url{https://arxiv.org/pdf/2008.08051.pdf}
+
+	\bibitem{FinDer}
+	Papageorgiou, A.: Finder.
+	\newblock \urlprefix\url{http://www.cs.columbia.edu/~ap/html/finder.html}
+
+	\bibitem{MUQ2}
+	Parno, M., Davis, A., Seelinger, L.: {MUQ}: The {MIT} {U}ncertainty
+	{Q}uantification library.
+	\newblock Journal of Open Source Software \textbf{6}(68), 3076 (2021).
+	\newblock \doi{10.21105/joss.03076}.
+	\newblock \urlprefix\url{https://doi.org/10.21105/joss.03076}
+
+	\bibitem{ParSee22a}
+	Parno, M., Seelinger, L.: Uncertainty propagation of material properties of a
+	cantilevered beam (2022).
+	\newblock
+	\urlprefix\url{https://um-bridge-benchmarks.readthedocs.io/en/docs/forward-benchmarks/muq-beam-propagation.html}
+
+	\bibitem{PasTra95}
+	Paskov, S., Traub, J.: Faster valuation of financial derivatives.
+	\newblock J. Portfolio Management \textbf{22}, 113--120 (1995)
+
+	\bibitem{paszke2019pytorch}
+	Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., Killeen,
+	T., Lin, Z., Gimelshein, N., Antiga, L., Desmaison, A., K{\"o}pf, A., Yang,
+	E., DeVito, Z., Raison, M., Tejani, A., Chilamkurthy, S., Steiner, B., Fang,
+	L., Bai, J., Chintala, S.: Py{T}orch: An imperative style, high-performance
+	deep learning library.
+	\newblock Advances in neural information processing systems \textbf{32},
+	8026--8037 (2019)
+
+	\bibitem{paulin2022}
+	Paulin, L., Bonneel, N., Coeurjolly, D., Iehl, J.C., Keller, A., Ostromoukhov,
+	V.: Matbuilder: Mastering sampling uniformity over projections.
+	\newblock ACM Transactions on Graphics (Proceedings of SIGGRAPH) \textbf{41}(4)
+	(2022).
+	\newblock \doi{https://doi.org/10.1145/3528223.3530063}
+
+	\bibitem{PotSch21}
+	Potts, D., Schmischke, M.: Approximation of high-dimensional periodic functions
+	with fourier-based methods.
+	\newblock SIAM J.\ Numer.\ Anal. \textbf{59}(5), 2393--2429 (2021).
+	\newblock \doi{10.1137/20M1354921}.
+	\newblock \urlprefix\url{https://doi.org/10.1137/20M1354921}
+
+	\bibitem{puchhammer2021variance}
+	Puchhammer, F., Ben~Abdellah, A., L'Ecuyer, P.: Variance reduction with
+	{Array-RQMC} for tau-leaping simulation of stochastic biological and chemical
+	reaction networks.
+	\newblock Bulletin of Mathematical Biology \textbf{83}(8), 91 (2021)
+
+	\bibitem{pytorchSoboldiscussion2020a}
+	{PyTorch Developers}: {S}obol point implementation (2020).
+	\newblock \urlprefix\url{https://github.com/pytorch/pytorch/issues/32047}
+
+	\bibitem{SAS_LD}
+	{SAS Institute}: Sas documentation for the model procedure (2023).
+	\newblock
+	\urlprefix\url{https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.4/etsug/etsug_model_sect197.htm}
+
+	\bibitem{scipySobol2020a}
+	{SciPy Developers}: {SciPy} discussion of {S}obol' sequence implementation
+	(2020).
+	\newblock \urlprefix\url{https://github.com/scipy/scipy/pull/10844}
+
+	\bibitem{UMBridge23}
+	Seelinger, L., Cheng-Seelinger, V., Davis, A., Parno, M., Reinarz, A.:
+	{UM-Bridge}: {U}ncertainty quantification and modeling bridge.
+	\newblock Journal of Open Source Software \textbf{8}(83), 4748 (2023).
+	\newblock \doi{10.21105/joss.04748}.
+	\newblock \urlprefix\url{https://doi.org/10.21105/joss.04748}
+
+	\bibitem{seelinger2023lowering}
+	Seelinger, L., Reinarz, A., Benezech, J., Lykkegaard, M.B., Tamellini, L.,
+	Scheichl, R.: Lowering the entry bar to {HPC}-scale uncertainty
+	quantification (2023)
+
+	\bibitem{SloJoe94}
+	Sloan, I.H., Joe, S.: Lattice Methods for Multiple Integration.
+	\newblock Oxford University Press, Oxford (1994)
+
+	\bibitem{smith2016software}
+	Smith, A.M., Katz, D.S., Niemeyer, K.E.: Software citation principles.
+	\newblock PeerJ Computer Science \textbf{2}, e86 (2016)
+
+	\bibitem{JagSor23a}
+	Sorokin, A.G., Jagadeeswaran, R.: Monte {C}arlo for vector functions of
+	integrals.
+	\newblock In: A.~Hinrichs, P.~Kritzer, F.~Pillichshammer (eds.) {M}onte {C}arlo
+	and Quasi-{M}onte {C}arlo Methods: {MCQMC}, {L}inz, Austria, {J}uly 2022,
+	Springer Proceedings in Mathematics and Statistics. Springer, Cham (2023+).
+	\newblock Submitted for publication
+
+	\bibitem{tfqfQMC2021a}
+	{TF Quant Finance Contributors}: Quasi {M}onte-{C}arlo methods (2021).
+	\newblock \urlprefix\url{https://github.com/google/tf-quant-finance/math/qmc}
+
+	\bibitem{MAT9.13}
+	{The MathWorks, Inc.}: {MATLAB} R2022b.
+	\newblock Natick, MA (2022)
+
+	\bibitem{NAG27}
+	{The Numerical Algorithms Group}: The {NAG} Library.
+	\newblock Oxford, {M}ark 27 edn. (2021)
+
+	\bibitem{TonEtAl22a}
+	Tong, X., Choi, S.C.T., Ding, Y., Hickernell, F.J., Jiang, L., {Jim\'enez
+		Rugama}, {\relax Ll}.A., Jagadeeswaran, R., Zhang, K., Zhang, Y., Zhou, X.:
+	Guaranteed automatic integration library {(GAIL)}: An open-source {MATLAB}
+	library for function approximation, minimization, and integration.
+	\newblock J. Open Res.\ Software \textbf{10}, 7 (2022).
+	\newblock \doi{10.5334/jors.381}
+
+	\bibitem{ASCR-SSSDU}
+	{U.S. Department of Energy, Office of Advanced Scientific Computing Research}:
+	Workshop on the science of scientific-software development and use (2021).
+	\newblock
+	\urlprefix\url{https://web.cvent.com/event/1b7d7c3a-e9b4-409d-ae2b-284779cfe72f/summary}
+
+	\bibitem{virtanen2020scipy}
+	Virtanen, P., Gommers, R., Oliphant, T.E., Haberland, M., Reddy, T.,
+	Cournapeau, D., Burovski, E., Peterson, P., Weckesser, W., Bright, J.,
+	van~der Walt, S.J., Brett, M., Wilson, J., Millman, K.J., Mayorov, N.,
+	Nelson, A.R.J., Jones, E., Kern, R., Larson, E., Carey, C.J., Polat, I.,
+	Feng, Y., Moore, E.W., VanderPlas, J., Laxalde, D., Perktold, J., Cimrman,
+	R., Henriksen, I., Quintero, E.A., Harris, C.R., Archibald, A.M., Ribeiro,
+	A.H., Pedregosa, F., van Mulbregt, P., Vijaykumar, A., Bardelli, A.P.,
+	Rothberg, A., Hilboll, A., Kloeckner, A., Scopatz, A., Lee, A., Rokem, A.,
+	Woods, C.N., Fulton, C., Masson, C., H{\"a}ggstr{\"o}m, C., Fitzgerald, C.,
+	Nicholson, D.A., Hagen, D.R., Pasechnik, D.V., Olivetti, E., Martin, E.,
+	Wieser, E., Silva, F., Lenders, F., Wilhelm, F., Young, G., Price, G.A.,
+	Ingold, G.L., Allen, G.E., Lee, G.R., Audren, H., Probst, I., Dietrich, J.P.,
+	Silterra, J., Webber, J.T., Slavi{\v c}, J., Nothman, J., Buchner, J.,
+	Kulick, J., Sch{\"o}nberger, J.L., de~Miranda~Cardoso, J., Reimer, J.,
+	Harrington, J., Rodr{\'\i}guez, J.L.C., Nunez-Iglesias, J., Kuczynski, J.,
+	Tritz, K., Thoma, M., Newville, M., K{\"u}mmerer, M., Bolingbroke, M.,
+	Tartre, M., Pak, M., Smith, N.J., Nowaczyk, N., Shebanov, N., Pavlyk, O.,
+	Brodtkorb, P.A., Lee, P., McGibbon, R.T., Feldbauer, R., Lewis, S., Tygier,
+	S., Sievert, S., Vigna, S., Peterson, S., More, S., Pudlik, T., Oshima, T.,
+	Pingel, T.J., Robitaille, T.P., Spura, T., Jones, T.R., Cera, T., Leslie, T.,
+	Zito, T., Krauss, T., Upadhyay, U., Halchenko, Y.O., V{\'a}zquez-Baeza, Y.,
+	Contributors: Scipy 1.0: fundamental algorithms for scientific computing in
+	python.
+	\newblock Nature Methods \textbf{17}(3), 261--272 (2020)
+
+	\bibitem{Woz99a}
+	Wo{\'z}niakowski, H.: Efficiency of quasi-{M}onte {C}arlo algorithms for high
+	dimensions.
+	\newblock In: H.~Niederreiter, J.~Spanier (eds.) {M}onte {C}arlo and
+	Quasi-{M}onte {C}arlo Methods 1998, pp. 114--136. Springer-Verlag, Berlin
+	(2000)
+
+\end{thebibliography}
+
+\end{document}
+
